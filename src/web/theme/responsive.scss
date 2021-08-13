@@ -1,0 +1,72 @@
+@import './variables.scss';
+$primary:#4EB176;
+$secondary:#444444;
+$text-color:#4B4B5A;
+
+@media(max-width:1270px){
+}
+@media(max-width:1050px){
+	.profileInfo .profileDetail{display:block;}
+	.profileInfo .profileDetail .profileDetailCol{margin-bottom:10px;}
+	.address{margin:0px!important;}
+	.timeslotPopup{width:405px;}
+	.timeslotPopup span{width: 22.2%;}
+	.AppointmentDate.timeSlot{width:140px;}
+	.totalInvoice .button{min-width:100px;}
+	/************************ new design changes **************************/
+	.customTabs li{margin-right: 15px;}
+}
+@media(max-width:991px){
+	.loginOuter{background-position:calc(100% - 50%) calc(100%);}
+	.loginBox{right: calc(100% - 50% - 210px);}
+	.sidebar_outer{position:absolute;z-index:3;}
+	.showSidebar{z-index:4;}
+	.customTabs a{padding-bottom:5px!important;}
+	.customTabs li{margin-right:10px;}
+		/************************ new design changes **************************/
+		.PetBlock{width: 310px;height: 200px;margin-right: 20px;margin-bottom: 20px;}
+}
+@media(max-width:767px){
+	.loginOuter{display:flex;background:none;}
+	.loginBox{position:static;margin:auto;padding:38px 40px;max-width:90%;}
+	.profileInfo{padding:15px;}
+	.profileInfo .profilePic{position: static;margin-bottom:15px;}
+	.right_content_col{padding:35px;}
+	.appointmentOption{width:100%;left:0px;padding:0px 25px;}
+	.editPic{position: relative;left: 0px;top: 0px;margin-bottom: 15px;}
+	.profileForm{padding-left:0px;}
+	.dateTimeOuter{flex-direction:column;}
+	.AppointmentDate, .AppointmentDate.timeSlot{width:100%;margin-bottom:10px;}
+	.timeslotPopup {width: 100%;}
+	.timeslotPopup span {width: 46%;}
+	.titleBtn{padding-right: 0px;}
+	.titleBtn button{position: static;}
+	.appRating div span{width: 25px;}
+	.appRating div {margin-right:2px;}
+	.totalInvoice{width:100%;padding-left:20px;}
+	.popupOverlay{padding: 0px 10px;}
+	/************************ new design changes **************************/
+	.titleDiscription{margin-bottom: 10px;}
+	.titleBtn{margin-bottom: 20px;}
+}
+@media(max-width:540px){
+	.customTabs{display:block;background:#ffffff;@include border-radius(5px);overflow:hidden;background: rgba(78, 177, 118, 0.1);}
+	.customTabs li{display:block;margin-right:0px;margin-bottom:0px;border-bottom:1px solid #bcdac8;}
+	.customTabs li a{display:block;padding: 10px 15px!important;}
+	.customTabs li a.active{background:$primary;color:#ffffff;}
+	.customTabs li a:after{display:none!important;}
+	.customTabs li:last-child{border:none!important;}
+	/************************ new design changes **************************/
+	.appointmentBtns{display:block;}
+	.appointmentBtns button{width:100%;margin-bottom:10px;}
+	.totalInvoice{padding:0px;}
+	.invoiceDetail{display:block;margin-bottom:10px;}
+	.invoiceDetail label{display:block;}
+	.invoiceDetail span{display:block;}
+	.bankDetail{width:100%;margin-bottom:50px;}
+	.calendarFilter{width:100%;}
+	.PetBlock{margin-right:0;}
+	.articleBlock{width:100%!important;margin-right: 0px!important;height:auto!important;}
+	.articleOuter .articleBlock .articleImg{height:173px;}
+	.settingLeft, .settingRight {width:100%;padding-left:0px;}
+}
