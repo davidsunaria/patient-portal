@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { numberFormat } from "patient-portal-utils/Service";
 
 const Table = (props) => {
     return (
-        <div className="table-responsive">
+        <div className="table-responsive mb-4">
             <table className="table mb-0 table-striped">
                 <thead>
-                    <tr>
+                    <tr key={1}>
                         {props.headers &&
                             props.headers.map((obj, idx) => {
                                 return <th>{obj}</th>;
@@ -17,18 +18,18 @@ const Table = (props) => {
                         props.tableData.map((val, index) => (
                             <tr key={index}>
                                 <td>
-                                   {val?.product_name}
+                                    {val?.product_name}
                                 </td>
                                 <td>{val?.quantity}</td>
-                                <td>INR {val?.rate}</td>
-                                <td>{val?.tax}</td>
-                                <td>INR {val?.amount}</td>
+                                <td>{numberFormat(val?.rate, 'currency', 2, 2)}</td>
+                                <td>{numberFormat(val?.tax, 'currency', 2, 2)}</td>
+                                <td>{numberFormat(val?.amount, 'currency', 2, 2)}</td>
                             </tr>
                         ))
 
                     ) : (
-                        <tr colSpan={5}>
-                            <td>
+                        <tr>
+                            <td colSpan={5}>
                                 No data found
                             </td>
 

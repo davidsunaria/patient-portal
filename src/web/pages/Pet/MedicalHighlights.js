@@ -89,14 +89,14 @@ const MedicalHighlights = (props) => {
 
   return (
     <React.Fragment>
-      <div class="box mb-2">
-        <div class="timeline">
+      <div className="box mb-2">
+        <div className="timeline">
           {records && records.length > 0 ? (
             records.map((val, index) => (
 
-              <div class="timelineSection">
-                <div class="timelineTime">{(val.d_date) ? formatDate(val?.d_date, 1, false) : ''} {(val.d_date) ? formatDate(val?.d_date, 2, false) : ''}</div>
-                <div class="timelineDetail">
+              <div className="timelineSection">
+                <div className="timelineTime">{(val.d_date) ? formatDate(val?.d_date, 1, false) : ''} {(val.d_date) ? formatDate(val?.d_date, 2, false) : ''}</div>
+                <div className="timelineDetail">
                   <div>
                     <p><span>{val?.treatment}</span></p>
                   </div>

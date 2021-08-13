@@ -129,4 +129,15 @@ export const deletePet = async (formData) => {
     return error.response.data;
   }
 };
-
+export const getReportsByVisit = async (payload) => {
+  let query;
+  if (payload.query) {
+    query = objectToQuery(payload.query);
+  }
+  try {
+    let response = await axiosApi.get(`${apiUrl}/pet/petReportsByVisit/${payload.id}?${query}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

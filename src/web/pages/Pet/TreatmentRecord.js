@@ -9,10 +9,11 @@ import { apiUrl } from "patient-portal-utils/HttpService.js";
 
 
 const TreatmentRecord = (props) => {
+  const history = useHistory();
   const [data, setData] = useState({});
   const getTreatmentRecord = useStoreActions((actions) => actions.pet.getTreatmentRecord);
   const downloadReport = useStoreActions((actions) => actions.pet.downloadReport);
-
+  const [downloadUrl, setDownloadUrl] = useState(null);
 
   const response = useStoreState((state) => state.pet.response);
   useEffect(async () => {
@@ -25,6 +26,9 @@ const TreatmentRecord = (props) => {
       if (statuscode && statuscode === 200) {
         if (data?.pet) {
           setData(data?.pet.visits);
+        }
+        if (data?.file_url) {
+          setDownloadUrl(data?.file_url);
         }
       }
     }
@@ -46,9 +50,14 @@ const TreatmentRecord = (props) => {
       await downloadReport({ url: '/download/invoice/', id: result.id });
     }
     if (type == "file") {
-      window.location.href = result.file;
+      history.push(`/treatment-record-reports/${result.id}`);
     }
   }
+  useEffect(() => {
+    if (downloadUrl) {
+      window.open(downloadUrl, "_blank");
+    }
+  }, [downloadUrl]);
   return (
     <React.Fragment>
       <div className="box mb-2">
@@ -60,14 +69,14 @@ const TreatmentRecord = (props) => {
                 <div className="timelineTime">{getDate(result, 3)} | {getDate(result, 4)}</div>
                 <div className="timelineDetail">
 
-                 { (result.prescription.length > 0 || result.invoice)  && <div className="dropdownArrow">
+                  {(result.prescription.length > 0 || result.invoice) && <div className="dropdownArrow">
                     <ul className="dropdownOption">
                       {result.prescription[0]?.id && <li className="onHover" onClick={() => downloadData(result, "prescription")}><img src={PRESCRIPTION_IMAGE} />Prescription</li>}
                       {result.invoice?.id && <li className="onHover" onClick={() => downloadData(result, "invoice")}><img src={INVOICE_IMAGE} />Invoice</li>}
-                      {result.file && <li className="onHover"><img src={REPORT_IMAGE} />Reports</li>}
+                      {result.file && <li className="onHover" onClick={() => downloadData(result, "file")}><img src={REPORT_IMAGE} />Reports</li>}
                     </ul>
                   </div>
-                }
+                  }
                   <div className="mb-2">
                     <p><span>Clinic: </span> {result?.clinic?.clinic_name}</p>
                     <p><span>Doctor: </span> {result?.doctor?.firstname} {result?.doctor?.lastname}</p>

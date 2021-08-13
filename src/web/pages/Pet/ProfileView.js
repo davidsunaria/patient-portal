@@ -55,18 +55,18 @@ const ProfileView = (props) => {
             <Divider />
 
             <ul className="customTabs">
-              <li><a  className={` ${currentTab && currentTab === "treatment_record" ? "active" : ""}`} onClick={() => selectedTab('treatment_record')}>Treatment Record</a></li>
-              <li><a  className={` ${currentTab && currentTab === "vaccination_record" ? "active" : ""}`} onClick={() => selectedTab('vaccination_record')}>Vaccination Record</a></li>
-              <li><a  className={` ${currentTab && currentTab === "antiparasitic_record" ? "active" : ""}`} onClick={() => selectedTab('antiparasitic_record')}>Anti-Parasitic Record</a></li>
+              <li><a  className={` ${currentTab && currentTab == "treatment_record" ? "active" : ""}`} onClick={() => selectedTab('treatment_record')}>Treatment Record</a></li>
+              <li><a  className={` ${currentTab && currentTab == "vaccination_record" ? "active" : ""}`} onClick={() => selectedTab('vaccination_record')}>Vaccination Record</a></li>
+              <li><a  className={` ${currentTab && currentTab == "antiparasitic_record" ? "active" : ""}`} onClick={() => selectedTab('antiparasitic_record')}>Anti-Parasitic Record</a></li>
               <li><a  className={` ${currentTab && currentTab === "reports_record" ? "active" : ""}`} onClick={() => selectedTab('reports_record')}>Reports</a></li>
-              <li><a  className={` ${currentTab && currentTab === "medical_highlights_record" ? "active" : ""}`} onClick={() => selectedTab('medical_highlights_record')}>Medical Highlights</a></li>
+              <li><a  className={` ${currentTab && currentTab == "medical_highlights_record" ? "active" : ""}`} onClick={() => selectedTab('medical_highlights_record')}>Medical Highlights</a></li>
             </ul>
-
-            {currentTab && currentTab === "treatment_record" && <TreatmentRecord petId={id} />}
-            {currentTab && currentTab === "vaccination_record" && <VaccinationRecord petId={id} />}
-            {currentTab && currentTab === "antiparasitic_record" && <AntiParasiticRecord  petId={id}/>}
-            {currentTab && currentTab === "reports_record" && <Reports petId={id} />}
-            {currentTab && currentTab === "medical_highlights_record" && <MedicalHighlights petId={id} />}
+     
+            {currentTab && currentTab == "treatment_record" && <TreatmentRecord petId={id} />}
+            {currentTab && currentTab == "vaccination_record" && <VaccinationRecord petId={id} />}
+            {currentTab && currentTab == "antiparasitic_record" && <AntiParasiticRecord  petId={id}/>}
+            {currentTab && currentTab == "reports_record" && <Reports petId={id} />}
+            {currentTab && currentTab == "medical_highlights_record" && <MedicalHighlights petId={id} />}
           </main>
         </div>
       </div>

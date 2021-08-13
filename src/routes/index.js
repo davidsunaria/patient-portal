@@ -35,8 +35,8 @@ import ArticleDetail from "patient-portal-components/Dashboard/ArticleDetail.js"
 import EditPet from "patient-portal-pages/Pet/EditPet.js";
 import AddPet from "patient-portal-pages/Pet/AddPet.js";
 import Layout from "patient-portal-components/Layout/Layout.js";
+import TreatmentReports from "patient-portal-pages/Pet/TreatmentReports.js";
 
-//console.log(this.props);
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
 	return (
@@ -97,6 +97,8 @@ const Routes = () => {
 						<PrivateRoute path={"/invoice-detail/:id"} component={InvoiceDetail} exact />
 
 						<PrivateRoute path={"/pets"} component={Pets} exact />
+						<PrivateRoute path={"/treatment-record-reports/:id"} component={TreatmentReports} exact />
+						
 						<PrivateRoute path={"/pet-profile/:id"} component={ProfileView} exact />
 						<PrivateRoute path={"/edit-pet/:id"} component={EditPet} exact />
 						<PrivateRoute path={"/create-pet"} component={AddPet} exact />

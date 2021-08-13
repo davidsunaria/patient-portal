@@ -1,23 +1,29 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import moment from "moment";
 import REPORT_DOWNLOAD from "patient-portal-images/report-download.svg";
 import REPORT_SHARE from "patient-portal-images/report-share.svg";
+import Header from "patient-portal-components/Header/Header.js";
+import Divider from "patient-portal-components/Divider/Divider.js";
+import Sidebar from "patient-portal-components/Sidebar/Sidebar.js";
+import { formatDate } from "patient-portal-utils/Service";
+import GO_BACK_IMAGE from "patient-portal-images/goBack.svg";
 
-
-const Reports = (props) => {
+const TreatmentReports = () => {
+  const history = useHistory();
+  const { id } = useParams();
   const [isBottom, setIsBottom] = useState(false);
   const [records, setRecords] = useState([]);
   const [page, setPage] = useState(0);
   const [perPage, setPerPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [nextPageUrl, setNextPageUrl] = useState(null);
-  const getReports = useStoreActions((actions) => actions.pet.getReports);
+  const getReportsByVisit = useStoreActions((actions) => actions.pet.getReportsByVisit);
   const response = useStoreState((state) => state.pet.response);
   const isLoading = useStoreState((state) => state.common.isLoading);
   const lastScrollTop = useRef(0);
+  const [petData, setPetData] = useState({});
 
   const handleScroll = useCallback((e) => {
     const scrollTop = parseInt(Math.max(e?.srcElement?.scrollTop));
@@ -35,15 +41,17 @@ const Reports = (props) => {
   }, []);
 
   useEffect(async () => {
-    let formData = {
-      page: 1, pagesize: 20
+    if (id) {
+      let formData = {
+        page: 1, pagesize: 20
+      }
+      await getReportsByVisit({ id: id, query: formData });
+      window.addEventListener('scroll', (e) => handleScroll(e), true);
+      return () => {
+        window.removeEventListener('scroll', (e) => handleScroll(e))
+      };
     }
-    await getReports({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
-    window.addEventListener('scroll', (e) => handleScroll(e), true);
-    return () => {
-      window.removeEventListener('scroll', (e) => handleScroll(e))
-    };
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (response) {
@@ -57,6 +65,7 @@ const Reports = (props) => {
           setPerPage(per_page);
 
           let serverRespone = data.files.data;
+          console.log("serverRespone", serverRespone);
           if (current_page == 1) {
             setRecords(serverRespone);
           }
@@ -79,64 +88,60 @@ const Reports = (props) => {
   }, [isBottom, nextPageUrl]);
   //Get data on when scrolled
   useEffect(async () => {
-    if (page && page > 1) {
+    if (page && page > 1 && id) {
       console.log('Get next page ', page)
       let formData = {
         page: page,
         pagesize: perPage,
       }
       console.log('Get next page payload ', formData)
-      await getReports({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
+      await getReportsByVisit({ id: id, query: formData });
     }
-  }, [page]);
-  const getDuedate = (val) => {
-    let status = 'orange';
-    const { due_date } = val;
-    let start = moment(due_date).format("YYYY-MM-DD");
-    let end = moment().format("YYYY-MM-DD");
-    let difference = moment(start).diff(end, 'days')
-    if (difference >= 14) {
-      status = ""
-    } else if (difference < 0) {
-      status = "red"
-    }
-    return status;
-  }
+  }, [page, id]);
+
   const downloadFile = (val) => {
     window.open(val.file_full_url, "_blank");
   }
   return (
     <React.Fragment>
 
-      {records && records.length > 0 ? (
-        records.map((val, index) => (
-          <div key={index} className="box recordCard">
-            <div className="reportAction onHover">
-              <img src={REPORT_DOWNLOAD} onClick={() => downloadFile(val)} />
-            </div>
-            <div className="recordDate">
-              <span>{(val.created) ? formatDate(val?.created, 1, false) : ''}</span>
-              <p>{(val.created) ? formatDate(val?.created, 2, false) : ''}</p>
-            </div>
-            <p className="reportType"><label>{val?.title}</label></p>
-          </div>
+      <div className="content_outer">
+
+        <Sidebar activeMenu="pets" />
+        <div className="right_content_col">
+          <main>
+            <a className="backTo" onClick={() => history.push("/pets")}>
+              <img src={GO_BACK_IMAGE} /> Back to pets
+            </a>
+            <Header heading={"Reports"} subHeading={"Here we can view all reports related to visit"} />
+            <Divider />
+
+            {records && records.length > 0 ? (
+              records.map((val, index) => (
+                <div key={index} className="box recordCard">
+                  <div className="reportAction onHover">
+                    <img src={REPORT_DOWNLOAD} onClick={() => downloadFile(val)} />
+                    {/* <Link><img src={REPORT_SHARE}/></Link> */}
+                  </div>
+                  <div className="recordDate">
+                    <span>{(val.created) ? formatDate(val?.created, 1, false) : ''}</span>
+                    <p>{(val.created) ? formatDate(val?.created, 2, false) : ''}</p>
+                  </div>
+                  <p className="reportType"><label>{val?.title}</label></p>
+                </div>
 
 
-        ))
+              ))
 
-      ) : (
-        <div className="noRecord">
-          <p>No record found:</p>
+            ) : (
+              <div className="noRecord">
+                <p><label>No record found:</label></p>
+              </div>
+            )}
+          </main>
         </div>
-      )}
-
-
-
-
-
+      </div>
     </React.Fragment>
   );
-
-};
-
-export default Reports;
+}
+export default TreatmentReports;

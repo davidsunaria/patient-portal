@@ -30,6 +30,9 @@ body {
   background:#F2F4F7;
   height: auto !important;
 }
+pre {
+    font-family: 'Open Sans', sans-serif;
+}
 input {
   outline: none;
 }
@@ -1108,7 +1111,7 @@ select.fieldInput{
         justify-content:center;
         margin:1% 5px;
 
-        &:hover{
+        &:hover, &.active{
             background:$primary;
             color:#ffffff;
             cursor:pointer;
@@ -1553,6 +1556,9 @@ input:checked + .slider:after {
 .bankDetail{
     width:41%;
     padding-top:20px;
+    color: #4B4B5A;
+    font-size: 13px;
+    white-space: pre-wrap;
 }
 .loginIntro{
     font-size:12px;
@@ -2099,4 +2105,15 @@ input:checked + .slider:after {
 
 .expandCalender{
     width: 100%;
+}
+
+.fieldBox .timeslotPopup{
+    width:100%;
+    position:static;
+    box-shadow:inherit;
+    padding:0px;
+    justify-content: space-around;
+}
+.fieldBox .timeslotPopup span{
+    width: 21.8%;
 }

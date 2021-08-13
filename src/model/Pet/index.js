@@ -1,10 +1,10 @@
 import { action, thunk } from "easy-peasy";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import { getPets, getPet, getTreatmentRecord, getVaccinationRecord, getAntiParasiticRecord, getReports, downloadReport, getMedicalRecords, createPet, updatePet, getSpecies, getBreeds, deletePet } from "patient-portal-api/PetApi.js";
+import { getPets, getPet, getTreatmentRecord, getVaccinationRecord, getAntiParasiticRecord, getReports, downloadReport, getMedicalRecords, createPet, updatePet, getSpecies, getBreeds, deletePet, getReportsByVisit } from "patient-portal-api/PetApi.js";
 const petModel = {
   response: [],
-  isPetDeleted:false,
+  isPetDeleted: false,
   setResponse: action((state, payload) => {
     state.response = payload;
   }),
@@ -134,7 +134,7 @@ const petModel = {
       await actions.setResponse(response);
     }
   }),
-  
+
   getBreeds: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getBreeds(payload);
@@ -157,6 +157,17 @@ const petModel = {
       toast.success(<ToastUI message={response.message} type={"Success"} />);
       getStoreActions().common.setLoading(false);
       await actions.setIsPetDeleted(true);
+    }
+  }),
+  getReportsByVisit: thunk(async (actions, payload, { getStoreActions }) => {
+    getStoreActions().common.setLoading(true);
+    let response = await getReportsByVisit(payload);
+    if (response.statuscode != 200) {
+      toast.error(<ToastUI message={response.message} type={"Error"} />);
+      getStoreActions().common.setLoading(false);
+    } else {
+      getStoreActions().common.setLoading(false);
+      await actions.setResponse(response);
     }
   })
 };

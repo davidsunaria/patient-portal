@@ -38,7 +38,7 @@ $text-color:#4B4B5A;
 	.dateTimeOuter{flex-direction:column;}
 	.AppointmentDate, .AppointmentDate.timeSlot{width:100%;margin-bottom:10px;}
 	.timeslotPopup {width: 100%;}
-	.timeslotPopup span {width: 46%;}
+	.timeslotPopup span {width: 46%!important;}
 	.titleBtn{padding-right: 0px;}
 	.titleBtn button{position: static;}
 	.appRating div span{width: 25px;}

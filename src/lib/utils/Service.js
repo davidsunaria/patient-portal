@@ -199,3 +199,22 @@ export function formatDate(date,fragment,isTime=false) {
     return  moment(date).format("h:mm A");
   }
 } 
+
+/*
+  style = 'currency', 'decimal' or 'percent'
+*/
+export function numberFormat(amount, style, minimumFractionDigits, maximumFractionDigits) {
+  let locale                = 'en'; // todo
+  let currency              = "INR"; //'usd'; // todo
+  style                     = style || 'decimal';
+  maximumFractionDigits     = maximumFractionDigits || 2;
+
+  var options               = {style: style, currency: currency,currencyDisplay: 'code', maximumFractionDigits: maximumFractionDigits, minimumFractionDigits: minimumFractionDigits};
+  var formatter             = new Intl.NumberFormat(locale, options);
+  if ( amount && amount !== null && amount !== '' && amount > 0 ) {
+    return formatter.format(amount);
+    //return givenNumber.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0];
+  }
+
+  return formatter.format(0);
+}
