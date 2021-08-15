@@ -21,9 +21,14 @@ const Header = (props) => {
   }
   return (
     <React.Fragment>
-      {props.backEnabled && (
+      {props.backEnabled && (!props.backTitle || !props.backAction ) && (
         <a className="backTo" onClick={() => goToUrl()}>
           <img src={GO_BACK_IMAGE} /> Back to Profile
+        </a>
+      )}
+       {props.backEnabled && props.backTitle && props.backAction && (
+        <a className="backTo" onClick={() => handleNav(props.backAction)}>
+          <img src={GO_BACK_IMAGE} /> {props.backTitle}
         </a>
       )}
       <div className="titleBtn">

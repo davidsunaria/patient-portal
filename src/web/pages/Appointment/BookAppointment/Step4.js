@@ -37,9 +37,11 @@ const Step4 = (props) => {
                             defaultValue={""}
                         />
                     </div>
+
+                   
                     <div className="appointmentBtns">
-                        <button className="button default mr-2">Back</button>
-                        <button className="button primary ml-auto">
+                        <button className="button default mr-2" onClick={() => props.onBack(3)}>Back</button>
+                        <button className="button primary ml-auto" onClick={() => props.onNext(5)}>
                             Continue
                         </button>
                     </div>

@@ -23,7 +23,7 @@ const ProfileView = (props) => {
         <div className="right_content_col">
           <main>
             <Header
-              backEnabled={true}
+              backEnabled={false}
               heading={"Profile"}
               subHeading={"Here we can get detail of pet"}
               hasBtn={true}

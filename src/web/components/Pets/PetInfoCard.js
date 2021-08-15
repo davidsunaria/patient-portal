@@ -1,15 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import Overlay from "patient-portal-components/Overlay/Overlay.js";
-import CAT_IMAGE from "patient-portal-images/cat.png";
-import DOG_IMAGE from "patient-portal-images/dog.png";
 import ADD_PET_IMG from "patient-portal-images/add-pet.svg";
 import EDIT_PET_IMG from "patient-portal-images/editPet.svg";
 import DELETE_PET_IMG from "patient-portal-images/deletePet.svg";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import { deletePet } from "../../../api/PetApi";
 
 const PetInfoCard = (props) => {
   const history = useHistory();

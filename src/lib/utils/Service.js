@@ -198,6 +198,15 @@ export function formatDate(date,fragment,isTime=false) {
   if(date && fragment == 4){
     return  moment(date).format("h:mm A");
   }
+  if(date && fragment == 5){
+    return  moment(date, "HH:mm:ss").format("h:mm A");
+  }
+  //Get Day Name By Day Number
+  if(date && fragment == 6){
+    return  moment().day(date).format("dddd")
+  }
+  
+  
 } 
 
 /*
@@ -217,4 +226,53 @@ export function numberFormat(amount, style, minimumFractionDigits, maximumFracti
   }
 
   return formatter.format(0);
+}
+
+
+/*
+time12h = '02:55 AM', '05:30:00 am'
+*/
+export function convertTime12to24(time12h, isSeconds=false) {
+  const [time, modifier] = time12h.split(' ');
+  let [hours, minutes] = time.split(':');
+  if (hours === '12') {
+    hours = '00';
+  }
+
+  if (modifier.toLowerCase() === 'pm') {
+    hours = parseInt(hours, 10) + 12;
+  }
+  if(isSeconds) {
+    return hours + ':' + minutes + ':00';
+  } else {
+    return hours + ':' + minutes;
+  }
+}
+
+/*
+time = '14:45:55', '19:50'
+*/
+export function convertTime24to12 (time) {
+  time = time.toString().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+  if (time.length > 1) {
+    time = time.slice (1);
+    time[0] = +time[0] % 12 || 12;
+    if(time[0] < 10) {
+      time[0] = '0'+time[0]
+    }
+  }
+  delete time[time.length-1];
+  return time.join ('');
+}
+
+/*
+time = '14:45:55', '19:50'
+*/
+export function getAmPm (time) {
+  time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+  if (time.length > 1) {
+    time = time.slice (1);
+    return +time[0] < 12 ? 'AM' : 'PM';
+  }
+  return null;
 }

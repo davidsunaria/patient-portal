@@ -57,14 +57,17 @@ const InvoiceDetail = (props) => {
                 <Sidebar activeMenu="invoices" />
                 <div className="right_content_col">
                     <main>
-                        <a className="backTo" onClick={() => history.push("/invoices")}>
-                            <img src={GO_BACK} /> Back to Invoice
-                        </a>
+
+
                         <Header
+                            backEnabled={true}
+                            backTitle={"Back to Invoices"}
+                            backAction={"invoices"}
                             heading={"My Invoices"}
                             subHeading={"Here you can your invoices list"}
                             hasBtn={false}
                         />
+
                         <div className="box px-4">
                             <div className="row pt-4">
                                 <div className="col-xl-2 col-md-4 mb-4">

@@ -7,75 +7,135 @@ import DIRECTION_IMAGE from "patient-portal-images/directionDrop.svg";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { formatDate } from "patient-portal-utils/Service";
 import RescheduleAppointment from "patient-portal-components/Appointment/RescheduleAppointment";
+import CancellationPolicy from "patient-portal-components/Appointment/CancellationPolicy";
+
+import Contact from "patient-portal-components/Appointment/Contact";
+import { join } from "lodash-es";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import { useHistory } from "react-router-dom";
 
 const AppointmentCard = (props) => {
+    const history = useHistory();
+    const style = { color: 'red' };
+    const [appointmentId, setAppointmentId] = useState(null);
     const [modal, setModal] = useState(false);
+    const [contactModal, setContactModal] = useState(false);
+    const [policyModal, setPolicyModal] = useState(false);
+
     const [modalData, setModalData] = useState({});
+    const [policyData, setPolicyData] = useState({});
+    const [contactModalData, setContactModalData] = useState({});
     const [clinicData, setClinicData] = useState({});
     const getClinicInfo = useStoreActions((actions) => actions.appointment.getClinicInfo);
+    const getCancellationPolicy = useStoreActions((actions) => actions.appointment.getCancellationPolicy);
+
     const isRescheduled = useStoreState((state) => state.appointment.isRescheduled);
+    const isCancelled = useStoreState((state) => state.appointment.isCancelled);
     const response = useStoreState((state) => state.appointment.response);
 
     const toggle = (val) => {
         setModal(!modal);
-        setModalData(val);
+        if (val) {
+            setModalData(val);
+        }
     };
+
     useEffect(() => {
-        if(isRescheduled){
+        if (isRescheduled) {
             setModal(!modal);
         }
     }, [isRescheduled]);
-    const showContact = async(clinicId) => {
-        await getClinicInfo(clinicId);
+    const showContact = async (e) => {
+        if (!e.target) {
+            await getClinicInfo(e);
+        }
+        setContactModal(!contactModal);
     }
+
     useEffect(() => {
         if (response) {
-          let { status, statuscode, data } = response;
-          if (statuscode && statuscode === 200) {
-            if (data?.clinic) {
-                setClinicData(data?.clinic);
+            let { status, statuscode, data } = response;
+            if (statuscode && statuscode === 200) {
+                if (data?.clinic) {
+                    setClinicData(data?.clinic);
+                }
+                if (data.cancellationPolicy) {
+                    setPolicyData(data.cancellationPolicy);
+                }
             }
-          }
         }
-      }, [response]);
+    }, [response]);
+    const cancelApp = async (e) => {
+        if (!e.target) {
+            await getCancellationPolicy();
+        }
+        setAppointmentId(e);
+        setPolicyModal(!policyModal);
+        // confirmAlert({
+        //   message: 'Are you sure to cancel this appointment?',
+        //   buttons: [
+        //     {
+        //       label: 'Yes',
+        //       onClick: () => props.onCancelAppointment(id)
+        //     },
+        //     {
+        //       label: 'No',
+        //       onClick: () => {}
+        //     }
+        //   ]
+        // });
+    };
+    useEffect(() => {
+        if (isCancelled) {
+            setPolicyModal(false);
+        }
+    }, [isCancelled]);
 
+    const joinMeeting = (meetingId) => {
+        window.open(`${process.env.REACT_APP_MEETING_URL}/${meetingId}`, "_blank");
+    }
     return (
         <React.Fragment>
             <RescheduleAppointment data={modalData} modal={modal} toggle={toggle} />
+            <Contact data={clinicData} modal={contactModal} toggle={showContact} />
+            <CancellationPolicy onCancelAppointment={props.onCancelAppointment} id={appointmentId} data={policyData} modal={policyModal} toggle={cancelApp} />
+
 
             {props.data && props.data.length > 0 ? (
                 props.data.map((val, index) => (
-                    <div key={index} className="box mb-2">
+                    // onClick={() => history.push(`/appointment-detail/${val?.id}`)}
+                    <div key={index} className="box mb-2 onHover" >
                         <div className="appointmentList">
                             <div className="dropdownArrow">
                                 <ul className="dropdownOption">
-                                
-                                    {props.type == "upcoming" && val.status != "canceled" && <li>
+
+                                    {(props.type == "upcoming" && val.status != "canceled") && <li>
                                         <a className="onHover" onClick={() => toggle(val)}>
                                             <img src={CALENDER_IMAGE} />
                                             Reschedule
                                         </a>
                                     </li>
                                     }
-                                    {props.type == "upcoming" && <li>
-                                        <a>
+                                    {(props.type == "upcoming" && val.status != "canceled") && <li>
+                                        <a onClick={() => cancelApp(val?.id)} >
                                             <img src={CANCEL_IMAGE} />
                                             Cancel
                                         </a>
                                     </li>}
                                     <li>
                                         <a onClick={() => showContact(val?.clinic_id)}>
-                                            <img src={CONTACT_IMAGE}  />
+                                            <img src={CONTACT_IMAGE} />
                                             Contact
                                         </a>
                                     </li>
-                                    {props.type == "upcoming" && <li>
-                                        <a>
+                                    {(props.type == "upcoming" && val.appointment_type == "virtual") && <li>
+                                        <a onClick={() => joinMeeting(val?.meetingId)}>
                                             <img src={JOIN_IMAGE} />
                                             Join
                                         </a>
                                     </li>}
-                                    {props.type == "past" && <li>
+                                    {(props.type == "past" || val.appointment_type == "in_person") && <li>
                                         <a>
                                             <img src={DIRECTION_IMAGE} />
                                             Get Direction
@@ -111,6 +171,10 @@ const AppointmentCard = (props) => {
                                     <label>Note</label>
                                     <p>{val?.appointment_notes}</p>
                                 </div>
+                                {val?.status == "canceled" && <div className="col-lg-3 col-sm-6 py-2">
+                                    <label>Status</label>
+                                    <p className="colorRed">Canceled</p>
+                                </div>}
                             </div>
                         </div>
                     </div>

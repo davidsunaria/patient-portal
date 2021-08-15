@@ -14,8 +14,11 @@ const Appointment = (props) => {
   const history = useHistory();
   const getUpcomingAppointments = useStoreActions((actions) => actions.appointment.getUpcomingAppointments);
   const getPastAppointments = useStoreActions((actions) => actions.appointment.getPastAppointments);
+  const cancelAppointment = useStoreActions((actions) => actions.appointment.cancelAppointment);
   const response = useStoreState((state) => state.appointment.response);
   const isRescheduled = useStoreState((state) => state.appointment.isRescheduled);
+  const isCancelled = useStoreState((state) => state.appointment.isCancelled);
+  
   const [appointments, setAppointments] = useState([]);
   const [selectedTab, setSelectedTab] = useState("upcoming");
   const tabsData = [
@@ -50,24 +53,30 @@ const Appointment = (props) => {
   }, [response]);
 
   useEffect(async () => {
-    if (isRescheduled) {
+    if (isRescheduled || isCancelled) {
       if (selectedTab == "upcoming") {
         await getUpcomingAppointments(getLoggedinUserId());
       }
     }
-  }, [isRescheduled]);
+  }, [isRescheduled, isCancelled]);
+
+  const onCancelAppointment = async(id) => {
+    await cancelAppointment({ id: id, clientId: getLoggedinUserId() });
+  }
   return (
     <React.Fragment>
       <div className="content_outer">
         <Sidebar activeMenu="appointment" />
         <div className="right_content_col">
           <main>
+          
             <Header
               heading={"Appointments"}
               subHeading={"Here we can book or reschedule your appointments"}
               hasBtn={true}
               btnName={"calendar"}
               btnTitle="Book an appointment"
+              onClick={"book-appointment"}
             />
             <Divider showIcon={false} />
             <Tabs
@@ -75,7 +84,7 @@ const Appointment = (props) => {
               selectedTab={selectedTab}
               tabsHandler={(tab) => tabsHandler(tab)}
             />
-            <AppointmentCard data={appointments} type={selectedTab} />
+            <AppointmentCard onCancelAppointment={onCancelAppointment} data={appointments} type={selectedTab} />
           </main>
         </div>
       </div>

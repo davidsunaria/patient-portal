@@ -152,12 +152,13 @@ const AddPet = (props) => {
         <Sidebar activeMenu="pets" />
         <div className="right_content_col">
           <main>
-            <Header
+          <Header
               backEnabled={true}
+              backTitle={"Back to pets"}
+              backAction={"pets"}
               heading={"Add Pet"}
-              subHeading={"Here we can add or edit pet information"}
+              subHeading={"Here we can add pet information"}
               hasBtn={false}
-
             />
            
             <div className="box">

@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { getLoggedinUserId, getUser } from "patient-portal-utils/Service";
 import Notifications from "patient-portal-components/Dashboard/Notifications"
 import APPOINTMENT_BOOK_IMG from "patient-portal-images/appointmentBtn.svg";
+import Header from "patient-portal-components/Header/Header.js";
 
 const Dashboard = (props) => {
   const history = useHistory();
@@ -55,11 +56,16 @@ const Dashboard = (props) => {
         <Sidebar activeMenu="dashboard" />
         <div className="right_content_col">
           <main>
-            <div className="titleBtn">
-              <h1 className="title">Hello, {userData?.firstname} {" "} {userData?.lastname}</h1>
-              <div className="titleDiscription">Today’s Recommendations</div>
-              <button className="button primary"><img src={APPOINTMENT_BOOK_IMG} />&nbsp;Book an Appointment</button>
-            </div>
+            <Header
+              backEnabled={false}
+              heading={`Hello , ${userData?.firstname} ${" "} ${userData?.lastname}`}
+              subHeading={"Today’s Recommendations"}
+              hasBtn={true}
+              btnName={"calendar"}
+              btnTitle="Book an Appointment"
+              onClick={"book-appointment"}
+            />
+            
             <div className="box mb-4">
               <div className="row">
                 <Notifications onDelete={onDelete} type={"upcoming"} data={upcoming} />

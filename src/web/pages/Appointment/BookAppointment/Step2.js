@@ -4,30 +4,21 @@ const Step2 = (props) => {
     return (
         <div className="row">
             <div className="col-md-8">
+                {/* {JSON.stringify(props)} */}
                 <div className="box">
                     <div className="checkboxOuter">
-                        <label className="customCheckbox">
-                            <input type="checkbox" name /> DCC Animal Hospital -
-                            Gurgaon
-                        </label>
-                        <label className="customCheckbox">
-                            <input type="checkbox" name /> DCC Animal Hospital -
-                            Delhi
-                        </label>
-                        <label className="customCheckbox">
-                            <input type="checkbox" name /> DCC Japan
-                        </label>
-                        <label className="customCheckbox">
-                            <input type="checkbox" name /> DCC Apollo
-                        </label>
-                        <label className="customCheckbox">
-                            <input type="checkbox" name /> Patient Portal Clinic
-                        </label>
+                        {
+                            props.data && props.data.length > 0 && props.data.map((val, index) => (
+                                <label key={index} className="customCheckbox">
+                                    <input type="radio" onChange={(e) => props.onSubmit(e)} name="client_id" value={val?.id} /> {val?.clinic_name}
+                                </label>
+                            ))
+                        }
                     </div>
                 </div>
                 <div className="appointmentBtns">
-                    <button className="button default mr-2">Back</button>
-                    <button className="button primary ml-auto">Continue</button>
+                    <button className="button default mr-2" onClick={() => props.onBack(1)}>Back</button>
+                    <button className="button primary ml-auto" onClick={() => props.onNext(3)}>Continue</button>
                 </div>
             </div>
             <div className="col-md-4">

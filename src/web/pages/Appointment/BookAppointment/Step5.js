@@ -83,9 +83,9 @@ const Step5 = (props) => {
                             </div>
                         </div>
                     </div>
-
+                    
                     <div className="appointmentBtns m-0">
-                        <button className="button primary mr-2">Back</button>
+                        <button className="button primary mr-2" onClick={() => props.onBack(1)}>Back</button>
                     </div>
                 </div>
             </div>

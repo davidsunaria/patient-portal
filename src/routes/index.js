@@ -36,6 +36,7 @@ import EditPet from "patient-portal-pages/Pet/EditPet.js";
 import AddPet from "patient-portal-pages/Pet/AddPet.js";
 import Layout from "patient-portal-components/Layout/Layout.js";
 import TreatmentReports from "patient-portal-pages/Pet/TreatmentReports.js";
+import AppointmentDetail from "patient-portal-pages/Appointment/AppointmentDetail.js";
 
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -92,6 +93,7 @@ const Routes = () => {
 
 						<PrivateRoute path={"/appointment"} component={Appointment} exact />
 						<PrivateRoute path={"/book-appointment"} component={BookAppointment} exact />
+						<PrivateRoute path={"/appointment-detail/:id"} component={AppointmentDetail} exact />
 						<PrivateRoute path={"/feedback"} component={Feedback} exact />
 						<PrivateRoute path={"/invoices"} component={Invoice} exact />
 						<PrivateRoute path={"/invoice-detail/:id"} component={InvoiceDetail} exact />

@@ -16,7 +16,7 @@ const Article = (props) => {
 
       {props.data && props.data.length > 0 ? (
         props.data.map((result, index) => (
-          <div key={index} className="box p-0 articleBlock" onClick={() => go(result.id)}>
+          <div key={index} className="box p-0 articleBlock onHover" onClick={() => go(result.id)}>
             <div className="articleImg">
               <img src={`${process.env.REACT_APP_MEDIA_URL}articles/${result.image}`} />
               <a className="shareIcon">

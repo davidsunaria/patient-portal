@@ -172,14 +172,16 @@ const EditPet = (props) => {
         <Sidebar activeMenu="pets" />
         <div className="right_content_col">
           <main>
-            <Header
+          <Header
               backEnabled={true}
-              heading={"Add Pet"}
-              subHeading={"Here we can add or edit pet information"}
+              backTitle={"Back to pets"}
+              backAction={"pets"}
+              heading={"Edit Pet"}
+              subHeading={"Here we can edit pet information"}
               hasBtn={false}
-
             />
-           
+
+            
             <div className="box">
               <Formik
                 enableReinitialize={true}

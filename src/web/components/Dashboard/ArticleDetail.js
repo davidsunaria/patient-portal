@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import GO_BACK_IMG from "patient-portal-images/goBack.svg";
 import APPOINTMENT_BOOK_IMG from "patient-portal-images/appointmentBtn.svg";
 import SHARE_IMG from "patient-portal-images/share1.svg";
+import Header from "patient-portal-components/Header/Header.js";
 
 const ArticleDetail = (props) => {
   const history = useHistory();
@@ -40,12 +41,25 @@ const ArticleDetail = (props) => {
         <Sidebar activeMenu="dashboard" />
         <div className="right_content_col">
           <main>
-            <div className="titleBtn">
+          <Header
+              backEnabled={true}
+              backTitle={"Back to Dashboard"}
+              backAction={"dashboard"}
+              heading={"Article Detail"}
+              subHeading={"Here we can get detail of pet"}
+              hasBtn={true}
+              btnName={"calendar"}
+              btnTitle="Book an Appointment"
+              onClick={"book-appointment"}
+            />
+            
+
+            {/* <div className="titleBtn">
               <a className="backTo" onClick={goToDashboard}><img src={GO_BACK_IMG} /> Back to Dashboard</a>
               <h1 className="title">Article Detail</h1>
               <div className="titleDiscription">Here we can get detail of pet</div>
               <button className="button primary"><img src={APPOINTMENT_BOOK_IMG} />&nbsp;Book an Appointment</button>
-            </div>
+            </div> */}
 
             <div className="articleOuter">
               <div className="box articleBlock articleDetail">

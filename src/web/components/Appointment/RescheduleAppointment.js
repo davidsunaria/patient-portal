@@ -83,7 +83,7 @@ const RescheduleAppointment = (props) => {
             </div>
 
             <div className="fieldOuter">
-              <label className="fieldLabel">Date</label>
+              <label className="fieldLabel">Select Date</label>
               <div className="fieldBox fieldIcon">
                 <DatePicker
                   includeDates={enabledDates}
@@ -99,10 +99,10 @@ const RescheduleAppointment = (props) => {
             </div>
 
             <div className="fieldOuter">
-              <label className="fieldLabel">Time slots</label>
+              <label className="fieldLabel">Select Timeslot</label>
               <div className="fieldBox">
                 <div className="timeslotPopup">
-                  {timeslots && timeslots.length > 0 ? (
+                  {date && timeslots && timeslots.length > 0 ? (
                     timeslots.map((val, index) => (
                       <span className={ (val == time) ? "active" : ''} key={index} onClick={() => selectTime(val)}>{val}</span>
                     ))
