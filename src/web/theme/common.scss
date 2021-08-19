@@ -856,6 +856,42 @@ table{
     }
 }
 
+.customCheckbox1{
+    display:block;
+    padding-left:24px;
+    position:relative;
+    font-size: 13px;
+    color:#88879C;
+    text-align:left;
+    margin-bottom:15px;
+    padding-top:2px;
+    cursor:pointer;
+    
+    input{
+        position:absolute;
+        left:0px;
+        top:2px;
+        appearance: none;
+        -webkit-appearance: none;
+
+        &:after{
+            width:16px;
+            height:16px;
+            @include border-radius(2px);
+            border:1px solid #4B4B5A;
+            content:'';
+            position:absolute;
+        }
+        &:checked:after{
+            background-image:url('~patient-portal-images/checkbox.svg');
+            background-repeat:no-repeat;
+            background-position:center;
+            background-color:$primary;
+            border-color:$primary;
+        }
+    }
+}
+
 .customRadio{
     display:block;
     padding-left:22px;
@@ -1065,6 +1101,12 @@ select.fieldInput{
         font-size: 13px;
         display: block;
         padding: 13px 5px;
+    }
+}
+.AppointmentDate{
+    padding-left:0px;
+    .react-datepicker__input-container{
+        padding-left:80px;
     }
 }
 .timeSlot{
@@ -2120,4 +2162,25 @@ input:checked + .slider:after {
 
 .colorRed{
 color: red!important;
+}
+
+.petSetMaxLimit{
+    max-height: 365px;
+    overflow-y: auto;
+}
+.notiRow{
+    position:relative;
+}
+.notiCross{
+    position: absolute;
+    right: 10px;
+    top: 20px;
+}
+.highlightDiv{
+    background: #90ee9047!important;
+}
+.questionFont{
+    font-size: 11px;
+    margin-bottom: 8px;
+    margin-top: -7px;
 }

@@ -91,6 +91,7 @@ const SignupComplete = (props) => {
                         value={values.email}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        autoComplete="off"
                       />
                     </div>
                     <ErrorMessage name="email" component="span" className="errorMsg" />
@@ -108,10 +109,11 @@ const SignupComplete = (props) => {
                         placeholder="Enter new password"
                         id="password"
                         name="password"
-                        type="text"
+                        type="password"
                         value={values.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        autoComplete="off"
                       />
                     </div>
                     <ErrorMessage name="password" component="span" className="errorMsg" />
@@ -129,10 +131,11 @@ const SignupComplete = (props) => {
                         placeholder="Confirm new password"
                         id="password_confirmation"
                         name="password_confirmation"
-                        type="text"
+                        type="password"
                         value={values.password_confirmation}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        autoComplete="off"
                       />
                     </div>
                     <ErrorMessage name="password_confirmation" component="span" className="errorMsg" />

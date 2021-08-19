@@ -13,12 +13,17 @@ import Header from "patient-portal-components/Header/Header.js";
 
 const Dashboard = (props) => {
   const history = useHistory();
-  const getDashboard = useStoreActions((actions) => actions.dashboard.getDashboard);
-  const response = useStoreState((state) => state.dashboard.response);
   const [userData, setUserData] = useState(getUser());
   const [articles, setArticles] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [completed, setCompleted] = useState([]);
+  const [petId, setPetId] = useState(null);
+  const [visitId, setVisitId] = useState(null);
+
+  const getPetByVisit = useStoreActions((actions) => actions.dashboard.getPetByVisit);
+  const getDashboard = useStoreActions((actions) => actions.dashboard.getDashboard);
+  const response = useStoreState((state) => state.dashboard.response);
+
 
   useEffect(async () => {
     await getDashboard(getLoggedinUserId());
@@ -28,12 +33,19 @@ const Dashboard = (props) => {
     if (response) {
       let { status, statuscode, data } = response;
       if (statuscode && statuscode === 200) {
-        setArticles(data.articles);//
-        setUpcoming(data.upcoming_data);
-        setCompleted(data.completed_data);
+        if (data?.articles) {
+          setArticles(data.articles);
+        }
+        if (data?.upcoming_data) {
+          setUpcoming(data.upcoming_data);
+        }
+        if (data?.completed_data) {
+          setCompleted(data.completed_data);
+        }
       }
     }
   }, [response]);
+
 
   const onDelete = useCallback((id, type) => {
     if (type == "upcoming") {
@@ -48,11 +60,67 @@ const Dashboard = (props) => {
     [upcoming, completed],
   )
 
+  const handleNotiEvent = useCallback((event) => {
+    switch (event.event_type) {
+
+      case "questionnaire":
+        history.push(`/questionnaire/${event.event_id}`);
+        break;
+      case "appointment_cancel":
+        history.push(`/appointment-detail/${event.event_id}`);
+        break;
+
+      case "appointment_cancel":
+        history.push(`/appointment-detail/${event.event_id}`);
+        break;
+
+      case "appointment_reschedule":
+        history.push(`/appointment-detail/${event.event_id}`);
+        break;
+
+      case "appointment":
+        history.push(`/appointment-detail/${event.event_id}`);
+        break;
+      case "treatment_instruction":
+        history.push(`/treatments/${event.event_id}`);
+        break;
+
+      case "deworming":
+        getPetId(event);
+        break;
+
+      case "anti_ectoparasite":
+        getPetId(event);
+        break;
+
+      case "vaccination":
+        getPetId(event);
+        break;
+      case "invoice":
+        history.push(`/invoice-detail/${event.event_id}`);
+        break;
+
+      case "visit":
+        getPetId(event);
+        break;
+
+      case "feedback":
+        history.push(`/feedback/${event.event_id}`);
+        break;
+    }
+  },
+    [history],
+  )
+  const getPetId = useCallback(async (event) => {
+    await getPetByVisit({ id: event.event_id, event: event.event_type, history });
+  },
+    [history],
+  )
 
   return (
     <React.Fragment>
       <div className="content_outer">
-        
+
         <Sidebar activeMenu="dashboard" />
         <div className="right_content_col">
           <main>
@@ -65,11 +133,11 @@ const Dashboard = (props) => {
               btnTitle="Book an Appointment"
               onClick={"book-appointment"}
             />
-            
+
             <div className="box mb-4">
               <div className="row">
-                <Notifications onDelete={onDelete} type={"upcoming"} data={upcoming} />
-                <Notifications onDelete={onDelete} type={"completed"} data={completed} />
+                <Notifications onNotiEvent={handleNotiEvent} onDelete={onDelete} type={"upcoming"} data={upcoming} />
+                <Notifications onNotiEvent={handleNotiEvent} onDelete={onDelete} type={"completed"} data={completed} />
               </div>
             </div>
 
@@ -80,7 +148,7 @@ const Dashboard = (props) => {
           </main>
         </div>
       </div>
-    
+
     </React.Fragment>
   );
 };

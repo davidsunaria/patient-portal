@@ -60,6 +60,7 @@ const InvoiceDetail = (props) => {
 
 
                         <Header
+                        key={1}
                             backEnabled={true}
                             backTitle={"Back to Invoices"}
                             backAction={"invoices"}
@@ -99,7 +100,7 @@ const InvoiceDetail = (props) => {
                             </div>
 
                             <div className="formSubtitle  mb-2">Product Details</div>
-                            <Table headers={tableHeaders} tableData={tableData} />
+                            <Table key={1} headers={tableHeaders} tableData={tableData} />
 
                             <div className="formSubtitle  mb-2">Payment Details</div>
 

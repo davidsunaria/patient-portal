@@ -1,12 +1,18 @@
-import React, { useState, useRef, forwardRef } from "react";
+import React, { useState, useRef, forwardRef, useEffect } from "react";
 import DOWN_ARROW_IMAGE from "patient-portal-images/down-arrow.svg";
 import Select from 'react-select';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatDate } from "patient-portal-utils/Service";
+import moment from "moment";
+import Other from "patient-portal-pages/Appointment/BookAppointment/Other.js"
+
 
 const Step3 = (props) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isOpenAccordian, setIsOpenAccordian] = useState(false);
+    const [openTimePopup, setOpenTimePopup] = useState(false);
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const calendarRef = useRef();
 
@@ -15,46 +21,61 @@ const Step3 = (props) => {
         setIsOpen(!isOpen);
         calendarRef.current.setOpen(!isOpen)
     };
+    const showTime = () => {
+        if (props.formData.date) {
+            setOpenTimePopup(!openTimePopup);
+        }
 
+    }
 
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
         <React.Fragment>
             <span onClick={onClick} ref={ref}>
-           
                 <div className="highlightDate">
-                    Jun
+                    {props.formData.date && moment(value).format('MMM')}
                     <br />
-                    30
+                    {props.formData.date && moment(value).format('DD')}
                 </div>
                 <label >
-                    Wednesday
+                    {props.formData.date && moment(value).format('dddd')}
                     <br />
-                    June 30th 2021
+
+                    {props.formData.date && moment(value).format('MMMM Do YYYY')}
                 </label>
             </span>
         </React.Fragment>
-
-
-        // <button className="example-custom-input" >
-        //     {value}
-        // </button>
     ));
+
+    const handleTimeSelect = (e, name, val) => {
+        setSelectedTimeSlot(val);
+        props.onSubmit(e, name, val);
+        showTime();
+    }
+    const handleAccordian = (index) => {
+        setIsOpenAccordian(index);
+    }
+    useEffect(() => {
+        if (!props.formData.date) {
+            setSelectedTimeSlot("");
+        }
+    }, [props.formData.date]);
+
     return (
         <div className="row">
             <div className="col-md-8">
                 {
                     props.data && props.data.length > 0 && props.data.map((val, index) => (
-                        <div key={index} className="box accordionOuter">
-                            <div className="accordionHeader">
+                        <div key={index} className="box accordionOuter" >
+                            <div className={"accordionHeader"} onClick={() => handleAccordian(index)}>
                                 {val?.service_category} <img src={DOWN_ARROW_IMAGE} />
                             </div>
-                            <div className="accordionContent">
+                            <div className={"accordionContent"}>
                                 <div className="checkboxOuter">
 
                                     {
                                         val.services && val.services.length > 0 && val.services.map((value, innerIndex) => (
                                             <label key={innerIndex} className="customCheckbox d-flex justify-content-between">
-                                                <input type="radio" onChange={(e) => props.onSubmit(e)} name="service_id" value={value?.id} />
+                                                <input type="radio" checked={value?.id == props.formData.service_id ? true : false} onChange={(e) => props.onSubmit(e, "service_id", value)} name="service_id" value={value?.id} />
                                                 <span className="serviceName">
                                                     {value?.name}
                                                 </span>
@@ -71,124 +92,69 @@ const Step3 = (props) => {
                 }
 
 
-                <div className="subtitle mt-4 mb-3">Select Doctor</div>
-                <p className="p-text">
-                    We recommend selecting “Any” doctor to give you the most
-                    available options for dates &amp; timeslots. Please select a
-                    specific doctor only if you specifically need to meet them.
-                    If you are unable to find a suitable timeslot for your
-                    selected doctor, please try “Any” or another doctor.
-                </p>
+                {props?.providers && props?.providers.length > 0 && <React.Fragment> <div className="subtitle mt-4 mb-3">Select Doctor</div>
+                    <p className="p-text">
+                        We recommend selecting “Any” doctor to give you the most
+                        available options for dates &amp; timeslots. Please select a
+                        specific doctor only if you specifically need to meet them.
+                        If you are unable to find a suitable timeslot for your
+                        selected doctor, please try “Any” or another doctor.
+                    </p>
 
-                <div className="row my-3">
-                    <div className="col-xl-4 col-md-6">
-                        <div className="fieldOuter mb-0">
-                            <div className="fieldBox">
+                    <div className="row my-3">
+                        <div className="col-xl-4 col-md-6">
+                            <div className="fieldOuter mb-0">
+                                <div className="fieldBox">
 
-                                <Select
-                                    className={"fieldInput"}
-                                    isSearchable={true}
-                                    id="provider_id"
-                                    name="provider_id"
-                                    options={props?.providers}
-                                    value={props.formData.provider_id}
-                                    onChange={(e) => props.onSubmit(e,"provider_id")}
-                                />
+                                    <Select
+                                        className={"customSelectBox"}
+                                        isSearchable={true}
+                                        id="provider_id"
+                                        name="provider_id"
+                                        options={props?.providers}
+                                        value={props.formData.provider_id}
+                                        onChange={(e) => props.onSubmit(e, "provider_id")}
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </div></React.Fragment>
+                }
+
+
                 <div className="dateTimeOuter">
                     <div className="AppointmentDate">
-                        {/* <div className="highlightDate">
-                            Jun
-                            <br />
-                            30
-                        </div>
-                        <label onClick={(e) => handleClick(e)}>
-                            Wednesday
-                            <br />
-                            June 30th 2021
-                        </label> */}
+
                         <DatePicker
+                            includeDates={props.enabledDates}
                             selected={props.formData.date}
-                            onChange={(e) => props.onSubmit(e,'date')}
+                            onChange={(e) => props.onSubmit(e, 'date', props.formData?.date)}
                             customInput={<ExampleCustomInput />}
                         />
-                        {/* <DatePicker
-
-                            ref={calendarRef}
-                            className="fieldInput"
-                            value={props.formData.date}
-                            onChange={(e) => props.onSubmit(e)}
-                        /> */}
-
                     </div>
-                    {/* <div className="AppointmentDate timeSlot">
-                        <label>10:00 am</label>
-                        <div className="timeslotPopup">
-                            <span>10:00 am</span>
-                            <span>10:05 am</span>
-                            <span>10:15 am</span>
-                            <span>10:20 am</span>
-                            <span>10:30 am</span>
-                            <span>10:45 am</span>
-                            <span>11:15 am</span>
-                            <span>11:30 am</span>
-                            <span>11:45 am</span>
-                            <span>12:00 pm</span>
-                            <span>12:15 pm</span>
-                            <span>12:30 pm</span>
+
+                    <div className="AppointmentDate timeSlot" >
+                        <label onClick={() => showTime()}>{ (selectedTimeSlot) ? selectedTimeSlot : props.formData.slot}</label>
+                        {props.formData && props.formData.date != undefined && <div className={(openTimePopup == false) ? "timeslotPopup d-none" : "timeslotPopup"}>
+                            {props.slot && props.slot.length > 0 && props.slot.map((val, index) => (
+                                <span key={index} onClick={(e) => handleTimeSelect(e, "slot", val)}>{val}</span>
+                            ))}
                         </div>
-                    </div> */}
+                        }
+                    </div>
                 </div>
+               
+                {props.enabledDates.length == 0 && <p className="p-text">
+                    No slots available. Kindly select another doctor or "Any" or another service.
+                </p>}
                 <div className="appointmentBtns">
                     <button className="button default mr-2" onClick={() => props.onBack(2)}>Back</button>
                     <button className="button primary ml-auto" onClick={() => props.onNext(4)}>Continue</button>
                 </div>
 
             </div>
-            <div className="col-md-4">
-                <div className="box appointmentDetail">
-                    <section>
-                        <label>Location</label>
-                        <p>DCC Animal Hospital - Delhi Ms. Deepika</p>
-                    </section>
-                    <section>
-                        <label>Services</label>
-                        <p>
-                            <span>Teleconsultation</span> - 30 minutes
-                            Telehealth Consultation
-                        </p>
-                    </section>
-                    <section>
-                        <label>Date &amp; Time</label>
-                        <p className="d-flex mb-2 mt-2 align-items-start">
-                            <img src="assets/img/calendar.svg" />{" "}
-                            <span className="ml-1">
-                                Wednesday, June 30th 2021
-                            </span>
-                        </p>
-                        <p className="d-flex align-items-start">
-                            <img src="assets/img/time.svg" />{" "}
-                            <span className="ml-1">10:00 am</span>
-                        </p>
-                    </section>
-                    <section>
-                        <label>Select Pet</label>
-                        <p>
-                            <span>Rolly</span> - Cat
-                        </p>
-                    </section>
-                    <section>
-                        <label>Your Info</label>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit.
-                        </p>
-                    </section>
-                </div>
-            </div>
+
+            <Other other={props.other} />
         </div>
     );
 };

@@ -104,7 +104,7 @@ const AppointmentCard = (props) => {
 
             {props.data && props.data.length > 0 ? (
                 props.data.map((val, index) => (
-                    // onClick={() => history.push(`/appointment-detail/${val?.id}`)}
+                    // 
                     <div key={index} className="box mb-2 onHover" >
                         <div className="appointmentList">
                             <div className="dropdownArrow">
@@ -129,20 +129,22 @@ const AppointmentCard = (props) => {
                                             Contact
                                         </a>
                                     </li>
-                                    {(props.type == "upcoming" && val.appointment_type == "virtual") && <li>
+                                    {(props.type == "upcoming" && val.status != "canceled" && val.appointment_type == "virtual") && <li>
                                         <a onClick={() => joinMeeting(val?.meetingId)}>
                                             <img src={JOIN_IMAGE} />
                                             Join
                                         </a>
                                     </li>}
                                     {(props.type == "past" || val.appointment_type == "in_person") && <li>
-                                        <a>
+                                    <a target="_blank" href={`http://maps.google.com/?${val?.clinic?.address}`}>
                                             <img src={DIRECTION_IMAGE} />
                                             Get Direction
                                         </a>
                                     </li>}
                                 </ul>
                             </div>
+                            {/* onClick={() => (val.status != "canceled") ? history.push(`/appointment-detail/${val?.id}`)  : ""} */}
+                            <div onClick={() =>  history.push(`/appointment-detail/${val?.id}`) }>
                             <div className="row">
                                 <div className="col pb-2">
                                     <label>Clinic</label>
@@ -175,6 +177,7 @@ const AppointmentCard = (props) => {
                                     <label>Status</label>
                                     <p className="colorRed">Canceled</p>
                                 </div>}
+                            </div>
                             </div>
                         </div>
                     </div>

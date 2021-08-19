@@ -141,3 +141,22 @@ export const getReportsByVisit = async (payload) => {
     return error.response.data;
   }
 };
+
+
+
+export const getDewormingDetail = async (formData) => {
+  try {
+    let response = await axiosApi.get(`${apiUrl}/pet/deworming-detail/${formData}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+export const getVaccinationDetail = async (formData) => {
+  try {
+    let response = await axiosApi.get(`${apiUrl}/pet/vaccination-detail/${formData}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

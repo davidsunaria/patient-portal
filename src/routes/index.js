@@ -37,6 +37,7 @@ import AddPet from "patient-portal-pages/Pet/AddPet.js";
 import Layout from "patient-portal-components/Layout/Layout.js";
 import TreatmentReports from "patient-portal-pages/Pet/TreatmentReports.js";
 import AppointmentDetail from "patient-portal-pages/Appointment/AppointmentDetail.js";
+import Questionnaire from "patient-portal-pages/Questionnaire/Questionnaire.js";
 
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -88,22 +89,25 @@ const Routes = () => {
 
 						<PrivateRoute path={"/profile"} component={Profile} exact />
 						<PrivateRoute path={"/edit-profile"} component={EditProfile} exact />
-						<PrivateRoute path={"/treatments"} component={Treatment} exact />
+						<PrivateRoute path={"/treatments/:id?"} component={Treatment} exact />
 						<PrivateRoute path={"/treatment-detail/:id"} component={TreatmentDetail} exact />
 
 						<PrivateRoute path={"/appointment"} component={Appointment} exact />
 						<PrivateRoute path={"/book-appointment"} component={BookAppointment} exact />
 						<PrivateRoute path={"/appointment-detail/:id"} component={AppointmentDetail} exact />
-						<PrivateRoute path={"/feedback"} component={Feedback} exact />
+						<PrivateRoute path={"/feedback/:id"} component={Feedback} exact />
 						<PrivateRoute path={"/invoices"} component={Invoice} exact />
 						<PrivateRoute path={"/invoice-detail/:id"} component={InvoiceDetail} exact />
 
 						<PrivateRoute path={"/pets"} component={Pets} exact />
 						<PrivateRoute path={"/treatment-record-reports/:id"} component={TreatmentReports} exact />
 						
-						<PrivateRoute path={"/pet-profile/:id"} component={ProfileView} exact />
+						<PrivateRoute path={"/pet-profile/:id/:type?/:visitId?"} component={ProfileView} exact />
 						<PrivateRoute path={"/edit-pet/:id"} component={EditPet} exact />
 						<PrivateRoute path={"/create-pet"} component={AddPet} exact />
+
+						
+						<PrivateRoute path={"/questionnaire/:id"} component={Questionnaire} exact />
 						<Route
 							path="/"
 							render={() => <Redirect to="/login" />}

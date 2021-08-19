@@ -9,11 +9,12 @@ import 'react-intl-tel-input/dist/main.css';
 import { LanguageContext } from "patient-portal-context/LanguageContext.js";
 import { Formik, ErrorMessage } from "formik";
 import { useAuthValidation } from "patient-portal-utils/validations/auth/AuthSchema";
+import { Spinner } from 'react-bootstrap';
 
 const Signup = (props) => {
   const history = useHistory();
   const {RegisterSchema} = useAuthValidation();
-
+  const isLoading = useStoreState((state) => state.common.isLoading);
   const sendOTP = useStoreActions((actions) => actions.auth.sendOTP);
   const isOtpSend = useStoreState((state) => state.auth.isOtpSend);
 
@@ -95,8 +96,7 @@ const Signup = (props) => {
                     </div>
                     {errors.phone && <span className="errorMsg">{errors.phone}</span>}
                   </div>
-                 
-                  <button className="loginBtn">Send OTP</button>
+                  <button type="submit" disabled={isLoading} className="loginBtn">Send OTP</button>
 
                   <div className="alreadyAccount">
                     <p>Already have an account?</p>

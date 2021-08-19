@@ -12,6 +12,8 @@ const VaccinationRecord = (props) => {
     const [nextPageUrl, setNextPageUrl] = useState(null);
 
     const getVaccinationRecord = useStoreActions((actions) => actions.pet.getVaccinationRecord);
+    const getVaccinationDetail = useStoreActions((actions) => actions.pet.getVaccinationDetail);
+
     const response = useStoreState((state) => state.pet.response);
     const isLoading = useStoreState((state) => state.common.isLoading);
 
@@ -31,15 +33,6 @@ const VaccinationRecord = (props) => {
         }, 0)
     }, []);
 
-    // useEffect(() => {
-    //     console.log("next", nextPageUrl)
-    //     window.addEventListener('scroll', (e) => handleScroll(e, nextPageUrl), true);
-    //     return () => {
-    //         console.log("scroll removed");
-    //         window.removeEventListener('scroll', (e) => handleScroll(e, nextPageUrl))
-    //     };
-    // }, [nextPageUrl])
-
     useEffect(async () => {
         let formData = {
             page: 1, pagesize: 20
@@ -58,6 +51,12 @@ const VaccinationRecord = (props) => {
         if (response) {
             let { status, statuscode, data } = response;
             if (statuscode && statuscode === 200) {
+                if (data && data.vaccination_details !== undefined) {
+                    let serverRespone= [];
+                    serverRespone.push(data?.vaccination_details);
+                    setRecords(serverRespone);
+                  }
+
                 if (data && data.vaccination !== undefined) {
                     const { current_page, next_page_url, per_page } = data.vaccination;
 
@@ -125,6 +124,13 @@ const VaccinationRecord = (props) => {
         }
         return status;
     }
+
+    useEffect(async() => {
+        if(props.petId && props.visitId){
+          console.log("heloo");
+          await getVaccinationDetail(props.visitId);
+        }
+    }, [props.petId,props.visitId]);
     return (
         <React.Fragment>
             <div >

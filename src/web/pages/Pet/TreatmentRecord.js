@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
 import { Link, useHistory, useParams } from "react-router-dom";
 import PRESCRIPTION_IMAGE from "patient-portal-images/dropPrescription.svg";
 import INVOICE_IMAGE from "patient-portal-images/dropInvoice.svg";
 import REPORT_IMAGE from "patient-portal-images/dropReport.svg";
-import { apiUrl } from "patient-portal-utils/HttpService.js";
 
 
 const TreatmentRecord = (props) => {
@@ -58,6 +57,17 @@ const TreatmentRecord = (props) => {
       window.open(downloadUrl, "_blank");
     }
   }, [downloadUrl]);
+
+  const executeScroll = (id) => {
+    const element = document.getElementById(id);
+    setTimeout(() => {
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 500);
+    return { cls: "highlightDiv timelineDetail" }
+  }
+
   return (
     <React.Fragment>
       <div className="box mb-2">
@@ -65,9 +75,10 @@ const TreatmentRecord = (props) => {
 
           {data && data.length > 0 ? (
             data.map((result, index) => (
-              <div key={index} className="timelineSection">
+              <div key={index} className={"timelineSection"} >
+
                 <div className="timelineTime">{getDate(result, 3)} | {getDate(result, 4)}</div>
-                <div className="timelineDetail">
+                <div id={result.id} className={(result.id == props.visitId) ? (executeScroll(result.id).cls) : "timelineDetail"}>
 
                   {(result.prescription.length > 0 || result.invoice) && <div className="dropdownArrow">
                     <ul className="dropdownOption">

@@ -33,6 +33,7 @@ const TreatmentDetail = (props) => {
       if (statuscode && statuscode === 200) {
         if (data?.treatment_instruction) {
           setInstruction(data.treatment_instruction);
+          props.onRender(data?.treatment_instruction?.instruction.type);
         }
       }
     }

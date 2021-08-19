@@ -19,6 +19,10 @@ export function clearUserData() {
   localStorage.removeItem("userData");
   localStorage.removeItem("isLoggedIn");
   localStorage.removeItem("temp_signup_data");
+  localStorage.removeItem("profileStatus");
+  localStorage.removeItem("dateFormat");
+  localStorage.removeItem("timeFormat");
+  
 }
 export function getAccountData() {
   return localStorage.getItem("accountData");
@@ -54,7 +58,7 @@ export function logoutCompletely() {
 }
 
 export function setTempData(payload) {
-  localStorage.setItem("temp_signup_data",  JSON.stringify(payload));
+  localStorage.setItem("temp_signup_data", JSON.stringify(payload));
 }
 export function removeTempData() {
   localStorage.removeItem("temp_signup_data");
@@ -185,42 +189,42 @@ export function getTimeFormat() {
     return 'HH:mm';
 }
 
-export function formatDate(date,fragment,isTime=false) {
-  if(date && fragment == 1){
-   return  moment(date).format("DD");
+export function formatDate(date, fragment, isTime = false) {
+  if (date && fragment == 1) {
+    return moment(date).format("DD");
   }
-  if(date && fragment == 2){
-    return  moment(date).format("MMM, YYYY");
+  if (date && fragment == 2) {
+    return moment(date).format("MMM, YYYY");
   }
-  if(date && fragment == 3){
-    return  moment(date).format("DD MMM YYYY");
+  if (date && fragment == 3) {
+    return moment(date).format("DD MMM YYYY");
   }
-  if(date && fragment == 4){
-    return  moment(date).format("h:mm A");
+  if (date && fragment == 4) {
+    return moment(date).format("h:mm A");
   }
-  if(date && fragment == 5){
-    return  moment(date, "HH:mm:ss").format("h:mm A");
+  if (date && fragment == 5) {
+    return moment(date, "HH:mm:ss").format("h:mm A");
   }
   //Get Day Name By Day Number
-  if(date && fragment == 6){
-    return  moment().day(date).format("dddd")
+  if (date && fragment == 6) {
+    return moment().day(date).format("dddd")
   }
-  
-  
-} 
+
+
+}
 
 /*
   style = 'currency', 'decimal' or 'percent'
 */
 export function numberFormat(amount, style, minimumFractionDigits, maximumFractionDigits) {
-  let locale                = 'en'; // todo
-  let currency              = "INR"; //'usd'; // todo
-  style                     = style || 'decimal';
-  maximumFractionDigits     = maximumFractionDigits || 2;
+  let locale = 'en'; // todo
+  let currency = "INR"; //'usd'; // todo
+  style = style || 'decimal';
+  maximumFractionDigits = maximumFractionDigits || 2;
 
-  var options               = {style: style, currency: currency,currencyDisplay: 'code', maximumFractionDigits: maximumFractionDigits, minimumFractionDigits: minimumFractionDigits};
-  var formatter             = new Intl.NumberFormat(locale, options);
-  if ( amount && amount !== null && amount !== '' && amount > 0 ) {
+  var options = { style: style, currency: currency, currencyDisplay: 'code', maximumFractionDigits: maximumFractionDigits, minimumFractionDigits: minimumFractionDigits };
+  var formatter = new Intl.NumberFormat(locale, options);
+  if (amount && amount !== null && amount !== '' && amount > 0) {
     return formatter.format(amount);
     //return givenNumber.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0];
   }
@@ -232,7 +236,7 @@ export function numberFormat(amount, style, minimumFractionDigits, maximumFracti
 /*
 time12h = '02:55 AM', '05:30:00 am'
 */
-export function convertTime12to24(time12h, isSeconds=false) {
+export function convertTime12to24(time12h, isSeconds = false) {
   const [time, modifier] = time12h.split(' ');
   let [hours, minutes] = time.split(':');
   if (hours === '12') {
@@ -242,7 +246,7 @@ export function convertTime12to24(time12h, isSeconds=false) {
   if (modifier.toLowerCase() === 'pm') {
     hours = parseInt(hours, 10) + 12;
   }
-  if(isSeconds) {
+  if (isSeconds) {
     return hours + ':' + minutes + ':00';
   } else {
     return hours + ':' + minutes;
@@ -252,27 +256,39 @@ export function convertTime12to24(time12h, isSeconds=false) {
 /*
 time = '14:45:55', '19:50'
 */
-export function convertTime24to12 (time) {
-  time = time.toString().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+export function convertTime24to12(time) {
+  time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
   if (time.length > 1) {
-    time = time.slice (1);
+    time = time.slice(1);
     time[0] = +time[0] % 12 || 12;
-    if(time[0] < 10) {
-      time[0] = '0'+time[0]
+    if (time[0] < 10) {
+      time[0] = '0' + time[0]
     }
   }
-  delete time[time.length-1];
-  return time.join ('');
+  delete time[time.length - 1];
+  return time.join('');
 }
 
 /*
 time = '14:45:55', '19:50'
 */
-export function getAmPm (time) {
-  time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+export function getAmPm(time) {
+  time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
   if (time.length > 1) {
-    time = time.slice (1);
+    time = time.slice(1);
     return +time[0] < 12 ? 'AM' : 'PM';
   }
   return null;
+}
+
+
+export function setProfileCompleted(payload) {
+  let data = {
+    isPetCompleted: payload.data?.is_pet,
+    isProfileCompleted: payload.data?.is_profile_completed
+  }
+  localStorage.setItem("profileStatus", JSON.stringify(data));
+}
+export function getProfileCompleted() {
+  return JSON.parse(localStorage.getItem("profileStatus"));
 }

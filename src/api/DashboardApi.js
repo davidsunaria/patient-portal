@@ -27,3 +27,12 @@ export const getArticleDetail = async (formData) => {
   }
 };
 
+
+export const getPetByVisit = async (formData) => {
+  try {
+    let response = await axiosApi.get(`${apiUrl}/get_pet_id_by_visit/${formData}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

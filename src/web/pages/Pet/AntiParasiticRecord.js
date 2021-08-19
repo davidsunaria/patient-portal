@@ -11,10 +11,11 @@ const AntiParasiticRecord = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const getAntiParasiticRecord = useStoreActions((actions) => actions.pet.getAntiParasiticRecord);
+  const getDewormingDetail = useStoreActions((actions) => actions.pet.getDewormingDetail);
   const response = useStoreState((state) => state.pet.response);
   const isLoading = useStoreState((state) => state.common.isLoading);
   const lastScrollTop = useRef(0);
-
+  
   const handleScroll = useCallback((e) => {
     const scrollTop = parseInt(Math.max(e?.srcElement?.scrollTop));
     let st = scrollTop;
@@ -45,6 +46,11 @@ const AntiParasiticRecord = (props) => {
     if (response) {
       let { status, statuscode, data } = response;
       if (statuscode && statuscode === 200) {
+        if (data && data.deworming_details !== undefined) {
+          let serverRespone= [];
+          serverRespone.push(data?.deworming_details);
+          setRecords(serverRespone);
+        }
         if (data && data.deworming !== undefined) {
           const { current_page, next_page_url, per_page } = data.deworming;
 
@@ -111,6 +117,13 @@ const AntiParasiticRecord = (props) => {
     return status;
   }
 
+
+  useEffect(async() => {
+      if(props.petId && props.visitId){
+        console.log("heloo");
+        await getDewormingDetail(props.visitId);
+      }
+  }, [props.petId,props.visitId]);
   return (
     <React.Fragment>
 

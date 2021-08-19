@@ -16,10 +16,12 @@ import QUESTIONNAIRE_IMG from "patient-portal-images/noti-questionnaire.svg";
 import NOTI_CROSS from "patient-portal-images/noti-cross.svg";
 
 const Notifications = (props) => {
+  const history = useHistory();
   const deleteNotification = useStoreActions((actions) => actions.dashboard.deleteNotification);
   const isNotificationDeleted = useStoreState((actions) => actions.dashboard.isNotificationDeleted);
-  const [deletedId, setDeletedId] = useState();
+  const [deletedId, setDeletedId] = useState(null);
   const [type, setType] = useState();
+
   const removeNotification = async (id, type) => {
     setDeletedId(id);
     setType(type);
@@ -36,7 +38,7 @@ const Notifications = (props) => {
   const getImage = (value) => {
     let src, class_used;
 
-    if (value.event_type === "appointment") {
+    if (value.event_type === "appointment" || value.event_type === "appointment_cancel" || value.event_type === "appointment_reschedule") {
       src = APPOINTMENT_IMG;
       class_used = "appointmentNotification";
     }
@@ -56,7 +58,7 @@ const Notifications = (props) => {
       src = ANTI_IMG;
       class_used = "antitickNotification";
     }
-    if (value.event_type === "invoice") {
+    if (value.event_type === "invoice" || value.event_type === "report" ) {
       src = INVOICE_IMG;
       class_used = "invoiceNotification";
     }
@@ -76,92 +78,52 @@ const Notifications = (props) => {
     return { src, class_used };
   }
 
+ 
   return (
     <React.Fragment>
-     
+
       {props.type && props.type == "upcoming" && (<div className="col-sm-6">
         <div className="dashboardTitle">UPCOMING</div>
         <div className="dashboardNotification">
-        {props.data && props.data.length > 0 ? (
-          props.data.map((result, index) => (
-            <div key={index} className={`notify ${getImage(result).class_used}`}>
-              <span><img src={getImage(result).src} /></span>
-              <p>{result?.grammar}</p>
-              <a onClick={() => removeNotification(result.id, "upcoming")}><img src={NOTI_CROSS} /></a>
+          {props.data && props.data.length > 0 ? (
+            props.data.map((result, index) => (
+              <div key={index} className={`notiRow ${getImage(result).class_used}`}>
+                <div className="notify onHover" onClick={() => props.onNotiEvent(result)}>
+                  <span><img src={getImage(result).src} /></span>
+                  <p>{result?.grammar}</p>
+                </div>
+                <a className="notiCross" onClick={() => removeNotification(result.id, "upcoming")}><img src={NOTI_CROSS} /></a>
+              </div>
+            ))
+          ) : (
+            <div className="notify">
+              <p>No data found</p>
             </div>
-          ))
-        ) : (
-          <div className="notify">
-            <p>No data found</p>
-          </div>
-        )}
+          )}
         </div>
-        {/* <div className="notify appointmentNotification">
-          <span><img src="../../../assets/img/noti-appointment.svg" /></span>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          <a href="#"><img src="assets/img/noti-cross.svg" /></a>
-        </div>
-        <div className="notify instructionNotification">
-          <span><img src="assets/img/noti-instruction.svg" /></span>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          <a href="#"><img src="assets/img/noti-cross.svg" /></a>
-        </div>
-        <div className="notify vaccinationNotification">
-          <span><img src="assets/img/noti-vaccination.svg" /></span>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          <a href="#"><img src="assets/img/noti-cross.svg" /></a>
-        </div>
-        <div className="notify dewormingNotification">
-          <span><img src="assets/img/noti-deworming.svg" /></span>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          <a href="#"><img src="assets/img/noti-cross.svg" /></a>
-        </div>
-        <div className="notify antitickNotification">
-          <span><img src="assets/img/noti-antitick.svg" /></span>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          <a href="#"><img src="assets/img/noti-cross.svg" /></a>
-        </div> */}
-
 
       </div>)}
 
       {props.type && props.type == "completed" && (<div className="col-sm-6">
         <div className="dashboardTitle">Completed</div>
         <div className="dashboardNotification">
-        {props.data && props.data.length > 0 ? (
-          props.data.map((result, index) => (
-            <div key={index} className={`notify ${getImage(result).class_used}`}>
-              <span><img src={getImage(result).src} /></span>
-              <p>{result?.grammar}</p>
-              <a onClick={() => removeNotification(result.id, "completed")}><img src={NOTI_CROSS} /></a>
+          {props.data && props.data.length > 0 ? (
+            props.data.map((result, index) => (
+              <div key={index} className={`notiRow ${getImage(result).class_used}`}>
+                <div className="notify onHover" onClick={() =>  props.onNotiEvent(result)}>
+                  <span><img src={getImage(result).src} /></span>
+                  <p>{result?.grammar}</p>
+                </div>
+                <a className="notiCross" onClick={() => removeNotification(result.id, "completed")}><img src={NOTI_CROSS} /></a>
+              </div>
+            ))
+          ) : (
+            <div className="notify">
+              <p>No data found</p>
             </div>
-          ))
-        ) : (
-          <div className="notify">
-            <p>No data found</p>
-          </div>
-        )}
+          )}
         </div>
-        {/* <div className="notify questionnaireNotification">
-          <span><img src="assets/img/noti-questionnaire.svg" /></span>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          <a href="#"><img src="assets/img/noti-cross.svg" /></a>
-        </div>
-        <div className="notify invoiceNotification">
-          <span><img src="assets/img/noti-invoice.svg" /></span>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          <a href="#"><img src="assets/img/noti-cross.svg" /></a>
-        </div>
-        <div className="notify visitNotification">
-          <span><img src="assets/img/noti-visit.svg" /></span>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          <a href="#"><img src="assets/img/noti-cross.svg" /></a>
-        </div>
-        <div className="notify feedbackNotification">
-          <span><img src="assets/img/noti-feedback.svg" /></span>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          <a href="#"><img src="assets/img/noti-cross.svg" /></a>
-        </div> */}
+
       </div>)}
     </React.Fragment>
   )

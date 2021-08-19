@@ -1,31 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
+import { useStoreActions, useStoreState } from "easy-peasy";
+import Other from "patient-portal-pages/Appointment/BookAppointment/Other.js"
 
 const Step4 = (props) => {
+    const getPets = useStoreActions((actions) => actions.pet.getPets);
+    const responsePet = useStoreState((state) => state.pet.response);
+    const [allPets, setAllPets] = useState([]);
+
+    useEffect(async () => {
+        await getPets(getLoggedinUserId());
+    }, []);
+
+    useEffect(() => {
+        if (responsePet) {
+            let { status, statuscode, data } = responsePet;
+            if (statuscode && statuscode === 200) {
+                if (data?.pets) {
+                    setAllPets(data?.pets);
+                }
+            }
+        }
+    }, [responsePet]);
+
     return (
         <div>
             <div className="subtitle mt-4 mb-3">Select Pet</div>
             <div className="row">
                 <div className="col-md-8">
                     <div className="box">
-                        <div className="checkboxOuter">
-                            <label className="customCheckbox d-flex justify-content-between">
-                                <input type="checkbox" name />
-                                <span className="serviceName">
-                                    Browno
-                                    <label className="appointmentSpecies">
-                                        Dog
+                        <div className="checkboxOuter petSetMaxLimit">
+                            {
+                                allPets && allPets.length > 0 && allPets.map((val, index) => (
+                                    <label key={index} className="customCheckbox d-flex justify-content-between">
+                                        <input type="radio" name="pet_id"  checked={val?.id == props.formData.pet_id ? true : false} value={val?.id} onChange={(e) => props.onSubmit(e, "pet", val)} />
+                                        <span className="serviceName">
+                                            {val?.name}
+                                            <label className="appointmentSpecies">
+                                                {val?.speciesmap?.species}
+                                            </label>
+                                        </span>
                                     </label>
-                                </span>
-                            </label>
-                            <label className="customCheckbox d-flex justify-content-between">
-                                <input type="checkbox" name />
-                                <span className="serviceName">
-                                    Rolly
-                                    <label className="appointmentSpecies">
-                                        Cat
-                                    </label>
-                                </span>
-                            </label>
+                                ))
+                            }
+
+
                         </div>
                     </div>
                     <div className="subtitle mt-4 mb-3">
@@ -33,12 +52,14 @@ const Step4 = (props) => {
                     </div>
                     <div className="box">
                         <textarea
+                            value={props.formData.appointment_notes}
+                            name="appointment_notes"
                             className="appointmentNote"
-                            defaultValue={""}
+                            onChange={(e) => props.onSubmit(e)}
                         />
                     </div>
 
-                   
+
                     <div className="appointmentBtns">
                         <button className="button default mr-2" onClick={() => props.onBack(3)}>Back</button>
                         <button className="button primary ml-auto" onClick={() => props.onNext(5)}>
@@ -46,47 +67,7 @@ const Step4 = (props) => {
                         </button>
                     </div>
                 </div>
-                <div className="col-md-4">
-                    <div className="box appointmentDetail">
-                        <section>
-                            <label>Location</label>
-                            <p>DCC Animal Hospital - Delhi Ms. Deepika</p>
-                        </section>
-                        <section>
-                            <label>Services</label>
-                            <p>
-                                <span>Teleconsultation</span> - 30 minutes
-                                Telehealth Consultation
-                            </p>
-                        </section>
-                        <section>
-                            <label>Date &amp; Time</label>
-                            <p className="d-flex mb-2 mt-2 align-items-start">
-                                <img src="assets/img/calendar.svg" />{" "}
-                                <span className="ml-1">
-                                    Wednesday, June 30th 2021
-                                </span>
-                            </p>
-                            <p className="d-flex align-items-start">
-                                <img src="assets/img/time.svg" />{" "}
-                                <span className="ml-1">10:00 am</span>
-                            </p>
-                        </section>
-                        <section>
-                            <label>Select Pet</label>
-                            <p>
-                                <span>Rolly</span> - Cat
-                            </p>
-                        </section>
-                        <section>
-                            <label>Your Info</label>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit.
-                            </p>
-                        </section>
-                    </div>
-                </div>
+                <Other other={props.other} />
             </div>
         </div>
     );

@@ -88,10 +88,11 @@ const ResetPassword = (props) => {
                         placeholder="Enter new password"
                         id="password"
                         name="password"
-                        type="text"
+                        type="password"
                         value={values.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        autoComplete="off"
                       />
                     </div>
                     <ErrorMessage name="password" component="span" className="errorMsg" />
@@ -109,10 +110,11 @@ const ResetPassword = (props) => {
                         placeholder="Enter new password"
                         id="password_confirmation"
                         name="password_confirmation"
-                        type="text"
+                        type="password"
                         value={values.password_confirmation}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        autoComplete="off"
                       />
                     </div>
                     <ErrorMessage name="password_confirmation" component="span" className="errorMsg" />

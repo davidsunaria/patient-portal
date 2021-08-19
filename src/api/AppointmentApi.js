@@ -106,7 +106,68 @@ export const getProviders = async (formData) => {
 
 export const getProviderSchedule = async (formData) => {
   try {
-    let response = await axiosApi.get(`${apiUrl}/service_for/${formData.formData.clinic_id}/${formData.type}`);
+    let response = await axiosApi.post(`${apiUrl}/provider_slots`, formData);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+export const getProviderSlots = async (formData) => {
+  try {
+    let response = await axiosApi.post(`${apiUrl}/slots`, formData);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const createAppointment = async (formData) => {
+  try {
+    let response = await axiosApi.post(`${apiUrl}/appointment/create`, formData);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const getProviderName = async (formData) => {
+  try {
+    let response = await axiosApi.post(`${apiUrl}/check_doctor`, formData);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+export const getFeedbackDetail = async (formData) => {
+  try {
+    let response = await axiosApi.get(`${apiUrl}/feedback/questions/${formData}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+
+export const saveFeedback = async (formData) => {
+  try {
+    let response = await axiosApi.post(`${apiUrl}/save/feedback/${formData.clientId}/${formData.invoiceId}`, formData.formData);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+export const getQuestionnaireDetail = async (formData) => {
+  try {
+    let response = await axiosApi.get(`${apiUrl}/get_questionnaire_details/${formData}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const uploadFile = async (formData) => {
+  try {
+    let response = await axiosApi.post(`${apiUrl}/upload/file`, formData);
     return response.data;
   } catch (error) {
     return error.response.data;

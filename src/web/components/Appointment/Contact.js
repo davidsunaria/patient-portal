@@ -12,7 +12,25 @@ import { formatDate } from "patient-portal-utils/Service";
 
 const Contact = (props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [clnicOpen, setClinicOpen] = useState(false);
 
+  useEffect(() => {
+    if (props.data.business_hours) {
+      props.data.business_hours && props.data.business_hours.length > 0 && props.data.business_hours.map((val, index) => {
+        if (val?.day == moment().day()) {
+          let format = 'HH:mm:ss';
+          let beforeTime = moment(val?.from_time, format);
+          let time = moment();
+          let afterTime = moment(val?.to_time, format);
+          if (time.isBetween(beforeTime, afterTime)) {
+            setClinicOpen(true);
+          } else {
+            setClinicOpen(false);
+          }
+        }
+      });
+    }
+  }, [props.data.business_hours]);
   return (
     <React.Fragment>
       <Modal isOpen={props.modal}  >
@@ -24,7 +42,7 @@ const Contact = (props) => {
               </a>
 
             </div>
-            <p className="p-text mb-4">Hospital - <span className="openStatus">Open</span></p>
+            <p className="p-text mb-4">Hospital - <span className={clnicOpen == true ? "openStatus" : "colorRed" }>{clnicOpen == true ? "Open" : "Close"}</span></p>
 
             <div className="addressRow mapImg">
               <div className="addressIcon">
@@ -33,7 +51,7 @@ const Contact = (props) => {
               <div className="addressInfo">
                 <label>Address</label>
                 <p>{props.data?.address}</p>
-                <img src={MAP_IMAGE} className="map" />
+                <a className="onHover" target="_blank" href={`http://maps.google.com/?${props.data?.address}`}><img src={MAP_IMAGE} className="map" /></a>
               </div>
             </div>
 
@@ -64,10 +82,10 @@ const Contact = (props) => {
               </div>
               <div className="addressInfo">
                 <label>Operating hours</label>
-                
+
                 {props.data.business_hours && props.data.business_hours.length > 0 ? (
                   props.data.business_hours.map((val, index) => (
-                    <div key={index} className={val?.day == moment().day()? "operationalHours todayHours" : "operationalHours"}>
+                    <div key={index} className={val?.day == moment().day() ? "operationalHours todayHours" : "operationalHours"}>
                       <label>{formatDate(val?.day, 6, false)}</label>
                       <span>{formatDate(val?.from_time, 5, false)} - {formatDate(val?.to_time, 5, false)}</span>
                     </div>

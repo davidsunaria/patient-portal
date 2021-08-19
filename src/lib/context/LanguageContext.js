@@ -7,14 +7,11 @@ const LanguageProvider = (props) => {
     const [labelData, setLabelData] = useState("");
 
     const value = useMemo(() => ({ labelData, setLabelData }), [labelData]);
-    const getTranslations = useStoreActions(
-        (actions) => actions.auth.getTranslations
-    );
+    const getTranslations = useStoreActions((actions) => actions.auth.getTranslations);
 
     useEffect(async () => {
-        let data = await getTranslations();
-        console.log(data);
-        setLabelData(data);
+        //let data = await getTranslations();
+        //setLabelData(data);
     }, []);
     return (
         <LanguageContext.Provider value={value}>

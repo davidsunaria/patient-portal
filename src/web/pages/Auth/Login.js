@@ -81,7 +81,7 @@ const Login = (props) => {
                         value={values.user_name}
                         onChange={handleChange}
                         onBlur={handleBlur}
-
+                    autoComplete="off"
                       />
 
 
@@ -104,18 +104,17 @@ const Login = (props) => {
                         placeholder="Enter your password"
                         id="password"
                         name="password"
-                        type="text"
+                        type="password"
                         value={values.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
-
+                        autoComplete="off"
                       />
 
                     </div>
                     <ErrorMessage name="password" component="span" className="errorMsg" />
                   </div>
-                  <button type="submit" disabled={isLoading} className="loginBtn">{isLoading && <Spinner animation="border" size="sm" />}
-                    {(isLoading) ? 'Processing' : 'Log In'}</button>
+                  <button type="submit" disabled={isLoading} className="loginBtn">Log In</button>
 
 
                   <div className="alreadyAccount">

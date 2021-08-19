@@ -104,8 +104,7 @@ const ForgotPassword = (props) => {
                     {errors.phone && <span className="errorMsg">{errors.phone}</span>}
                   </div>
 
-                  <button disabled={isLoading} type="submit" className="loginBtn">{isLoading && <Spinner animation="border" size="sm" />}
-                    {(isLoading) ? 'Processing' : 'Send OTP'}</button>
+                  <button disabled={isLoading} type="submit" className="loginBtn">Send OTP</button>
 
                   <div className="alreadyAccount">
                     <p>Already have an account?</p>

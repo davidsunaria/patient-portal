@@ -64,9 +64,9 @@ const AppointmentDetail = () => {
                         <div className="appointmentConfirmText">{appointmentData?.clinic?.address}</div>
 
                         <div className="appointmentConfirmIcons">
-                          <a><img src={LOCATION_IMAGE} /></a>
-                          <a><img src={CONTACT_IMAGE} /></a>
-                          <a><img src={CALENDER_IMAGE} /></a>
+                          <a target="_blank" href={`http://maps.google.com/?${appointmentData?.clinic?.address}`}><img src={LOCATION_IMAGE} /></a>
+                          <a href={`tel:${appointmentData?.phone_code}`}><img src={CONTACT_IMAGE} /></a>
+                          {/* <a><img src={CALENDER_IMAGE} /></a> */}
                         </div>
                       </div>
                       <div className="appointmentConfirmSection">
