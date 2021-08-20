@@ -30,17 +30,17 @@ const AddPet = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState("");
   const [showBreedName, setShowBreedName] = useState(false);
-  
+  const [preview, setPreview] = useState();
   const [formData, setFormData] = useState({
     name: '',
-    species: {value: '', label: ''},
-    breed: {value: '', label: ''},
+    species: { value: '', label: '' },
+    breed: { value: '', label: '' },
     breed_name: "",
     gender: '',
     dob: '',
     weight: '',
     microchip_no: '',
-    tags: '',
+    tags: [],
     neutered: '',
     profile_image: ''
   });
@@ -62,14 +62,14 @@ const AddPet = (props) => {
     let formData = new FormData();
     formData.append("name", pageData.name);
     formData.append("species", pageData.species);
-    formData.append("breed", (pageData.breed == "other") ? "Other" :  pageData.breed);
-    formData.append("breed_name",pageData.breed == "other" ? pageData.breed_name : "");
+    formData.append("breed", (pageData.breed == "other") ? "Other" : pageData.breed);
+    formData.append("breed_name", pageData.breed == "other" ? pageData.breed_name : "");
     formData.append("gender", pageData.gender);
     formData.append("dob", pageData.dob);
     formData.append("neutered", (pageData.neutered) ? pageData.neutered : "");
     formData.append("profile_image", (file) ? file : '');
     formData.append("client_id", getLoggedinUserId());
-    formData.append("weight", pageData.weight);
+    formData.append("weight", (pageData.weight !== null && pageData.weight !== undefined) ? pageData.weight : "");
     formData.append("tags", (pageData.tags) ? pageData.tags : "");
     formData.append("microchip_no", (pageData.microchip_no) ? pageData.microchip_no : '');
     formData.append("mcd_no", (pageData.mcd_no) ? pageData.mcd_no : '');
@@ -107,7 +107,7 @@ const AddPet = (props) => {
             value: "other", label: "Other"
           });
         }
-       
+
         setAllBreeds(resultSet);
       }
     }
@@ -146,13 +146,24 @@ const AddPet = (props) => {
     };
   };
 
+  useEffect(() => {
+    if (!file) {
+      setPreview(undefined);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
+    // free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [file]);
+
   return (
     <React.Fragment>
       <div className="content_outer">
         <Sidebar activeMenu="pets" />
         <div className="right_content_col">
           <main>
-          <Header
+            <Header
               backEnabled={true}
               backTitle={"Back to pets"}
               backAction={"pets"}
@@ -160,12 +171,12 @@ const AddPet = (props) => {
               subHeading={"Here we can add pet information"}
               hasBtn={false}
             />
-           
+
             <div className="box">
               <Formik
                 enableReinitialize={true}
                 initialValues={formData}
-                onSubmit={async (values, {resetForm}) => {
+                onSubmit={async (values, { resetForm }) => {
                   //setFormData(JSON.stringify(values, null, 2))
                   addPet(values);
                   resetForm({});
@@ -182,12 +193,14 @@ const AddPet = (props) => {
                     handleChange,
                     handleBlur,
                     handleSubmit,
-                    handleReset
+                    handleReset,
+                    setFieldValue
                   } = props;
                   return (
                     <form className="profileForm" onSubmit={handleSubmit}>
                       <div className="editPic">
-                        <img src={DEFAULT_PET} />
+                        {file && <img src={`${preview}`} />}
+                        {!file && <img src={DEFAULT_PET} />}
                         <a className="editPicOverlay">
                           <img src={EDIT_PROFILE_IMAGE} />
                           <input type="file" onChange={onFileChange} />
@@ -196,7 +209,7 @@ const AddPet = (props) => {
                       </div>
 
                       <div className="formSubtitle">Profile Information</div>
-                      
+
                       <div className="row mb-2">
                         <div className="col-sm-6">
                           <div className="fieldOuter">
@@ -226,6 +239,7 @@ const AddPet = (props) => {
                             <label className="fieldLabel">Species<span className="required">*</span></label>
                             <div className="fieldBox">
                               <Select
+                                placeholder={"Select species"}
                                 className={
                                   errors.species && errors.species
                                     ? "customSelectBox error"
@@ -241,7 +255,7 @@ const AddPet = (props) => {
                                   let event = { target: { name: 'species', value: selectedOption } }
                                   handleChange(event);
                                   setSelectedSpecies(selectedOption.value);
-                                  if(selectedOption.value != "Other"){
+                                  if (selectedOption.value != "Other") {
                                     props.setFieldValue("breed_name", "");
                                     setShowBreedName(false);
                                   }
@@ -251,7 +265,7 @@ const AddPet = (props) => {
                                   handleBlur({ target: { name: 'species' } });
                                 }}
                               />
-                              
+
                               <ErrorMessage name="[species.value]" component="span" className="errorMsg" />
                             </div>
                           </div>
@@ -263,6 +277,7 @@ const AddPet = (props) => {
                             <label className="fieldLabel">Breed<span className="required">*</span></label>
                             <div className="fieldBox">
                               <Select
+
                                 className={
                                   errors.breed && touched.breed
                                     ? "customSelectBox error"
@@ -277,11 +292,11 @@ const AddPet = (props) => {
                                 onChange={selectedOption => {
                                   let event = { target: { name: 'breed', value: selectedOption } }
                                   handleChange(event);
-                                  if(selectedOption.value == "other"){
+                                  if (selectedOption.value == "other") {
                                     props.setFieldValue("breed_name", "");
                                     setShowBreedName(true);
                                   }
-                                  else{
+                                  else {
                                     props.setFieldValue("breed_name", "");
                                     setShowBreedName(false);
                                   }
@@ -295,7 +310,7 @@ const AddPet = (props) => {
                           </div>
                         </div>
 
-                        { showBreedName && <div className="col-sm-6">
+                        {showBreedName && <div className="col-sm-6">
                           <div className="fieldOuter">
                             <label className="fieldLabel">Breed Name<span className="required">*</span></label>
                             <div className="fieldBox">
@@ -342,7 +357,7 @@ const AddPet = (props) => {
                             <div className="fieldBox fieldIcon">
 
                               <DatePicker
-                              
+                                placeholderText="DOB"
                                 ref={calendarRef}
                                 className="fieldInput"
                                 value={values.dob}
@@ -356,8 +371,8 @@ const AddPet = (props) => {
                                 }}
                               />
                               <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
-                           
-                            <ErrorMessage name="dob" component="span" className="errorMsg" />
+
+                              <ErrorMessage name="dob" component="span" className="errorMsg" />
                             </div>
                           </div>
                         </div>
@@ -372,7 +387,7 @@ const AddPet = (props) => {
                                 id="weight"
                                 name="weight"
                                 type="text"
-                                value={values.weight}
+                                value={values.weight || ""}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                               />
@@ -419,17 +434,15 @@ const AddPet = (props) => {
                           <div className="fieldOuter">
                             <label className="fieldLabel">Tags</label>
                             <div className="fieldBox">
-                              <input
+                              <TagsInput
+                              placeholder="Enter tags"
                                 className="fieldInput"
-                                placeholder=""
-                                id="tags"
                                 name="tags"
-                                type="text"
                                 value={values.tags}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                                onChange={tags => {
+                                  setFieldValue("tags", tags);
+                                }}
                               />
-
                             </div>
                           </div>
                         </div>
@@ -455,7 +468,7 @@ const AddPet = (props) => {
 
                       <div className="mt-2 mb-3">
                         <button type="submit" className="button primary  mr-2">Save</button>
-                        <button className="button default" onClick={ () => history.push("/pets")}>Cancel</button>
+                        <button className="button default" onClick={() => history.push("/pets")}>Cancel</button>
                       </div>
                     </form>
                   );

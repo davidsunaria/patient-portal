@@ -16,7 +16,6 @@ const Sidebar = (props) => {
   const [showSubmenu, setShowSubMenu] = useState(false);
   const [hideLeftSection, setHideLeftSection] = useState(false);
   const [menu, setMenu] = useState("");
-  //const loggedInUser = useStoreState((state) => state.doctor.loggedInUser);
   const logout = useStoreActions((actions) => actions.auth.logout);
   const isLoggedOut = useStoreState((state) => state.auth.isLoggedOut);
 
@@ -41,6 +40,12 @@ const Sidebar = (props) => {
       
     }
   }, [isLoggedOut]);
+
+  useEffect(() => {
+      if(props.data){
+        setUserData(props.data);
+      }
+  }, [props.data]);
   return (
     <React.Fragment>
       <div>

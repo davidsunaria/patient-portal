@@ -24,7 +24,7 @@ const ProfileView = (props) => {
           <main>
             <Header
               backEnabled={false}
-              heading={"Profile"}
+              heading={"Pets"}
               subHeading={"Here we can get detail of pet"}
               hasBtn={true}
               btnName={"plus"}

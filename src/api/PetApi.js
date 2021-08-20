@@ -160,3 +160,13 @@ export const getVaccinationDetail = async (formData) => {
     return error.response.data;
   }
 };
+
+export const getReportDetail = async (formData) => {
+  try {
+    let response = await axiosApi.get(`${apiUrl}/get_pet_report_by_id/${formData}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+

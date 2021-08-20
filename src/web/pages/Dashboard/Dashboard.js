@@ -104,6 +104,10 @@ const Dashboard = (props) => {
         getPetId(event);
         break;
 
+      case "report":
+        getPetId(event);
+        break;
+
       case "feedback":
         history.push(`/feedback/${event.event_id}`);
         break;

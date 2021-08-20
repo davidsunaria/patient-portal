@@ -21,11 +21,11 @@ const Step3 = (props) => {
         setIsOpen(!isOpen);
         calendarRef.current.setOpen(!isOpen)
     };
-    const showTime = () => {
+    const showTime = (e) => {
+        console.log(e?.target, props?.formData?.date, openTimePopup)
         if (props.formData.date) {
             setOpenTimePopup(!openTimePopup);
         }
-
     }
 
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
@@ -60,6 +60,28 @@ const Step3 = (props) => {
         }
     }, [props.formData.date]);
 
+    const useOuterClick = (callback) => {
+        const callbackRef = useRef(); // initialize mutable ref, which stores callback
+        const innerRef = useRef(); // returned to client, who marks "border" element
+
+        // update cb on each render, so second useEffect has access to current value 
+        useEffect(() => { callbackRef.current = callback; });
+
+        useEffect(() => {
+            document.addEventListener("click", handleClick);
+            return () => document.removeEventListener("click", handleClick);
+            function handleClick(e) {
+                if (innerRef.current && callbackRef.current &&
+                    !innerRef.current.contains(e.target)
+                ) callbackRef.current(e);
+            }
+        }, []); // no dependencies -> stable click listener
+
+        return innerRef; // convenience for client (doesn't need to init ref himself) 
+    }
+    const innerRef = useOuterClick(ev => {
+        setOpenTimePopup(false);
+    });
     return (
         <div className="row">
             <div className="col-md-8">
@@ -107,6 +129,7 @@ const Step3 = (props) => {
                                 <div className="fieldBox">
 
                                     <Select
+                                        placeholder={"Select provider"}
                                         className={"customSelectBox"}
                                         isSearchable={true}
                                         id="provider_id"
@@ -120,9 +143,13 @@ const Step3 = (props) => {
                         </div>
                     </div></React.Fragment>
                 }
+                {/* Slot-{JSON.stringify(props.slot)}<br/>
+               Date-  {JSON.stringify(props.formData.date)}<br/>
+               State-{JSON.stringify(openTimePopup)}<br/>
+               enabledDates-{JSON.stringify(props?.enabledDates.length)}<br/>
+               providers-{JSON.stringify(props?.providers.length)}<br/> */}
 
-
-                <div className="dateTimeOuter">
+                {(props?.enabledDates.length > 0 || props?.providers.length > 0) && <div className="dateTimeOuter">
                     <div className="AppointmentDate">
 
                         <DatePicker
@@ -132,10 +159,11 @@ const Step3 = (props) => {
                             customInput={<ExampleCustomInput />}
                         />
                     </div>
-
+               
                     <div className="AppointmentDate timeSlot" >
-                        <label onClick={() => showTime()}>{ (selectedTimeSlot) ? selectedTimeSlot : props.formData.slot}</label>
+                        <label ref={innerRef} onClick={(e) => showTime(e)}>{(selectedTimeSlot) ? selectedTimeSlot : props.formData.slot}</label>
                         {props.formData && props.formData.date != undefined && <div className={(openTimePopup == false) ? "timeslotPopup d-none" : "timeslotPopup"}>
+                            
                             {props.slot && props.slot.length > 0 && props.slot.map((val, index) => (
                                 <span key={index} onClick={(e) => handleTimeSelect(e, "slot", val)}>{val}</span>
                             ))}
@@ -143,8 +171,9 @@ const Step3 = (props) => {
                         }
                     </div>
                 </div>
-               
-                {props.enabledDates.length == 0 && <p className="p-text">
+                }
+
+                {props?.service_for && props.enabledDates.length == 0 && <p className="p-text">
                     No slots available. Kindly select another doctor or "Any" or another service.
                 </p>}
                 <div className="appointmentBtns">

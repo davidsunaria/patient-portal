@@ -173,3 +173,13 @@ export const uploadFile = async (formData) => {
     return error.response.data;
   }
 };
+
+
+export const saveQuestionnaire = async (formData) => {
+  try {
+    let response = await axiosApi.post(`${apiUrl}/save/patient/questionnaire`, formData);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

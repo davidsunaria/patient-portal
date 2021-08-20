@@ -39,6 +39,7 @@ const EditProfile = (props) => {
     preferred_clinic: '',
     company: ''
   };
+  const [preview, setPreview] = useState();
   const [file, setFile] = useState("");
   const [userData, setUserData] = useState(initvalues);
   const [countries, setCountries] = useState([]);
@@ -62,8 +63,8 @@ const EditProfile = (props) => {
     if (response) {
       let { message, statuscode, data } = response;
       if (statuscode && statuscode === 200) {
-        if(data?.filename){
-          let payload = {...userData};
+        if (data?.filename) {
+          let payload = { ...userData };
           payload.user_image = `${data.filename}`;
           setUserData(payload);
         }
@@ -104,7 +105,7 @@ const EditProfile = (props) => {
     formData.append("source", payload?.source);
     formData.append("preferred_clinic", payload?.preferred_clinic);
     formData.append("company", payload?.company);
-    
+
     if (file && file !== undefined) {
       formData.append("profile_image", file);
     }
@@ -124,6 +125,16 @@ const EditProfile = (props) => {
       toast.error(<ToastUI message={'Upload canceled, no files selected.'} type={"Error"} />);
     };
   };
+  useEffect(() => {
+    if (!file) {
+      setPreview(undefined);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
+    // free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [file]);
   return (
     <React.Fragment>
 
@@ -164,7 +175,8 @@ const EditProfile = (props) => {
                     <form onSubmit={handleSubmit} className="profileForm">
 
                       <div className="editPic">
-                        <img src={`${userData?.user_image ? process.env.REACT_APP_MEDIA_URL + userData.user_image : DEFAULT_USER_IMG}`} />
+                        {file && <img src={`${preview}`} />}
+                        {!file && <img src={`${userData?.user_image ? process.env.REACT_APP_MEDIA_URL + userData.user_image : DEFAULT_USER_IMG}`} />}
                         <a className="editPicOverlay">
                           <img src={EDIT_PROFILE_IMG} />
                           <input type="file" onChange={onFileChange} />
@@ -247,7 +259,7 @@ const EditProfile = (props) => {
 
                               {userData.phone_code &&
                                 <IntlTelInput
-                                disabled
+                                  disabled
                                   preferredCountries={['IN']}
                                   css={['intl-tel-input']}
                                   defaultValue={`${userData.phone_code}`}

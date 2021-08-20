@@ -29,8 +29,8 @@ const Invoice = (props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
-    const [petId, setPetId] = useState(null);
-    const [clinicId, setClinicId] = useState(null);
+    const [petId, setPetId] = useState({ value: "", label: "All" });
+    const [clinicId, setClinicId] = useState({ value: "", label: "All" });
     const [allClinics, setAllClinics] = useState([]);
     const [allPets, setAllPets] = useState([]);
 
@@ -59,6 +59,9 @@ const Invoice = (props) => {
             if (statuscode && statuscode === 200) {
                 if (data?.pets) {
                     let result = [];
+                    result.push({
+                        value: "", label: "All"
+                    });
                     _.forOwn(data?.pets, function (value, key) {
                         result.push({
                             value: value.id, label: value.name
@@ -76,6 +79,9 @@ const Invoice = (props) => {
             if (statuscode && statuscode === 200) {
                 if (data?.clinics) {
                     let result = [];
+                    result.push({
+                        value: "", label: "All"
+                    });
                     _.forOwn(data?.clinics, function (value, key) {
                         result.push({
                             value: value.id, label: value.clinic_name
@@ -157,7 +163,7 @@ const Invoice = (props) => {
         };
     }, []);
 
-   
+
     useEffect(() => {
         if (isBottom) {
             if (nextPageUrl) {
@@ -211,13 +217,14 @@ const Invoice = (props) => {
                             subHeading={"Here you can your invoices list"}
                             hasBtn={false}
                         />
+
                         <form>
                             <div className="box mb-3">
                                 <div className="fieldOuter d-sm-inline-block mr-sm-2 mb-2 mb-lg-0">
                                     <div className="fieldBox fieldIcon">
 
                                         <DatePicker
-
+                                            placeholderText="Date"
                                             ref={calendarRef}
                                             className="fieldInput calendarFilter expandCalender"
                                             selectsRange={true}
@@ -236,6 +243,7 @@ const Invoice = (props) => {
                                     <div className="fieldBox">
 
                                         <Select
+                                            defaultValue={{ label: "All", value: "" }}
                                             className={"customSelectBox petSelect"}
                                             placeholder={"Select pet"}
                                             isSearchable={true}
@@ -251,6 +259,7 @@ const Invoice = (props) => {
                                 <div className="fieldOuter d-inline-block mb-sm-0">
                                     <div className="fieldBox">
                                         <Select
+                                            defaultValue={{ label: "All", value: "" }}
                                             className={"customSelectBox petSelect"}
                                             placeholder={"Select clinic"}
                                             isSearchable={true}

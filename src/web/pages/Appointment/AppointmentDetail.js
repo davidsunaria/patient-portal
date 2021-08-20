@@ -7,6 +7,8 @@ import CONTACT_IMAGE from "patient-portal-images/app-contact.svg";
 import CALENDER_IMAGE from "patient-portal-images/app-calendar.svg";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import moment from "moment";
+import { getAge } from "patient-portal-utils/Service";
+
 const AppointmentDetail = () => {
   const history = useHistory();
   const { id } = useParams();
@@ -54,7 +56,7 @@ const AppointmentDetail = () => {
               <div className="col-md-12">
 
                 <div className="box confirmAppointment">
-                  <div className="ConfirmSubtitle">Your appointment has been confirmed.</div>
+                  <div className="ConfirmSubtitle">Your appointment has been {appointmentData?.status == "canceled" ? "canceled" : "confirmed"}.</div>
 
                   <div className="row">
                     <div className="col-xl-4 col-md-6">
@@ -64,9 +66,9 @@ const AppointmentDetail = () => {
                         <div className="appointmentConfirmText">{appointmentData?.clinic?.address}</div>
 
                         <div className="appointmentConfirmIcons">
-                          <a target="_blank" href={`http://maps.google.com/?${appointmentData?.clinic?.address}`}><img src={LOCATION_IMAGE} /></a>
-                          <a href={`tel:${appointmentData?.phone_code}`}><img src={CONTACT_IMAGE} /></a>
-                          {/* <a><img src={CALENDER_IMAGE} /></a> */}
+                        {appointmentData?.status == "canceled" && <spanc className="appointmentConfirmText colorRed">Canceled</spanc>}
+                          {appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`http://maps.google.com/?${appointmentData?.clinic?.address}`}><img src={LOCATION_IMAGE} /></a>
+                            <a href={`tel:${appointmentData?.phone_code}`}><img src={CONTACT_IMAGE} /></a></React.Fragment>}
                         </div>
                       </div>
                       <div className="appointmentConfirmSection">
@@ -83,7 +85,7 @@ const AppointmentDetail = () => {
                         <div className="appointmentConfirmTitle">Pet Info</div>
                         <div className="appointmentConfirmText">Name: {petData?.name}</div>
                         <div className="appointmentConfirmText">Breed: {petData?.breedmap?.name}</div>
-                        <div className="appointmentConfirmText">Age: {petData?.dob}</div>
+                        <div className="appointmentConfirmText">Age: {getAge(petData?.dob)}</div>
                       </div>
                       <div className="appointmentConfirmSection border-0">
                         <div className="appointmentConfirmTitle">Date & Time</div>

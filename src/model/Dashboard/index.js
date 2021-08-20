@@ -79,6 +79,10 @@ const dashboardModel = {
         type = "vaccination-record";
         payload.history.push(`/pet-profile/${response.data.pet_visit.pet_id}/${type}/${response.data.pet_visit.id}`);
       }
+      else if (payload.event == "report") {
+        type = "report";
+        payload.history.push(`/pet-profile/${response.data.pet_visit.pet_id}/${type}/${response.data.pet_visit.id}`);
+      }
       
       else {
         payload.history.push(`/pet-profile/${response.data.pet_visit.pet_id}/treatment-record/${response.data.pet_visit.id}`);

@@ -24,8 +24,6 @@ const ProfileView = (props) => {
   const response = useStoreState((state) => state.pet.response);
   const { id, visitId, type } = useParams();
 
-
-
   useEffect(async () => {
     await getPet(id);
   }, []);
@@ -52,6 +50,9 @@ const ProfileView = (props) => {
       if (type == "vaccination-record") {
         setCurrentTab("vaccination_record");
       }
+      if (type == "report") {
+        setCurrentTab("reports_record");
+      }
     }
   }, [type]);
   return (
@@ -60,7 +61,9 @@ const ProfileView = (props) => {
         <Sidebar activeMenu="pets" />
         <div className="right_content_col">
           <main>
-            <Header heading={"Profile"} subHeading={"Here we can add or edit pet information"} />
+            <Header backEnabled={true}
+              backTitle={"Back to profile"}
+              backAction={"pets"} heading={"Profile"} subHeading={"Here we can add or edit pet information"} />
             <PetProfile data={petData} />
             <Divider />
 
@@ -71,11 +74,11 @@ const ProfileView = (props) => {
               <li><a className={` ${currentTab && currentTab === "reports_record" ? "active" : ""}`} onClick={() => selectedTab('reports_record')}>Reports</a></li>
               <li><a className={` ${currentTab && currentTab == "medical_highlights_record" ? "active" : ""}`} onClick={() => selectedTab('medical_highlights_record')}>Medical Highlights</a></li>
             </ul>
-           
+
             {currentTab && currentTab == "treatment_record" && <TreatmentRecord petId={id} visitId={visitId} />}
             {currentTab && currentTab == "vaccination_record" && <VaccinationRecord petId={id} visitId={visitId} />}
             {currentTab && currentTab == "antiparasitic_record" && <AntiParasiticRecord petId={id} visitId={visitId} />}
-            {currentTab && currentTab == "reports_record" && <Reports petId={id} />}
+            {currentTab && currentTab == "reports_record" && <Reports petId={id} visitId={visitId} />}
             {currentTab && currentTab == "medical_highlights_record" && <MedicalHighlights petId={id} />}
           </main>
         </div>

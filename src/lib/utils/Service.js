@@ -22,7 +22,7 @@ export function clearUserData() {
   localStorage.removeItem("profileStatus");
   localStorage.removeItem("dateFormat");
   localStorage.removeItem("timeFormat");
-  
+
 }
 export function getAccountData() {
   return localStorage.getItem("accountData");
@@ -291,4 +291,28 @@ export function setProfileCompleted(payload) {
 }
 export function getProfileCompleted() {
   return JSON.parse(localStorage.getItem("profileStatus"));
+}
+
+export function getAge(dob) {
+  let string = [];
+  let age = moment(dob);
+  let currentDate = moment();
+  //'weeks',
+  let intervals = ['years', 'months',  'days'];
+  let out = [];
+  intervals.forEach(function (interval) {
+    let diff = currentDate.diff(age, interval);
+    age.add(diff, interval);
+    out.push(diff);
+  });
+  if (out[0]) {
+    string.push(`${out[0]}Y`);
+  }
+  if (out[1]) {
+    string.push(`${out[1]}M`);
+  }
+  if (out[2]) {
+    string.push(`${out[2]}D`);
+  }
+  return string.join(',');
 }

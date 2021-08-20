@@ -27,7 +27,13 @@ const Header = (props) => {
       }
     }
     else{
-      history.push(`/${type}`);
+      if(type == "treatments"){
+        props.rerender();
+      }
+      else{
+        history.push(`/${type}`);
+      }
+      
     }
     
   }

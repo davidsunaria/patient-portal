@@ -31,7 +31,7 @@ const EditPet = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState("");
   const [showBreedName, setShowBreedName] = useState(false);
-  
+  const [preview, setPreview] = useState();
   const [formData, setFormData] = useState({
     name: '',
     species: {value: '', label: ''},
@@ -41,7 +41,7 @@ const EditPet = (props) => {
     dob: '',
     weight: '',
     microchip_no: '',
-    tags: '',
+    tags: [],
     neutered: '',
     profile_image: ''
   });
@@ -74,7 +74,7 @@ const EditPet = (props) => {
       formData.append("profile_image", (file) ? file : '');
     }
     formData.append("client_id", getLoggedinUserId());
-    formData.append("weight", pageData.weight);
+    formData.append("weight", (pageData.weight !== null && pageData.weight !== undefined) ? pageData.weight : "");
     formData.append("tags", (pageData.tags) ? pageData.tags : "");
     formData.append("microchip_no", (pageData.microchip_no) ? pageData.microchip_no : '');
     formData.append("mcd_no", (pageData.mcd_no) ? pageData.mcd_no : '');
@@ -102,7 +102,8 @@ const EditPet = (props) => {
             pageData.pet_image = `${process.env.REACT_APP_MEDIA_URL + pageData.pet_image}`;
           }
           else{
-            pageData.pet_image = DEFAULT_PET;
+           // pageData.pet_image = DEFAULT_PET;
+           //pageData.pet_image = "https://via.placeholder.com/150";
           }
           setFormData(pageData);
         }
@@ -166,6 +167,16 @@ const EditPet = (props) => {
     };
   };
 
+  useEffect(() => {
+    if (!file) {
+      setPreview(undefined);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
+    // free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [file]);
   return (
     <React.Fragment>
       <div className="content_outer">
@@ -202,14 +213,17 @@ const EditPet = (props) => {
                     handleChange,
                     handleBlur,
                     handleSubmit,
-                    handleReset
+                    handleReset,
+                    setFieldValue
                   } = props;
                   return (
                    
                     <form className="profileForm" onSubmit={handleSubmit}>
                        
                       <div className="editPic">
-                        <img src={values.pet_image} />
+                      {file && <img src={`${preview}`} />}
+                      {!file && !values?.pet_image && <img  src={`https://via.placeholder.com/130`} />}
+                      {!file && values?.pet_image &&  <img src={values.pet_image} />}
                         <a className="editPicOverlay">
                           <img src={EDIT_PROFILE_IMAGE} />
                           <input type="file" onChange={onFileChange} />
@@ -364,6 +378,7 @@ const EditPet = (props) => {
                             <div className="fieldBox fieldIcon">
 
                               <DatePicker
+                              placeholderText="DOB"
                                 ref={calendarRef}
                                 className="fieldInput"
                                 value={values.dob}
@@ -440,15 +455,14 @@ const EditPet = (props) => {
                           <div className="fieldOuter">
                             <label className="fieldLabel">Tags</label>
                             <div className="fieldBox">
-                              <input
+                            <TagsInput
+                              placeholder="Enter tags"
                                 className="fieldInput"
-                                placeholder=""
-                                id="tags"
                                 name="tags"
-                                type="text"
                                 value={values.tags}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                                onChange={tags => {
+                                  setFieldValue("tags", tags);
+                                }}
                               />
 
                             </div>

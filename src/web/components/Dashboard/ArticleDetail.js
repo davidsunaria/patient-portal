@@ -43,7 +43,7 @@ const ArticleDetail = (props) => {
           <main>
           <Header
               backEnabled={true}
-              backTitle={"Back to Dashboard"}
+              backTitle={"Back to dashboard"}
               backAction={"dashboard"}
               heading={"Article Detail"}
               subHeading={"Here we can get detail of pet"}
@@ -54,18 +54,11 @@ const ArticleDetail = (props) => {
             />
             
 
-            {/* <div className="titleBtn">
-              <a className="backTo" onClick={goToDashboard}><img src={GO_BACK_IMG} /> Back to Dashboard</a>
-              <h1 className="title">Article Detail</h1>
-              <div className="titleDiscription">Here we can get detail of pet</div>
-              <button className="button primary"><img src={APPOINTMENT_BOOK_IMG} />&nbsp;Book an Appointment</button>
-            </div> */}
-
             <div className="articleOuter">
               <div className="box articleBlock articleDetail">
                 <div className="articleImg">
                   <img src={`${process.env.REACT_APP_MEDIA_URL}articles/${article?.image}`} />
-                  <a href="#" className="shareIcon"><img src={SHARE_IMG} /></a></div>
+                  </div>
                 <h5>{article?.title}</h5>
                 <p dangerouslySetInnerHTML={{  __html:article?.content}}/>
               </div>
@@ -73,17 +66,7 @@ const ArticleDetail = (props) => {
           </main>
         </div>
       </div>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      
     </React.Fragment>
   );
 };

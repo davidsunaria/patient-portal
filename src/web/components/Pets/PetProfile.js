@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import EDIT_PET_PROFILE_IMG from "patient-portal-images/edit-profile.svg";
 import { Link, useHistory, useParams } from "react-router-dom";
+import { getAge } from "patient-portal-utils/Service";
 
 const PetProfile = (props) => {
   const renderImage = (props) => {
@@ -40,7 +41,7 @@ const PetProfile = (props) => {
           </div>
           <div className="profileDetailCol">
             <label>DOB</label>
-            <span>{props.data?.dob}</span>
+            <span>{getAge(props.data?.dob)}</span>
           </div>
           <div className="profileDetailCol address">
             <label>Weight (KG)</label>

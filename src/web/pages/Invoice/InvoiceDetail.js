@@ -5,8 +5,7 @@ import Header from "patient-portal-components/Header/Header.js";
 import GO_BACK from "patient-portal-images/goBack.svg";
 import { useHistory, useParams } from "react-router-dom";
 import { useStoreActions, useStoreState } from "easy-peasy";
-
-import { numberFormat } from "patient-portal-utils/Service";
+import { getAge, numberFormat } from "patient-portal-utils/Service";
 
 const InvoiceDetail = (props) => {
     const history = useHistory();
@@ -94,7 +93,7 @@ const InvoiceDetail = (props) => {
                                 <div className="col-xl-2 col-md-4 mb-4">
                                     <div className="profileDetailCol">
                                         <label>Pet</label>
-                                        <span>{invoiceData?.pet?.name} (2y 11m)</span>
+                                        <span>{invoiceData?.pet?.name} ({getAge(invoiceData?.pet?.dob)})</span>
                                     </div>
                                 </div>
                             </div>

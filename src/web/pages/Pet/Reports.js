@@ -15,6 +15,8 @@ const Reports = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const getReports = useStoreActions((actions) => actions.pet.getReports);
+  const getReportDetail = useStoreActions((actions) => actions.pet.getReportDetail);
+  
   const response = useStoreState((state) => state.pet.response);
   const isLoading = useStoreState((state) => state.common.isLoading);
   const lastScrollTop = useRef(0);
@@ -48,7 +50,14 @@ const Reports = (props) => {
   useEffect(() => {
     if (response) {
       let { status, statuscode, data } = response;
+      
       if (statuscode && statuscode === 200) {
+        if (data && data.file !== undefined) {
+          let serverRespone= [];
+          serverRespone.push(data?.file);
+          setRecords(serverRespone);
+        }
+  
         if (data && data.files !== undefined) {
           const { current_page, next_page_url, per_page } = data.files;
 
@@ -105,9 +114,16 @@ const Reports = (props) => {
   const downloadFile = (val) => {
     window.open(val.file_full_url, "_blank");
   }
+
+  useEffect(async() => {
+    if(props.petId && props.visitId){
+      await getReportDetail(props.visitId);
+    }
+}, [props.petId,props.visitId]);
+
   return (
     <React.Fragment>
-
+      
       {records && records.length > 0 ? (
         records.map((val, index) => (
           <div key={index} className="box recordCard">
@@ -120,10 +136,7 @@ const Reports = (props) => {
             </div>
             <p className="reportType"><label>{val?.title}</label></p>
           </div>
-
-
         ))
-
       ) : (
         <div className="noRecord">
           <p>No record found:</p>

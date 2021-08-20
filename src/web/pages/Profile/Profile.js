@@ -9,6 +9,7 @@ import { getLoggedinUserId } from "patient-portal-utils/Service";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import USER_LOCATION_IMG from "patient-portal-images/userLocation.svg";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { setUser } from "patient-portal-utils/Service.js";
 
 const Profile = () => {
   const history = useHistory();
@@ -40,6 +41,7 @@ const Profile = () => {
       if (statuscode && statuscode === 200) {
         if (data?.clientData) {
           setUserData(data.clientData);
+          setUser(data.clientData);
         }
         if (data?.client_settings) {
           setSettingsData(data?.client_settings);
@@ -76,7 +78,7 @@ const Profile = () => {
           <ModalBody className="p-0 ">
             <div className="popupWrapper">
               <div className="popupTitle mb-3">Notification Settings
-                <a className="cross" data-dismiss="modal">
+                <a className="cross" onClick={toggle}>
                   <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M17.25 5.75L5.75 17.25" stroke="#444444" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round" />
                     <path d="M5.75 5.75L17.25 17.25" stroke="#444444" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round" />
@@ -121,7 +123,7 @@ const Profile = () => {
           </ModalBody>
 
         </Modal>
-        <Sidebar activeMenu="profile" />
+        <Sidebar activeMenu="profile" data={userData} />
         <div className="right_content_col">
           <main>
             <Header
@@ -136,7 +138,11 @@ const Profile = () => {
               <div className="box d-sm-flex">
                 <div className="settingLeft">
                   <div className="profilePic">
-                    <img src={`${process.env.REACT_APP_MEDIA_URL}${userData?.user_image}`} />
+                  
+
+              {!userData?.user_image && <img  src={`https://via.placeholder.com/150`} />}
+              {userData?.user_image && <img  src={`${process.env.REACT_APP_MEDIA_URL}${userData?.user_image}`} />}
+                    
                   </div>
                   <div className="userName">{userData?.firstname} {userData?.lastname}</div>
                   <div className="userLocation"><img src={USER_LOCATION_IMG} />{userData?.city}, {userData?.country}</div>
@@ -144,13 +150,12 @@ const Profile = () => {
                   <section>
                     <div className="settingLinkTitle">Settings</div>
                     <Link to="/edit-profile">Edit Profile</Link>
-                    <a href="#" onClick={toggle}>Notification Settings</a>
-
-                    <Link to="/feedback">Rate DCC Patient Portal</Link>
+                    <a onClick={toggle}>Notification Settings</a>
                   </section>
                   <section>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms and Conditions</a>
+                    <a href={`${process.env.REACT_APP_BOOKING_PORTAL_URL}pages/privacy-policy`} target="_blank">Privacy Policy</a>
+                    <a href={`${process.env.REACT_APP_BOOKING_PORTAL_URL}pages/refund-policy`} target="_blank">Refund Policy</a>
+                    <a href={`${process.env.REACT_APP_BOOKING_PORTAL_URL}pages/terms-and-conditions`} target="_blank">Terms And Conditions</a>
                   </section>
                 </div>
 

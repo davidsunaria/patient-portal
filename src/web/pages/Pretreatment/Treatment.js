@@ -31,8 +31,8 @@ const Treatment = (props) => {
     setSelectedTab(tab.handler);
   }
 
-
   useEffect(async () => {
+    console.log("Hiooks", selectedTab, id);
     if (selectedTab && !id) {
       let type;
       if (selectedTab === "pre-treatment") {
@@ -70,8 +70,18 @@ const Treatment = (props) => {
 
   const onRenderDetail = (type) => {
     setTitle(type);
-    console.log("hey", type);
   }
+  const resetTab = () => {
+    let tab;
+    if(title == "pre"){
+      tab = "pre-treatment";
+    }
+    else{
+      tab = "post-treatment";
+    }
+    setShowDetail(false);
+    setSelectedTab(tab);
+  } 
   return (
     <React.Fragment>
       <div className="content_outer">
@@ -79,6 +89,7 @@ const Treatment = (props) => {
         <div className="right_content_col">
           <main>
             <Header
+              rerender={resetTab}
               backEnabled={showDetail == true ? true : false}
               backTitle={`Back to ${ (title) ? title +'-' : ''}treatment`}
               backAction={"treatments"}
