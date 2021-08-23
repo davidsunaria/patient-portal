@@ -92,7 +92,7 @@ const Notifications = (props) => {
                   <span><img src={getImage(result).src} /></span>
                   <p>{result?.grammar}</p>
                 </div>
-                <a className="notiCross" onClick={() => removeNotification(result.id, "upcoming")}><img src={NOTI_CROSS} /></a>
+                <a title="Delete notification" className="notiCross" onClick={() => removeNotification(result.id, "upcoming")}><img src={NOTI_CROSS} /></a>
               </div>
             ))
           ) : (
@@ -114,7 +114,7 @@ const Notifications = (props) => {
                   <span><img src={getImage(result).src} /></span>
                   <p>{result?.grammar}</p>
                 </div>
-                <a className="notiCross" onClick={() => removeNotification(result.id, "completed")}><img src={NOTI_CROSS} /></a>
+                <a title="Delete notification" className="notiCross" onClick={() => removeNotification(result.id, "completed")}><img src={NOTI_CROSS} /></a>
               </div>
             ))
           ) : (

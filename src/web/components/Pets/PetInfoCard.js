@@ -55,8 +55,8 @@ const PetInfoCard = (props) => {
         <div className="PetBlock" >
 
           <div className="petActions">
-          <Link to={`/edit-pet/${props.data.id}`}><img src={EDIT_PET_IMG} /></Link>
-           <a>
+          <Link title="Edit pet" to={`/edit-pet/${props.data.id}`}><img src={EDIT_PET_IMG} /></Link>
+           <a title="Delete pet">
               <img src={DELETE_PET_IMG} onClick={() => delPet(props.data.id)} />
            </a>
           </div>
