@@ -16,35 +16,35 @@ const Header = (props) => {
 
   const handleNav = (type) => {
     console.log("Type", type);
-    if(type == "book-appointment"){
+    if (type == "book-appointment") {
       let isCompleted = getProfileCompleted();
-      if(isCompleted.isPetCompleted == 0 || isCompleted.isProfileCompleted == 0){
+      if (isCompleted.isPetCompleted == 0 || isCompleted.isProfileCompleted == 0) {
         toast.error(<ToastUI message={"Please set up yout and you pet\'s profile to have a better experience"} type={"Error"} />);
         history.push(`/create-pet`);
       }
-      else{
+      else {
         history.push(`/${type}`);
       }
     }
-    else{
-      if(type == "treatments"){
+    else {
+      if (type == "treatments") {
         props.rerender();
       }
-      else{
+      else {
         history.push(`/${type}`);
       }
-      
+
     }
-    
+
   }
   return (
     <React.Fragment>
-      {props.backEnabled && (!props.backTitle || !props.backAction ) && (
+      {props.backEnabled && (!props.backTitle || !props.backAction) && (
         <a className="backTo" onClick={() => goToUrl()}>
           <img src={GO_BACK_IMAGE} /> Back to Profile
         </a>
       )}
-       {props.backEnabled && props.backTitle && props.backAction && (
+      {props.backEnabled && props.backTitle && props.backAction && (
         <a className="backTo" onClick={() => handleNav(props.backAction)}>
           <img src={GO_BACK_IMAGE} /> {props.backTitle}
         </a>

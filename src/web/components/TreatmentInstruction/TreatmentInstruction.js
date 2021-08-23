@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
+import NoRecord from "patient-portal-components/NoRecord";
 
 const TreatmentInstruction = (props) => {
   const history = useHistory();
@@ -20,9 +21,7 @@ const TreatmentInstruction = (props) => {
           </div>
         ))
       ) : (
-        <div>
-          <p>No data found</p>
-        </div>
+        <NoRecord />
       )}
     </React.Fragment>
   );

@@ -41,7 +41,7 @@ const Reports = (props) => {
       page: 1, pagesize: 20
     }
     await getReports({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
-    window.addEventListener('scroll', (e) => handleScroll(e), true);
+    window.addEventListener('scroll', (e) => handleScroll(e));
     return () => {
       window.removeEventListener('scroll', (e) => handleScroll(e))
     };
@@ -138,8 +138,8 @@ const Reports = (props) => {
           </div>
         ))
       ) : (
-        <div className="noRecord">
-          <p>No record found:</p>
+        <div className="box mb-2 text-center">
+          <p>No record found</p>
         </div>
       )}
 

@@ -57,7 +57,8 @@ const ArticleDetail = (props) => {
             <div className="articleOuter">
               <div className="box articleBlock articleDetail">
                 <div className="articleImg">
-                  <img src={`${process.env.REACT_APP_MEDIA_URL}articles/${article?.image}`} />
+                {!article?.image && <img  src={`https://via.placeholder.com/560`} />}
+                {article?.image &&   <img src={`${process.env.REACT_APP_MEDIA_URL}articles/${article?.image}`} />}
                   </div>
                 <h5>{article?.title}</h5>
                 <p dangerouslySetInnerHTML={{  __html:article?.content}}/>

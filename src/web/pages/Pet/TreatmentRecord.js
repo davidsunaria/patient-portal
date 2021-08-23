@@ -5,26 +5,29 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import PRESCRIPTION_IMAGE from "patient-portal-images/dropPrescription.svg";
 import INVOICE_IMAGE from "patient-portal-images/dropInvoice.svg";
 import REPORT_IMAGE from "patient-portal-images/dropReport.svg";
-
+import NoRecord from "patient-portal-components/NoRecord";
 
 const TreatmentRecord = (props) => {
   const history = useHistory();
-  const [data, setData] = useState({});
+  const [records, setRecords] = useState([]);
   const getTreatmentRecord = useStoreActions((actions) => actions.pet.getTreatmentRecord);
   const downloadReport = useStoreActions((actions) => actions.pet.downloadReport);
   const [downloadUrl, setDownloadUrl] = useState(null);
 
   const response = useStoreState((state) => state.pet.response);
   useEffect(async () => {
-    await getTreatmentRecord({ clientId: getLoggedinUserId(), petId: props.petId });
-  }, []);
+    if(props.petId){
+      console.log("Treatment records");
+      await getTreatmentRecord({ clientId: getLoggedinUserId(), petId: props.petId });
+    }
+  }, [props.petId]);
 
   useEffect(() => {
     if (response) {
       let { status, statuscode, data } = response;
       if (statuscode && statuscode === 200) {
-        if (data?.pet) {
-          setData(data?.pet.visits);
+        if (data?.pet?.visits) {
+          setRecords(data?.pet?.visits);
         }
         if (data?.file_url) {
           setDownloadUrl(data?.file_url);
@@ -71,10 +74,10 @@ const TreatmentRecord = (props) => {
   return (
     <React.Fragment>
       <div className="box mb-2">
-        <div className="timeline">
-
-          {data && data.length > 0 ? (
-            data.map((result, index) => (
+        <div className={records && records.length > 0 ? "timeline" : ""}>
+     
+          {records && records.length > 0 ? (
+            records.map((result, index) => (
               <div key={index} className={"timelineSection"} >
 
                 <div className="timelineTime">{getDate(result, 3)} | {getDate(result, 4)}</div>
@@ -105,9 +108,7 @@ const TreatmentRecord = (props) => {
               </div>
             ))
           ) : (
-            <div>
-              <p>No data found</p>
-            </div>
+            <NoRecord extraClass={"text-center"}/>
           )}
         </div>
       </div>

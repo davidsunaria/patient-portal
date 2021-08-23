@@ -15,6 +15,7 @@ import { Formik, ErrorMessage } from "formik";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import _ from "lodash";
 import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
+import NoRecord from "patient-portal-components/NoRecord";
 
 const Invoice = (props) => {
     const calendarRef = useRef();
@@ -143,7 +144,6 @@ const Invoice = (props) => {
             formData = { ...formData, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD") };
         }
         if (petId) {
-            console.log("pet selected", petId)
             formData = { ...formData, pet_id: petId.value };
         }
         if (clinicId) {
@@ -287,9 +287,7 @@ const Invoice = (props) => {
                                 ))
 
                             ) : (
-                                <div className="box recordCard">
-                                    <p><label>No record found:</label></p>
-                                </div>
+                                <NoRecord />
                             )}
                         </form>
                     </main>

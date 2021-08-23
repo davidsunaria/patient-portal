@@ -42,6 +42,7 @@ const BookAppointment = (props) => {
   const handleStepOne = (payload) => {
     let formPayload = { ...formData };
     formPayload.type = payload;
+    formPayload.client_id = getLoggedinUserId();
     setFormData(formPayload);
     setCurrentPage(2);
   }
@@ -90,7 +91,7 @@ const BookAppointment = (props) => {
     else if (name == undefined && e?.target !== undefined && e?.target?.name && e?.target?.value) {
       formPayload[e.target.name] = e?.target?.value;
     }
-    
+
     setFormData(formPayload);
     updateOther(val, 3, name);
   }
@@ -148,7 +149,7 @@ const BookAppointment = (props) => {
 
         // Set Timeslot 
         if (data?.timeSlots) {
-          if(data.timeSlots){
+          if (data.timeSlots) {
             setTimeSlot(data.timeSlots);
           }
         }
@@ -200,7 +201,7 @@ const BookAppointment = (props) => {
       setOtherData({});
       setAllServices([]);
     }
-    if(page === 2){
+    if (page === 2) {
       let request = { ...formData };
       let requestOther = { ...otherData };
 
@@ -214,8 +215,8 @@ const BookAppointment = (props) => {
 
       requestOther.date = "";
       requestOther.slot = "";
-      requestOther.service_name= "";
-      requestOther.service_description= "";
+      requestOther.service_name = "";
+      requestOther.service_description = "";
       requestOther.service_duration = "";
       requestOther.provider_name = "";
       setAllServices([]);
@@ -242,8 +243,8 @@ const BookAppointment = (props) => {
       setAllProviders([]);
       setCalenderData([]);
       setTimeSlot([]);
-      setFormData({...formData, date: "",slot: "", provider_name: "" })
-      setOtherData({...otherData, date: "",slot: "" })
+      setFormData({ ...formData, date: "", slot: "", provider_name: "" })
+      setOtherData({ ...otherData, date: "", slot: "" })
       await getProviders({ formData: formData, type: formData.service_id });
     }
     /*if (formData.service_id && formData.clinic_id && formData.service_for == "provider") {
@@ -302,7 +303,7 @@ const BookAppointment = (props) => {
       }
       await getProviderSlots(payload);
     }
-    
+
   }, [formData.date]);
   // Get Doctor Name
   useEffect(async () => {
@@ -381,7 +382,7 @@ const BookAppointment = (props) => {
       if (!formData.service_id) {
         toast.error(<ToastUI message={"Please select service"} type={"Error"} />);
       }
-      else if (formData.service_for == "provider" && !formData.provider_id.value) {
+      else if (formData.service_for == "provider" && !formData.provider_id?.value) {
         toast.error(<ToastUI message={"Please select provider"} type={"Error"} />);
       }
 
@@ -419,9 +420,11 @@ const BookAppointment = (props) => {
               subHeading={"Start your process to book your appointment"}
               hasBtn={false}
             />
-            {/* {JSON.stringify(formData)} */}
+            {JSON.stringify(formData)}
+            {JSON.stringify(allProviders)}
+            
             {currentPage == 1 && <Step1 page={currentPage} onSubmit={handleStepOne} />}
-            {currentPage == 2 && <Step2 other={otherData} data={allClinics} page={currentPage} onSubmit={handleStepTwo} onNext={handleNext} onBack={handleBack} />}
+            {currentPage == 2 && <Step2 other={otherData} formData={formData} data={allClinics} page={currentPage} onSubmit={handleStepTwo} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 3 && <Step3 other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 4 && <Step4 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 5 && <Step5 page={currentPage} onSubmit={handleStepFive} onNext={handleNext} onBack={handleBack} />}

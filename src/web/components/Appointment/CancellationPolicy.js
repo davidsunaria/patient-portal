@@ -22,7 +22,7 @@ const CancellationPolicy = (props) => {
                 <img src={CROSS_IMAGE} />
               </a>
             </div>
-            <div className="addressRow">
+            <div className="p-text my-3">
               {props.data?.cancellation_policy}
             </div>
             <button className="button primary mr-2" onClick={() => props.onCancelAppointment(props.id)}>Accept</button>

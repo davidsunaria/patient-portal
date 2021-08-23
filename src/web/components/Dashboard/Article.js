@@ -18,10 +18,10 @@ const Article = (props) => {
         props.data.map((result, index) => (
           <div key={index} className="box p-0 articleBlock onHover" onClick={() => go(result.id)}>
             <div className="articleImg">
-              <img src={`${process.env.REACT_APP_MEDIA_URL}articles/${result.image}`} />
-              <a className="shareIcon">
-                <img src={SHARE_IMG} />
-              </a>
+            {!result.image && <img  src={`https://via.placeholder.com/150`} />}
+
+            {result.image && <img src={`${process.env.REACT_APP_MEDIA_URL}articles/${result.image}`} />}
+             
             </div>
             <p>{result?.title}</p>
           </div>

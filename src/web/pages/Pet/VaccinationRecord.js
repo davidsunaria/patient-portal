@@ -3,6 +3,8 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
 import { Link, useHistory, useParams } from "react-router-dom";
 import moment from "moment";
+import NoRecord from "patient-portal-components/NoRecord";
+
 const VaccinationRecord = (props) => {
     const [isBottom, setIsBottom] = useState(false);
     const [records, setRecords] = useState([]);
@@ -34,58 +36,60 @@ const VaccinationRecord = (props) => {
     }, []);
 
     useEffect(async () => {
-        let formData = {
-            page: 1, pagesize: 20
+        if (props.petId) {
+            console.log("vaccination records");
+            let formData = {
+                page: 1, pagesize: 20
+            }
+            await getVaccinationRecord({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
+            window.addEventListener('scroll', (e) => handleScroll(e));
+            return () => {
+                window.removeEventListener('scroll', (e) => handleScroll(e))
+            };
         }
-        await getVaccinationRecord({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
-        window.addEventListener('scroll', (e) => handleScroll(e), true);
-        return () => {
-            window.removeEventListener('scroll', (e) => handleScroll(e))
-        };
-    }, []);
-
-
-
+    }, [props.petId]);
 
     useEffect(() => {
         if (response) {
             let { status, statuscode, data } = response;
             if (statuscode && statuscode === 200) {
                 if (data && data.vaccination_details !== undefined) {
-                    let serverRespone= [];
+                    let serverRespone = [];
                     serverRespone.push(data?.vaccination_details);
                     setRecords(serverRespone);
-                  }
+                }
 
                 if (data && data.vaccination !== undefined) {
                     const { current_page, next_page_url, per_page } = data.vaccination;
+                    let serverRespone = data.vaccination.data || [];
 
                     setCurrentPage(current_page);
                     setNextPageUrl(next_page_url);
                     setPerPage(per_page);
 
-                    let serverRespone = data.vaccination.data;
-                    if (current_page != 1) {
-                        serverRespone = [...records, ...serverRespone]
-                    }
-                    let dateMap = {
-                    }
-                    serverRespone.forEach((e, i) => {
-                        if (e.due_date) {
-                            const date = moment(e.due_date).toDate()
-                            const type = e.vaccination_type
-                            if (dateMap[type]) {
-                                if (date > dateMap[type]?.date) {
-                                    serverRespone[dateMap[type].i].due_date = ""
-                                    dateMap[type] = { i, date }
-                                } else {
-                                    serverRespone[i].due_date = ""
-                                }
-                            } else dateMap[type] = { i, date }
+                    if (serverRespone.length > 0) {
+                        if (current_page != 1) {
+                            serverRespone = [...records, ...serverRespone]
                         }
-                    });
+                        let dateMap = {
+                        }
+                        serverRespone.forEach((e, i) => {
+                            if (e.due_date) {
+                                const date = moment(e.due_date).toDate()
+                                const type = e.vaccination_type
+                                if (dateMap[type]) {
+                                    if (date > dateMap[type]?.date) {
+                                        serverRespone[dateMap[type].i].due_date = ""
+                                        dateMap[type] = { i, date }
+                                    } else {
+                                        serverRespone[i].due_date = ""
+                                    }
+                                } else dateMap[type] = { i, date }
+                            }
+                        });
+                        setRecords(serverRespone);
+                    }
 
-                    setRecords(serverRespone);
                     setIsBottom(false);
                 }
             }
@@ -125,18 +129,15 @@ const VaccinationRecord = (props) => {
         return status;
     }
 
-    useEffect(async() => {
-        if(props.petId && props.visitId){
-          console.log("heloo");
-          await getVaccinationDetail(props.visitId);
+    useEffect(async () => {
+        if (props.petId && props.visitId) {
+            console.log("get detail");
+            await getVaccinationDetail(props.visitId);
         }
-    }, [props.petId,props.visitId]);
+    }, [props.petId, props.visitId]);
     return (
         <React.Fragment>
             <div >
-
-
-
                 {records && records.length > 0 ? (
                     records.map((val, index) => (
                         <div key={index} className="box recordCard">
@@ -151,9 +152,8 @@ const VaccinationRecord = (props) => {
                     ))
 
                 ) : (
-                    <div>
-              <p>No data found</p>
-            </div>
+                    <NoRecord />
+                   
                 )}
 
             </div>

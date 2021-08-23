@@ -31,15 +31,18 @@ const MedicalHighlights = (props) => {
   }, []);
 
   useEffect(async () => {
-    let formData = {
-      page: 1, pagesize: 20
+    if (props.petId) {
+      let formData = {
+        page: 1, pagesize: 20
+      }
+      await getMedicalRecords({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
+      window.addEventListener('scroll', (e) => handleScroll(e));
+      return () => {
+        window.removeEventListener('scroll', (e) => handleScroll(e))
+      };
     }
-    await getMedicalRecords({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
-    window.addEventListener('scroll', (e) => handleScroll(e), true);
-    return () => {
-      window.removeEventListener('scroll', (e) => handleScroll(e))
-    };
-  }, []);
+
+  }, [props.petId]);
 
   useEffect(() => {
     if (response) {
@@ -90,7 +93,7 @@ const MedicalHighlights = (props) => {
   return (
     <React.Fragment>
       <div className="box mb-2">
-        <div className="timeline">
+      <div className={records && records.length > 0 ? "timeline" : ""}>
           {records && records.length > 0 ? (
             records.map((val, index) => (
 
@@ -105,8 +108,8 @@ const MedicalHighlights = (props) => {
             ))
 
           ) : (
-            <div>
-              <p><label>No record found:</label></p>
+            <div className="text-center">
+              <p>No record found</p>
             </div>
           )}
         </div>

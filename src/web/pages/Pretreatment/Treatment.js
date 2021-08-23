@@ -7,11 +7,10 @@ import Tabs from "patient-portal-components/Tabs/Tabs.js";
 import Sidebar from "patient-portal-components/Sidebar/Sidebar.js";
 import TreatmentInstruction from "patient-portal-components/TreatmentInstruction/TreatmentInstruction.js";
 import TreatmentDetail from "patient-portal-pages/Pretreatment/TreatmentDetail.js";
-
-
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { getLoggedinUserId } from "patient-portal-utils/Service";
 
+import NoRecord from "patient-portal-components/NoRecord";
 
 const Treatment = (props) => {
   const history = useHistory();
@@ -71,7 +70,7 @@ const Treatment = (props) => {
   const onRenderDetail = (type) => {
     setTitle(type);
   }
-  const resetTab = () => {
+  const resetTab = async() => {
     let tab;
     if(title == "pre"){
       tab = "pre-treatment";
@@ -79,6 +78,7 @@ const Treatment = (props) => {
     else{
       tab = "post-treatment";
     }
+    history.push(`/treatments`);
     setShowDetail(false);
     setSelectedTab(tab);
   } 

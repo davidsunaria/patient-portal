@@ -3,6 +3,8 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
 import { Link, useHistory, useParams } from "react-router-dom";
 import moment from "moment";
+import NoRecord from "patient-portal-components/NoRecord";
+
 const AntiParasiticRecord = (props) => {
   const [isBottom, setIsBottom] = useState(false);
   const [records, setRecords] = useState([]);
@@ -15,7 +17,7 @@ const AntiParasiticRecord = (props) => {
   const response = useStoreState((state) => state.pet.response);
   const isLoading = useStoreState((state) => state.common.isLoading);
   const lastScrollTop = useRef(0);
-  
+
   const handleScroll = useCallback((e) => {
     const scrollTop = parseInt(Math.max(e?.srcElement?.scrollTop));
     let st = scrollTop;
@@ -32,52 +34,58 @@ const AntiParasiticRecord = (props) => {
   }, []);
 
   useEffect(async () => {
-    let formData = {
-      page: 1, pagesize: 20
+    if (props.petId) {
+      let formData = {
+        page: 1, pagesize: 20
+      }
+      await getAntiParasiticRecord({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
+      window.addEventListener('scroll', (e) => handleScroll(e));
+      return () => {
+        window.removeEventListener('scroll', (e) => handleScroll(e))
+      };
     }
-    await getAntiParasiticRecord({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
-    window.addEventListener('scroll', (e) => handleScroll(e), true);
-    return () => {
-      window.removeEventListener('scroll', (e) => handleScroll(e))
-    };
-  }, []);
+
+  }, [props.petId]);
 
   useEffect(() => {
     if (response) {
       let { status, statuscode, data } = response;
       if (statuscode && statuscode === 200) {
         if (data && data.deworming_details !== undefined) {
-          let serverRespone= [];
+          console.log("data.deworming_details", data.deworming_details)
+          let serverRespone = [];
           serverRespone.push(data?.deworming_details);
           setRecords(serverRespone);
         }
         if (data && data.deworming !== undefined) {
           const { current_page, next_page_url, per_page } = data.deworming;
-
+          let serverRespone = data.deworming.data || [];
           setCurrentPage(current_page);
           setNextPageUrl(next_page_url);
           setPerPage(per_page);
-
-          let serverRespone = data.deworming.data;
-          if (current_page != 1) {
-            serverRespone = [...records, ...serverRespone]
-          }
-          let dateMap = {}
-          serverRespone.forEach((e, i) => {
-            if (e.due_date) {
-              const date = moment(e.due_date).toDate()
-              const type = e.type;
-              if (dateMap[type]) {
-                if (date > dateMap[type]?.date) {
-                  serverRespone[dateMap[type].i].due_date = "";
-                  dateMap[type] = { i, date }
-                } else {
-                  serverRespone[i].due_date = "";
-                }
-              } else dateMap[type] = { i, date }
+        
+          if (serverRespone.length > 0) {
+             if (current_page != 1) {
+              serverRespone = [...records, ...serverRespone]
             }
-          });
-          setRecords(serverRespone);
+            let dateMap = {}
+            serverRespone.forEach((e, i) => {
+              if (e.due_date) {
+                const date = moment(e.due_date).toDate()
+                const type = e.type;
+                if (dateMap[type]) {
+                  if (date > dateMap[type]?.date) {
+                    serverRespone[dateMap[type].i].due_date = "";
+                    dateMap[type] = { i, date }
+                  } else {
+                    serverRespone[i].due_date = "";
+                  }
+                } else dateMap[type] = { i, date }
+              }
+            });
+            setRecords(serverRespone);
+          }
+          
           setIsBottom(false);
         }
       }
@@ -118,12 +126,12 @@ const AntiParasiticRecord = (props) => {
   }
 
 
-  useEffect(async() => {
-      if(props.petId && props.visitId){
-        console.log("heloo");
-        await getDewormingDetail(props.visitId);
-      }
-  }, [props.petId,props.visitId]);
+  useEffect(async () => {
+    if (props.petId && props.visitId) {
+      console.log("heloo");
+      await getDewormingDetail(props.visitId);
+    }
+  }, [props.petId, props.visitId]);
   return (
     <React.Fragment>
 
@@ -141,9 +149,7 @@ const AntiParasiticRecord = (props) => {
         ))
 
       ) : (
-        <div >
-          <p><label>No record found:</label></p>
-        </div>
+        <NoRecord />
       )}
 
 

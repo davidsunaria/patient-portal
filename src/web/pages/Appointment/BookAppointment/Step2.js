@@ -11,7 +11,7 @@ const Step2 = (props) => {
                         {
                             props.data && props.data.length > 0 && props.data.map((val, index) => (
                                 <label key={index} className="customCheckbox">
-                                    <input type="radio" onChange={(e) => props.onSubmit(e,val)} name="client_id" value={val?.id} /> {val?.clinic_name}
+                                    <input type="radio" checked={ (val?.id == props.formData?.clinic_id) ? true : false} onChange={(e) => props.onSubmit(e,val)} name="client_id" value={val?.id} /> {val?.clinic_name}
                                 </label>
                             ))
                         }

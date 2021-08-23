@@ -18,7 +18,7 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 
 const ProfileView = (props) => {
   const history = useHistory();
-  const [currentTab, setCurrentTab] = useState('treatment_record');
+  const [currentTab, setCurrentTab] = useState();
   const [petData, setPetData] = useState({});
   const getPet = useStoreActions((actions) => actions.pet.getPet);
   const response = useStoreState((state) => state.pet.response);
@@ -39,11 +39,17 @@ const ProfileView = (props) => {
     }
   }, [response]);
   const selectedTab = (type) => {
+    if(visitId && type){
+      history.push(`/pet-profile/${id}`);
+    }
     setCurrentTab(type)
   }
 
   useEffect(() => {
     if (type) {
+      if (type == "treatment-record") {
+        setCurrentTab("treatment_record");
+      }
       if (type == "antiparasitic-record" || type == "deworming") {
         setCurrentTab("antiparasitic_record");
       }
@@ -66,20 +72,20 @@ const ProfileView = (props) => {
               backAction={"pets"} heading={"Profile"} subHeading={"Here we can add or edit pet information"} />
             <PetProfile data={petData} />
             <Divider />
-
+          
             <ul className="customTabs">
-              <li><a className={` ${currentTab && currentTab == "treatment_record" ? "active" : ""}`} onClick={() => selectedTab('treatment_record')}>Treatment Record</a></li>
+              <li><a className={` ${(currentTab == "" || currentTab == "treatment_record") ? "active" : ""}`} onClick={() => selectedTab('treatment_record')}>Treatment Record</a></li>
               <li><a className={` ${currentTab && currentTab == "vaccination_record" ? "active" : ""}`} onClick={() => selectedTab('vaccination_record')}>Vaccination Record</a></li>
               <li><a className={` ${currentTab && currentTab == "antiparasitic_record" ? "active" : ""}`} onClick={() => selectedTab('antiparasitic_record')}>Anti-Parasitic Record</a></li>
               <li><a className={` ${currentTab && currentTab === "reports_record" ? "active" : ""}`} onClick={() => selectedTab('reports_record')}>Reports</a></li>
               <li><a className={` ${currentTab && currentTab == "medical_highlights_record" ? "active" : ""}`} onClick={() => selectedTab('medical_highlights_record')}>Medical Highlights</a></li>
             </ul>
 
-            {currentTab && currentTab == "treatment_record" && <TreatmentRecord petId={id} visitId={visitId} />}
-            {currentTab && currentTab == "vaccination_record" && <VaccinationRecord petId={id} visitId={visitId} />}
-            {currentTab && currentTab == "antiparasitic_record" && <AntiParasiticRecord petId={id} visitId={visitId} />}
-            {currentTab && currentTab == "reports_record" && <Reports petId={id} visitId={visitId} />}
-            {currentTab && currentTab == "medical_highlights_record" && <MedicalHighlights petId={id} />}
+            {(!currentTab || currentTab === "treatment_record") && <TreatmentRecord petId={id} visitId={visitId} />}
+            {currentTab && currentTab === "vaccination_record" && <VaccinationRecord petId={id} visitId={visitId} />}
+            {currentTab && currentTab === "antiparasitic_record" && <AntiParasiticRecord petId={id} visitId={visitId} />}
+            {currentTab && currentTab === "reports_record" && <Reports petId={id} visitId={visitId} />}
+            {currentTab && currentTab === "medical_highlights_record" && <MedicalHighlights petId={id} />}
           </main>
         </div>
       </div>

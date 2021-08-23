@@ -15,7 +15,7 @@ const ProfileView = (props) => {
   const handleAddPet = () => {
     history.push("/create-pet");
   }
-  
+
   return (
     <React.Fragment>
       <div className="content_outer">

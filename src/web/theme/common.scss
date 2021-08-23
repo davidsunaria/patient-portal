@@ -2154,7 +2154,7 @@ input:checked + .slider:after {
     position:static;
     box-shadow:inherit;
     padding:0px;
-    justify-content: space-around;
+    justify-content:flex-start;
 }
 .fieldBox .timeslotPopup span{
     width: 21.8%;
