@@ -74,7 +74,7 @@ const ProfileView = (props) => {
             <Divider />
           
             <ul className="customTabs">
-              <li><a className={` ${(currentTab == "" || currentTab == "treatment_record") ? "active" : ""}`} onClick={() => selectedTab('treatment_record')}>Treatment Record</a></li>
+              <li><a className={` ${(!currentTab || currentTab == "treatment_record") ? "active" : ""}`} onClick={() => selectedTab('treatment_record')}>Treatment Record</a></li>
               <li><a className={` ${currentTab && currentTab == "vaccination_record" ? "active" : ""}`} onClick={() => selectedTab('vaccination_record')}>Vaccination Record</a></li>
               <li><a className={` ${currentTab && currentTab == "antiparasitic_record" ? "active" : ""}`} onClick={() => selectedTab('antiparasitic_record')}>Anti-Parasitic Record</a></li>
               <li><a className={` ${currentTab && currentTab === "reports_record" ? "active" : ""}`} onClick={() => selectedTab('reports_record')}>Reports</a></li>
