@@ -2103,7 +2103,7 @@ input:checked + .slider:after {
     padding-left:50px!important;
 }
 ._loading_overlay_wrapper{
-    position: fixed;
+    position: fixed!important;
     width: 100%;
     height: 100%;
     left: 0px;
