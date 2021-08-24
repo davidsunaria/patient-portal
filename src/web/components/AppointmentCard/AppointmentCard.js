@@ -94,7 +94,7 @@ const AppointmentCard = (props) => {
     }, [isCancelled]);
 
     const joinMeeting = (meetingId) => {
-        window.open(`${process.env.REACT_APP_MEETING_URL}/${meetingId}`, "_blank");
+        window.open(`${process.env.REACT_APP_MEETING_URL}${meetingId}`, "_blank");
     }
     return (
         <React.Fragment>
