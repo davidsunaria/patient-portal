@@ -164,7 +164,7 @@ const Step3 = (props) => {
                         <label ref={innerRef} onClick={(e) => showTime(e)}>{(selectedTimeSlot) ? selectedTimeSlot : props.formData.slot}</label>
                         {props.formData && props.formData.date != undefined && <div className={(openTimePopup == false) ? "timeslotPopup d-none" : "timeslotPopup"}>
                             
-                            {props.slot && props.slot.length > 0 && props.slot.map((val, index) => (
+                            {props.slot && Object.values(props.slot).map((val, index) => (
                                 <span key={index} onClick={(e) => handleTimeSelect(e, "slot", val)}>{val}</span>
                             ))}
                         </div>

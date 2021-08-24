@@ -5,11 +5,15 @@ import { getPets, getPet, getTreatmentRecord, getVaccinationRecord, getAntiParas
 const petModel = {
   response: [],
   isPetDeleted: false,
+  isPetCreated: false,
   setResponse: action((state, payload) => {
     state.response = payload;
   }),
   setIsPetDeleted: action((state, payload) => {
     state.isPetDeleted = payload;
+  }),
+  setIsPetCreated: action((state, payload) => {
+    state.isPetCreated = payload;
   }),
   getPets: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
@@ -108,6 +112,7 @@ const petModel = {
     } else {
       toast.success(<ToastUI message={response.message} type={"Success"} />);
       getStoreActions().common.setLoading(false);
+      await actions.setIsPetCreated(true);
       await actions.setResponse(response);
     }
   }),
@@ -182,7 +187,7 @@ const petModel = {
       await actions.setResponse(response);
     }
   }),
-  
+
   getVaccinationDetail: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getVaccinationDetail(payload);
@@ -207,7 +212,7 @@ const petModel = {
       await actions.setResponse(response);
     }
   })
-  
+
 };
 
 export default petModel;

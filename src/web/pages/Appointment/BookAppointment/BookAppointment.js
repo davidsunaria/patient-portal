@@ -420,9 +420,7 @@ const BookAppointment = (props) => {
               subHeading={"Start your process to book your appointment"}
               hasBtn={false}
             />
-            {JSON.stringify(formData)}
-            {JSON.stringify(allProviders)}
-            
+           
             {currentPage == 1 && <Step1 page={currentPage} onSubmit={handleStepOne} />}
             {currentPage == 2 && <Step2 other={otherData} formData={formData} data={allClinics} page={currentPage} onSubmit={handleStepTwo} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 3 && <Step3 other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}

@@ -19,8 +19,14 @@ const Header = (props) => {
     if (type == "book-appointment") {
       let isCompleted = getProfileCompleted();
       if (isCompleted.isPetCompleted == 0 || isCompleted.isProfileCompleted == 0) {
-        toast.error(<ToastUI message={"Please set up yout and you pet\'s profile to have a better experience"} type={"Error"} />);
-        history.push(`/create-pet`);
+        toast.error(<ToastUI message={"Please set up your and you pet\'s profile to have a better experience"} type={"Error"} />);
+        if(isCompleted.isProfileCompleted == 0){
+          history.push(`/edit-profile`);
+        }
+        else if(isCompleted.isPetCompleted == 0){
+          history.push(`/create-pet`);
+        }
+        
       }
       else {
         history.push(`/${type}`);

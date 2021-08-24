@@ -15,6 +15,7 @@ const Questionnaire = () => {
   const history = useHistory();
   const [selectedScale, setSelectedScale] = useState(0);
   const [file, setFile] = useState(null);
+  const [patientQuestionnaireId, setPatientQuestionnaireId] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -22,7 +23,7 @@ const Questionnaire = () => {
   const saveQuestionnaire = useStoreActions((actions) => actions.appointment.saveQuestionnaire);
   const uploadFile = useStoreActions((actions) => actions.appointment.uploadFile);
   const response = useStoreState((state) => state.appointment.response);
-  const isQuestionnaireSubmitted = useStoreState((state) => state.dashboard.isQuestionnaireSubmitted);
+  const isQuestionnaireSubmitted = useStoreState((state) => state.appointment.isQuestionnaireSubmitted);
 
 
   useEffect(() => {
@@ -41,6 +42,10 @@ const Questionnaire = () => {
     if (response) {
       let { status, statuscode, data } = response;
       if (statuscode && statuscode === 200) {
+
+        if (data?.details?.id) {
+          setPatientQuestionnaireId(data?.details?.id);
+        }
         if (data?.details?.questionnaire?.questions) {
           let json = data?.details?.questionnaire?.questions;
           _.forOwn(json, (value, index) => {
@@ -90,7 +95,7 @@ const Questionnaire = () => {
     }
   }
   const onselectScale = (i, index, id) => {
-    setSelectedScale(i);
+    setSelectedScale(i+1);
     let val = [...questions];
     val[index]['answer'] = id;
     val[index]['error'] = false;
@@ -144,7 +149,7 @@ const Questionnaire = () => {
       });
 
       let formData = {
-        patient_questionnarire_id: allQuestions[0]["questionnaires_id"],
+        patient_questionnarire_id: patientQuestionnaireId,
         client_id: getLoggedinUserId(),
         patient_answers: patientAnswers
       }
@@ -165,7 +170,7 @@ const Questionnaire = () => {
               hasBtn={false} />
             <Divider showIcon={false} />
 
-            {JSON.stringify(questions[5])}
+           
 
             <div className="box">
               {

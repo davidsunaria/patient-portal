@@ -18,7 +18,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
-import { getLoggedinUserId } from "patient-portal-utils/Service";
+import { getLoggedinUserId, getProfileCompleted } from "patient-portal-utils/Service";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import DEFAULT_PET from "patient-portal-images/default-pet.png";
 
@@ -53,7 +53,8 @@ const AddPet = (props) => {
   const getSpecies = useStoreActions((actions) => actions.pet.getSpecies);
   const getBreeds = useStoreActions((actions) => actions.pet.getBreeds);
   const response = useStoreState((state) => state.pet.response);
-
+  const isPetCreated = useStoreState((state) => state.pet.isPetCreated);
+  
   const addPet = async (payload) => {
     let pageData = { ...payload };
     pageData.breed = pageData.breed.value;
@@ -157,6 +158,16 @@ const AddPet = (props) => {
     return () => URL.revokeObjectURL(objectUrl)
   }, [file]);
 
+  useEffect(() => {
+    if(isPetCreated){
+      let res = getProfileCompleted();
+      let data = {
+        isPetCompleted: 1,
+        isProfileCompleted: res.isProfileCompleted
+      }
+      localStorage.setItem("profileStatus", JSON.stringify(data));
+    }
+  }, [isPetCreated]);
   return (
     <React.Fragment>
       <div className="content_outer">

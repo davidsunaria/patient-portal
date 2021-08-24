@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import PetInfoCard from "patient-portal-components/Pets/PetInfoCard.js";
-import { getLoggedinUserId } from "patient-portal-utils/Service";
+import { getLoggedinUserId, getProfileCompleted } from "patient-portal-utils/Service";
 import { useStoreActions, useStoreState } from "easy-peasy";
 
 const PetList = (props) => {
@@ -37,6 +37,14 @@ const PetList = (props) => {
         let array = [...petsData]
         let newarray = array.filter(element => element.id !== deletedPetId);
         setPetsData(newarray);
+        if(newarray.length == 0){
+          let res = getProfileCompleted();
+          let data = {
+            isPetCompleted: 0,
+            isProfileCompleted: res.isProfileCompleted
+          }
+          localStorage.setItem("profileStatus", JSON.stringify(data));
+        }
       }
   }, [isPetDeleted, deletedPetId]);
   return (
