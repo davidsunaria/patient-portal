@@ -98,6 +98,7 @@ const EditPet = (props) => {
           let pageData = { ...data?.pet };
           pageData.breed = {label: pageData.breedmap.name,value: pageData.breedmap.id};
           pageData.species = {label: pageData.speciesmap.species,value: pageData.speciesmap.id};
+          pageData.tags = (pageData.tags !== null) ? pageData.tags : [];
           if(pageData.pet_image){
             pageData.pet_image = `${process.env.REACT_APP_MEDIA_URL + pageData.pet_image}`;
           }
