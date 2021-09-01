@@ -38,7 +38,7 @@ const Notifications = (props) => {
   const getImage = (value) => {
     let src, class_used;
 
-    if (value.event_type === "appointment" || value.event_type === "appointment_cancel" || value.event_type === "appointment_reschedule") {
+    if (value.event_type === "appointment_reminder" || value.event_type === "appointment" || value.event_type === "appointment_cancel" || value.event_type === "appointment_reschedule") {
       src = APPOINTMENT_IMG;
       class_used = "appointmentNotification";
     }
@@ -97,7 +97,7 @@ const Notifications = (props) => {
             ))
           ) : (
             <div className="notify">
-              <p>No data found</p>
+              <p>No recommendations found</p>
             </div>
           )}
         </div>
@@ -119,7 +119,7 @@ const Notifications = (props) => {
             ))
           ) : (
             <div className="notify">
-              <p>No data found</p>
+              <p>No recommendations found</p>
             </div>
           )}
         </div>

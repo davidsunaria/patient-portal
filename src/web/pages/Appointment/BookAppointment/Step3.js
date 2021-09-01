@@ -6,6 +6,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { formatDate } from "patient-portal-utils/Service";
 import moment from "moment";
 import Other from "patient-portal-pages/Appointment/BookAppointment/Other.js"
+import I_IMAGE from "patient-portal-images/i.svg";
+import Service from "patient-portal-components/Appointment/Service";
 
 
 const Step3 = (props) => {
@@ -15,6 +17,14 @@ const Step3 = (props) => {
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const calendarRef = useRef();
+    const [serviceModal, setServiceModal] = useState(false);
+    const [serviceDetail, setServiceDetail] = useState({});
+
+    const showServiceDetail = async (e) => {
+        console.log("geyy", e)
+        setServiceModal(!serviceModal);
+        setServiceDetail(e);
+    }
 
     const handleClick = (e) => {
         e.preventDefault();
@@ -84,6 +94,7 @@ const Step3 = (props) => {
     });
     return (
         <div className="row">
+            <Service data={serviceDetail} modal={serviceModal} toggle={showServiceDetail} />
             <div className="col-md-8">
                 {
                     props.data && props.data.length > 0 && props.data.map((val, index) => (
@@ -102,6 +113,7 @@ const Step3 = (props) => {
                                                     {value?.name}
                                                 </span>
                                                 <span className="serviceTime">{value?.duration} Minutes</span>
+                                                <img onClick={() => showServiceDetail(value)} class="infoIcon" src={I_IMAGE} />
                                             </label>
 
                                         ))

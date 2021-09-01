@@ -4,10 +4,15 @@ import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { getMyProfile, getPets, updateMyProfile, getClinics, getSettings, updateSettings } from "patient-portal-api/ProfileApi.js";
 const profileModel = {
   response: [],
+  isProfileUpdated: false,
   setResponse: action((state, payload) => {
     state.response = payload;
   }),
+  setIsProfileUpdated: action((state, payload) => {
+    state.isProfileUpdated = payload;
+  }),
   getMyProfile: thunk(async (actions, payload, { getStoreActions }) => {
+    await actions.setIsProfileUpdated(false);
     getStoreActions().common.setLoading(true);
     let response = await getMyProfile(payload);
     if (response.statuscode != 200) {
@@ -31,11 +36,13 @@ const profileModel = {
   }),
   updateMyProfile: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
+    await actions.setIsProfileUpdated(false);
     let response = await updateMyProfile(payload);
     if (response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
     } else {
+      await actions.setIsProfileUpdated(true);
       getStoreActions().common.setLoading(false);
       toast.success(<ToastUI message={response.message} type={"Success"} />);
       await actions.setResponse(response);

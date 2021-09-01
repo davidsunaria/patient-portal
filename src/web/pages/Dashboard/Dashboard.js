@@ -20,6 +20,7 @@ const Dashboard = (props) => {
   const [petId, setPetId] = useState(null);
   const [visitId, setVisitId] = useState(null);
 
+  const getPetIdInfo = useStoreActions((actions) => actions.dashboard.getPetIdInfo);
   const getPetByVisit = useStoreActions((actions) => actions.dashboard.getPetByVisit);
   const getDashboard = useStoreActions((actions) => actions.dashboard.getDashboard);
   const response = useStoreState((state) => state.dashboard.response);
@@ -70,11 +71,10 @@ const Dashboard = (props) => {
         history.push(`/appointment-detail/${event.event_id}`);
         break;
 
-      case "appointment_cancel":
+      case "appointment_reschedule":
         history.push(`/appointment-detail/${event.event_id}`);
         break;
-
-      case "appointment_reschedule":
+      case "appointment_reminder":
         history.push(`/appointment-detail/${event.event_id}`);
         break;
 
@@ -86,15 +86,15 @@ const Dashboard = (props) => {
         break;
 
       case "deworming":
-        getPetId(event);
+        getPetId(event, "new");
         break;
 
       case "anti_ectoparasite":
-        getPetId(event);
+        getPetId(event, "new");
         break;
 
       case "vaccination":
-        getPetId(event);
+        getPetId(event, "new");
         break;
       case "invoice":
         history.push(`/invoice-detail/${event.event_id}`);
@@ -115,8 +115,16 @@ const Dashboard = (props) => {
   },
     [history],
   )
-  const getPetId = useCallback(async (event) => {
-    await getPetByVisit({ id: event.event_id, event: event.event_type, history });
+  const getPetId = useCallback(async (event, type) => {
+    
+    if (type && type == "new") {
+      console.log("Heloo", event.event_id, event.event_type, type);
+      await getPetIdInfo({ id: event.event_id, event: event.event_type, history });
+    }
+    else {
+      alert("1")
+      await getPetByVisit({ id: event.event_id, event: event.event_type, history });
+    }
   },
     [history],
   )
@@ -130,7 +138,7 @@ const Dashboard = (props) => {
           <main>
             <Header
               backEnabled={false}
-              heading={`Hello , ${userData?.firstname} ${" "} ${userData?.lastname}`}
+              heading={`Hello, ${userData?.firstname} ${" "} ${userData?.lastname}`}
               subHeading={"Today’s Recommendations"}
               hasBtn={true}
               btnName={"calendar"}

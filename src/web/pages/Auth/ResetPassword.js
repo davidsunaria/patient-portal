@@ -51,7 +51,7 @@ const ResetPassword = (props) => {
         <div className="loginBox">
           <div className="loginLogo"><img src={DCCLOGO} /></div>
           <div className="loginTitle">Forgot Password</div>
-          <div className="loginIntro">Re-create your password and login again</div>
+          <div className="loginIntro">Re-create your password</div>
           <Formik
             enableReinitialize={true}
             initialValues={formData}
@@ -107,7 +107,7 @@ const ResetPassword = (props) => {
                     }>
                       <img src={PASSWORD_IMAGE} />
                       <input
-                        placeholder="Enter new password"
+                        placeholder="Re-enter new password"
                         id="password_confirmation"
                         name="password_confirmation"
                         type="password"
@@ -120,10 +120,10 @@ const ResetPassword = (props) => {
                     <ErrorMessage name="password_confirmation" component="span" className="errorMsg" />
                   </div>
                   <button type="submit" disabled={isLoading} className="loginBtn">{isLoading && <Spinner animation="border" size="sm" />}
-                    {(isLoading) ? 'Processing' : 'Log In'}</button>
+                    {(isLoading) ? 'Processing' : 'Submit'}</button>
 
                   <div className="alreadyAccount">
-                    <p>Already have a account?</p>
+                    <p>Already have an account?</p>
                     <Link to="/login">Sign In</Link>
                   </div>
 
@@ -134,17 +134,7 @@ const ResetPassword = (props) => {
           </Formik>
         </div>
       </div>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      
     </React.Fragment>
   );
 };

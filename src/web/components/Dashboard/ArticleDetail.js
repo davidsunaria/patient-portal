@@ -46,7 +46,7 @@ const ArticleDetail = (props) => {
               backTitle={"Back to dashboard"}
               backAction={"dashboard"}
               heading={"Article Detail"}
-              subHeading={"Here we can get detail of pet"}
+              subHeading={""}
               hasBtn={true}
               btnName={"calendar"}
               btnTitle="Book an Appointment"

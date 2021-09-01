@@ -6,6 +6,7 @@ const petModel = {
   response: [],
   isPetDeleted: false,
   isPetCreated: false,
+  isPetUpdated:false,
   setResponse: action((state, payload) => {
     state.response = payload;
   }),
@@ -15,7 +16,11 @@ const petModel = {
   setIsPetCreated: action((state, payload) => {
     state.isPetCreated = payload;
   }),
+  setIsPetUpdated: action((state, payload) => {
+    state.isPetUpdated = payload;
+  }),
   getPets: thunk(async (actions, payload, { getStoreActions }) => {
+    await actions.setIsPetUpdated(false);
     getStoreActions().common.setLoading(true);
     let response = await getPets(payload);
     if (response.statuscode != 200) {
@@ -27,6 +32,7 @@ const petModel = {
     }
   }),
   getPet: thunk(async (actions, payload, { getStoreActions }) => {
+    await actions.setIsPetUpdated(false);
     getStoreActions().common.setLoading(true);
     let response = await getPet(payload);
     if (response.statuscode != 200) {
@@ -105,6 +111,7 @@ const petModel = {
   }),
   createPet: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
+    await actions.setIsPetCreated(false);
     let response = await createPet(payload);
     if (response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
@@ -118,12 +125,14 @@ const petModel = {
   }),
   updatePet: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
+    await actions.setIsPetUpdated(false);
     let response = await updatePet(payload);
     if (response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
     } else {
       toast.success(<ToastUI message={response.message} type={"Success"} />);
+      await actions.setIsPetUpdated(true);
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
     }
@@ -139,7 +148,6 @@ const petModel = {
       await actions.setResponse(response);
     }
   }),
-
   getBreeds: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getBreeds(payload);
@@ -187,7 +195,6 @@ const petModel = {
       await actions.setResponse(response);
     }
   }),
-
   getVaccinationDetail: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getVaccinationDetail(payload);
@@ -212,7 +219,6 @@ const petModel = {
       await actions.setResponse(response);
     }
   })
-
 };
 
 export default petModel;

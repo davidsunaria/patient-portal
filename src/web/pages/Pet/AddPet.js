@@ -21,6 +21,7 @@ import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-load
 import { getLoggedinUserId, getProfileCompleted } from "patient-portal-utils/Service";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import DEFAULT_PET from "patient-portal-images/default-pet.png";
+import { addDays } from 'date-fns';
 
 
 // https://stackoverflow.com/questions/57594045/validation-using-formik-with-yup-and-react-select
@@ -159,13 +160,16 @@ const AddPet = (props) => {
   }, [file]);
 
   useEffect(() => {
+    console.log("isPetCreated", isPetCreated)
     if(isPetCreated){
+      
       let res = getProfileCompleted();
       let data = {
         isPetCompleted: 1,
         isProfileCompleted: res.isProfileCompleted
       }
       localStorage.setItem("profileStatus", JSON.stringify(data));
+      history.push("/pets");
     }
   }, [isPetCreated]);
   return (
@@ -232,7 +236,7 @@ const AddPet = (props) => {
                                     ? "fieldInput error"
                                     : "fieldInput"
                                 }
-                                placeholder="Enter first name"
+                                placeholder="Enter pet name"
                                 id="name"
                                 name="name"
                                 type="text"
@@ -252,28 +256,25 @@ const AddPet = (props) => {
                               <Select
                                 placeholder={"Select species"}
                                 className={
-                                  errors.species && errors.species
+                                  errors.species && touched.species
                                     ? "customSelectBox error"
                                     : "customSelectBox"
                                 }
                                 isSearchable={true}
                                 id="species"
                                 name="species"
-                                value={values.species}
+                                value={values.species || ""}
                                 options={allSpecies}
-                                onBlur={handleBlur}
                                 onChange={selectedOption => {
                                   let event = { target: { name: 'species', value: selectedOption } }
-                                  handleChange(event);
+                                 
                                   setSelectedSpecies(selectedOption.value);
                                   if (selectedOption.value != "Other") {
                                     props.setFieldValue("breed_name", "");
                                     setShowBreedName(false);
                                   }
                                   props.setFieldValue("breed", {});
-                                }}
-                                onBlur={() => {
-                                  handleBlur({ target: { name: 'species' } });
+                                  handleChange(event);
                                 }}
                               />
 
@@ -297,9 +298,8 @@ const AddPet = (props) => {
                                 isSearchable={true}
                                 id="breed"
                                 name="breed"
-                                value={values.breed}
+                                value={values.breed || ""}
                                 options={allBreeds}
-                                onBlur={handleBlur}
                                 onChange={selectedOption => {
                                   let event = { target: { name: 'breed', value: selectedOption } }
                                   handleChange(event);
@@ -311,9 +311,6 @@ const AddPet = (props) => {
                                     props.setFieldValue("breed_name", "");
                                     setShowBreedName(false);
                                   }
-                                }}
-                                onBlur={() => {
-                                  handleBlur({ target: { name: 'breed' } });
                                 }}
                               />
                               <ErrorMessage name="[breed.value]" component="span" className="errorMsg" />
@@ -327,7 +324,7 @@ const AddPet = (props) => {
                             <div className="fieldBox">
                               <input
                                 className={
-                                  errors.name && touched.name
+                                  errors.breed_name && touched.breed_name
                                     ? "fieldInput error"
                                     : "fieldInput"
                                 }
@@ -368,17 +365,14 @@ const AddPet = (props) => {
                             <div className="fieldBox fieldIcon">
 
                               <DatePicker
+                              maxDate={new Date()}
                                 placeholderText="DOB"
                                 ref={calendarRef}
                                 className="fieldInput"
                                 value={values.dob}
-                                onBlur={handleBlur}
                                 onChange={selectedOption => {
                                   let event = { target: { name: 'dob', value: moment(selectedOption).format("YYYY-MM-DD") } }
                                   handleChange(event);
-                                }}
-                                onBlur={() => {
-                                  handleBlur({ target: { name: 'dob' } });
                                 }}
                               />
                               <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />

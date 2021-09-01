@@ -30,8 +30,8 @@ const Invoice = (props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
-    const [petId, setPetId] = useState({ value: "", label: "All" });
-    const [clinicId, setClinicId] = useState({ value: "", label: "All" });
+    const [petId, setPetId] = useState({ value: "", label: "All Pets" });
+    const [clinicId, setClinicId] = useState({ value: "", label: "All Clinics" });
     const [allClinics, setAllClinics] = useState([]);
     const [allPets, setAllPets] = useState([]);
 
@@ -243,7 +243,7 @@ const Invoice = (props) => {
                                     <div className="fieldBox">
 
                                         <Select
-                                            defaultValue={{ label: "All", value: "" }}
+                                            defaultValue={{ label: "All Pets", value: "" }}
                                             className={"customSelectBox petSelect"}
                                             placeholder={"Select pet"}
                                             isSearchable={true}
@@ -259,7 +259,7 @@ const Invoice = (props) => {
                                 <div className="fieldOuter d-inline-block mb-sm-0">
                                     <div className="fieldBox">
                                         <Select
-                                            defaultValue={{ label: "All", value: "" }}
+                                            defaultValue={{ label: "All Clinics", value: "" }}
                                             className={"customSelectBox petSelect"}
                                             placeholder={"Select clinic"}
                                             isSearchable={true}

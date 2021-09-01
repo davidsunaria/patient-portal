@@ -14,6 +14,7 @@ import { getLoggedinUserId, getUser } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 const BookAppointment = (props) => {
+  const {id} = useParams();
   let { firstname, lastname, email, phone_code } = getUser();
   const history = useHistory();
   const [formData, setFormData] = useState({ type: "", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: "", appointment_notes: "", duration: "", service_for: "" });
@@ -37,7 +38,13 @@ const BookAppointment = (props) => {
 
   const response = useStoreState((state) => state.appointment.response);
   const isBooked = useStoreState((state) => state.appointment.isBooked);
-
+  useEffect(() => {
+    if(id){
+      let formPayload = { ...formData };
+      formPayload.pet_id = id;
+      setFormData(formPayload);
+    }
+  }, [id]);
   //Set First Step Data
   const handleStepOne = (payload) => {
     let formPayload = { ...formData };
@@ -219,7 +226,7 @@ const BookAppointment = (props) => {
       requestOther.service_description = "";
       requestOther.service_duration = "";
       requestOther.provider_name = "";
-      setAllServices([]);
+      //setAllServices([]);
       setAllProviders([]);
       setCalenderData([]);
       setTimeSlot([]);

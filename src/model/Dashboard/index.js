@@ -1,7 +1,7 @@
 import { action, thunk } from "easy-peasy";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import { getDashboard, deleteNotification, getArticleDetail, getPetByVisit } from "patient-portal-api/DashboardApi.js";
+import { getDashboard, deleteNotification, getArticleDetail, getPetByVisit, getPetIdInfo } from "patient-portal-api/DashboardApi.js";
 import { setProfileCompleted } from "patient-portal-utils/Service.js";
 const dashboardModel = {
   response: [],
@@ -64,7 +64,6 @@ const dashboardModel = {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
     } else {
-      console.log("TYpe", payload.event);
       getStoreActions().common.setLoading(false);
       let type;
       if (payload.event == "anti_ectoparasite") {
@@ -88,6 +87,21 @@ const dashboardModel = {
         payload.history.push(`/pet-profile/${response.data.pet_visit.pet_id}/treatment-record/${response.data.pet_visit.id}`);
       }
 
+    }
+  }),
+  
+  getPetIdInfo: thunk(async (actions, payload, { getStoreActions }) => {
+
+    getStoreActions().common.setLoading(true);
+    let response = await getPetIdInfo(payload);
+    if (response.statuscode != 200) {
+      toast.error(<ToastUI message={response.message} type={"Error"} />);
+      getStoreActions().common.setLoading(false);
+    } else {
+      getStoreActions().common.setLoading(false);
+      if (payload.event == "anti_ectoparasite" || payload.event == "deworming" || payload.event == "vaccination") {
+        payload.history.push(`/book-appointment/${response.data.event_data.pet_id}`);
+      }
     }
   })
 };

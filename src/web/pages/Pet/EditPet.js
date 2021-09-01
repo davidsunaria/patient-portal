@@ -54,6 +54,7 @@ const EditPet = (props) => {
   const getSpecies = useStoreActions((actions) => actions.pet.getSpecies);
   const getBreeds = useStoreActions((actions) => actions.pet.getBreeds);
   const response = useStoreState((state) => state.pet.response);
+  const isPetUpdated = useStoreState((state) => state.pet.isPetUpdated);
 
   const editPet = async (payload) => {
     let pageData = { ...payload };
@@ -96,9 +97,10 @@ const EditPet = (props) => {
 
         if (data?.pet) {
           let pageData = { ...data?.pet };
+          console.log(pageData);
           pageData.breed = {label: pageData.breedmap.name,value: pageData.breedmap.id};
           pageData.species = {label: pageData.speciesmap.species,value: pageData.speciesmap.id};
-          pageData.tags = (pageData.tags !== null) ? pageData.tags : [];
+          pageData.tags = (pageData.tags && pageData.tags !== null) ? pageData.tags.split(",") : [];
           if(pageData.pet_image){
             pageData.pet_image = `${process.env.REACT_APP_MEDIA_URL + pageData.pet_image}`;
           }
@@ -178,7 +180,16 @@ const EditPet = (props) => {
     // free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(objectUrl)
   }, [file]);
+
+  useEffect(() => {
+    console.log("isPetUpdated", isPetUpdated)
+    if(isPetUpdated){
+      history.push("/pets");
+    }
+  }, [isPetUpdated]);
+
   return (
+    
     <React.Fragment>
       <div className="content_outer">
         <Sidebar activeMenu="pets" />
@@ -192,7 +203,6 @@ const EditPet = (props) => {
               subHeading={"Here we can edit pet information"}
               hasBtn={false}
             />
-
             
             <div className="box">
               <Formik
@@ -245,7 +255,7 @@ const EditPet = (props) => {
                                     ? "fieldInput error"
                                     : "fieldInput"
                                 }
-                                placeholder="Enter first name"
+                                placeholder="Enter pet name"
                                 id="name"
                                 name="name"
                                 type="text"
@@ -264,7 +274,7 @@ const EditPet = (props) => {
                             <div className="fieldBox">
                               <Select
                                 className={
-                                  errors.species && errors.species
+                                  errors.species && touched.species
                                     ? "customSelectBox error"
                                     : "customSelectBox"
                                 }
@@ -273,19 +283,15 @@ const EditPet = (props) => {
                                 name="species"
                                 value={values.species}
                                 options={allSpecies}
-                                onBlur={handleBlur}
                                 onChange={selectedOption => {
                                   let event = { target: { name: 'species', value: selectedOption } }
-                                  handleChange(event);
                                   setSelectedSpecies(selectedOption.value);
                                   if(selectedOption.value != "Other"){
                                     props.setFieldValue("breed_name", "");
                                     setShowBreedName(false);
                                   }
                                   props.setFieldValue("breed", {});
-                                }}
-                                onBlur={() => {
-                                  handleBlur({ target: { name: 'species' } });
+                                  handleChange(event);
                                 }}
                               />
                               
@@ -310,7 +316,6 @@ const EditPet = (props) => {
                                 name="breed"
                                 value={values.breed}
                                 options={allBreeds}
-                                onBlur={handleBlur}
                                 onChange={selectedOption => {
                                   let event = { target: { name: 'breed', value: selectedOption } }
                                   handleChange(event);
@@ -322,9 +327,6 @@ const EditPet = (props) => {
                                     props.setFieldValue("breed_name", "");
                                     setShowBreedName(false);
                                   }
-                                }}
-                                onBlur={() => {
-                                  handleBlur({ target: { name: 'breed' } });
                                 }}
                               />
                               <ErrorMessage name="[breed.value]" component="span" className="errorMsg" />
@@ -338,7 +340,7 @@ const EditPet = (props) => {
                             <div className="fieldBox">
                               <input
                                 className={
-                                  errors.name && touched.name
+                                  errors.name && touched.breed_name
                                     ? "fieldInput error"
                                     : "fieldInput"
                                 }
@@ -379,6 +381,7 @@ const EditPet = (props) => {
                             <div className="fieldBox fieldIcon">
 
                               <DatePicker
+                              maxDate={new Date()}
                               placeholderText="DOB"
                                 ref={calendarRef}
                                 className="fieldInput"
@@ -460,7 +463,7 @@ const EditPet = (props) => {
                               placeholder="Enter tags"
                                 className="fieldInput"
                                 name="tags"
-                                value={values.tags}
+                                value={values.tags || ""}
                                 onChange={tags => {
                                   setFieldValue("tags", tags);
                                 }}

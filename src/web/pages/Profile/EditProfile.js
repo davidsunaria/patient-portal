@@ -53,7 +53,13 @@ const EditProfile = (props) => {
   const getClinics = useStoreActions((actions) => actions.profile.getClinics);
   const updateMyProfile = useStoreActions((actions) => actions.profile.updateMyProfile);
   const response = useStoreState((state) => state.profile.response);
-
+  const isProfileUpdated = useStoreState((state) => state.profile.isProfileUpdated);
+   
+ useEffect(() => {
+   if(isProfileUpdated){
+    history.push("/profile");
+   }
+ }, [isProfileUpdated]); 
   useEffect(async () => {
     await getMyProfile(getLoggedinUserId());
     await getClinics();
@@ -91,7 +97,7 @@ const EditProfile = (props) => {
     formData.append("email", payload?.email);
     formData.append("phone", `${(phone.phone) ? phone.phone.replace(/[ `~!@#$%^&*()_|\-=?;:'",.<>\{\}\[\]\\\/]/gi, '') : ''}`);
     formData.append("countryCode", `${(phone.phone) ? "+" + phone.dialCode : ''}`);
-    formData.append("gender", payload?.gender);
+    formData.append("gender", (payload?.gender == null || payload?.gender == 'null') ? "" : payload?.gender);
     formData.append("nick_name", payload?.nick_name);
     formData.append("phone_code2", `${(phone2.phone) ? "+" + phone2.dialCode : ''}`);
     formData.append("phoneNumber_2", `${(phone2.phone) ? phone2.phone.replace(/[ `~!@#$%^&*()_|\-=?;:'",.<>\{\}\[\]\\\/]/gi, '') : ''}`);
@@ -100,15 +106,16 @@ const EditProfile = (props) => {
     formData.append("pincode", payload?.pincode);
     formData.append("city", payload?.city);
     formData.append("state", payload?.state);
-    formData.append("country", payload.country);
-    formData.append("gst_no", payload?.gst_no);
-    formData.append("source", payload?.source);
-    formData.append("preferred_clinic", payload?.preferred_clinic);
-    formData.append("company", payload?.company);
+    formData.append("country", (payload.country) ? payload.country : "");
+    formData.append("gst_no", (payload?.gst_no) ? payload?.gst_no : "");
+    formData.append("source", (payload?.source) ? payload?.source : "");
+    formData.append("preferred_clinic", (payload?.preferred_clinic) ? payload?.preferred_clinic : ""); 
+    formData.append("company", (payload?.company) ? payload?.company : "");
 
     if (file && file !== undefined) {
       formData.append("profile_image", file);
     }
+    console.log("formData", payload);
     await updateMyProfile(formData);
   }
   const onFileChange = async event => {
@@ -149,7 +156,6 @@ const EditProfile = (props) => {
               hasBtn={false}
 
             />
-
             <div className="box">
               <Formik
                 enableReinitialize={true}
@@ -283,17 +289,17 @@ const EditProfile = (props) => {
                           </div>
                         </div>
                         <div className="col-sm-6">
-                          <div className="fieldOuter">
+                          <div className="fieldOuter position-relative">
                             <label className="fieldLabel">Gender<span className="required">*</span></label>
                             <div className="fieldBox fieldIcon mt-2">
                               <label className="customRadio d-inline-block mr-3 mb-0">
-                                <input type="radio" checked={values.gender === 'male'} name="gender" value={"male"}
+                                <input type="radio" checked={values?.gender == 'male' ? true : false} name="gender" value={"male"}
                                   onChange={handleChange}
-                                  onBlur={handleBlur} /> Male</label>
+                                   /> Male</label>
                               <label className="customRadio d-inline-block mb-0">
-                                <input type="radio" checked={values.gender === 'female'} name="gender" value={"female"}
+                                <input type="radio" checked={values?.gender == 'female' ? true : false} name="gender" value={"female"}
                                   onChange={handleChange}
-                                  onBlur={handleBlur} /> Female</label>
+                                   /> Female</label>
                             </div>
                             <ErrorMessage name="gender" component="span" className="errorMsg" />
 
@@ -566,17 +572,7 @@ const EditProfile = (props) => {
       )}
 
 
-      <ToastContainer
-        position="bottom-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+     
     </React.Fragment>
   );
 };

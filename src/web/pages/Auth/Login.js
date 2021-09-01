@@ -4,7 +4,7 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import { LanguageContext } from "patient-portal-context/LanguageContext.js";
 import DCCLOGO from "patient-portal-images/dcc-logo.svg";
 
-import EMAIL_IMAGE from "patient-portal-images/email.svg";
+import EMAIL_IMAGE from "patient-portal-images/phone-email.svg";
 import PASSWORD_IMAGE from "patient-portal-images/password.svg";
 
 import { Formik, ErrorMessage } from "formik";
@@ -39,7 +39,7 @@ const Login = (props) => {
         <div className="loginBox">
           <div className="loginLogo"><img src={DCCLOGO} /></div>
           <div className="loginTitle"> Welcome Back!</div>
-          <div className="loginIntro">If you are an existing client, Please sign in below. If you are new to our practice, Please complete signup to activate your Mobile App.</div>
+          <div className="loginIntro">If you are an existing client, Please sign in below. If you are new to our practice, Please complete signup to activate your account.</div>
 
           <Formik
             enableReinitialize={true}
@@ -74,7 +74,7 @@ const Login = (props) => {
                     }>
                       <img src={EMAIL_IMAGE} />
                       <input
-                        placeholder="Enter email of phone"
+                        placeholder="Enter email or phone"
                         id="user_name"
                         name="user_name"
                         type="text"

@@ -40,18 +40,15 @@ const TreatmentDetail = (props) => {
   }, [response]);
 
  
-  const getDate = (result, type) => {
-    if (result.date && result.time) {
-      return formatDate(`${result.date} ${" "} ${result.time} `, type, false);
-    }
-  }
+ 
 
  
   return (
     <React.Fragment>
       <div className="box">
+        
         <div className="teatmentTitle">{instruction?.instruction?.title}</div>
-        <div className="treatmentDate">{getDate(instruction, 3)} | {getDate(instruction, 4)} </div>
+        <div className="treatmentDate">{formatDate(instruction?.appointment?.appointment_datetime, 3)} | {formatDate(instruction?.appointment?.appointment_datetime, 4)} </div>
         <p className="p-text" dangerouslySetInnerHTML={{ __html: instruction?.instruction?.instructions }} />
       </div>
     </React.Fragment>

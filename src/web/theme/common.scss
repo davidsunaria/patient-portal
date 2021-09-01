@@ -1555,7 +1555,7 @@ input:checked + .slider:after {
         display:none;
 
         li{
-            a{
+            
                 font-size:12px;
                 color:$p-color;
                 padding-left:23px;
@@ -1563,6 +1563,7 @@ input:checked + .slider:after {
                 display:block;
                 padding-top:4px;
                 padding-bottom:4px;
+                
 
                 &:hover{
                     color:$primary;
@@ -1573,7 +1574,7 @@ input:checked + .slider:after {
                     left:0px;
                     top:5px;
                 }
-            }
+            
         }
     }
 
@@ -2188,4 +2189,26 @@ color: red!important;
     background-color: rgba(73, 83, 67, 0.2);
     border: 1px solid rgba(78,177,18, 1);
     margin-top: 3px;
+}
+.servicesDetail{
+    .serviceDetailRow{
+        padding: 10px 0px;
+        border-bottom: 1px dashed #dddddd;
+        label{
+            color:#4B4B5A;
+            font-size: 13px;
+            display:block;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        div{
+            font-size: 13px;
+            font-weight: 400;
+            color: #666666;
+        }
+    }
+    > div:last-child{
+        border:none;
+        padding-bottom:0px;
+    }
 }

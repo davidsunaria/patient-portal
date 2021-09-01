@@ -42,7 +42,7 @@ const ForgotPassword = (props) => {
         <div className="loginBox">
           <div className="loginLogo"><img src={DCCLOGO} /></div>
           <div className="loginTitle mb-2">Welcome Back!</div>
-          <p className="loginTitleInfo mb-4">If you are existing client, and forgot your password. Please enter phone number associated with your account</p>
+          <p className="loginTitleInfo mb-4">If you are an existing client, and forgot your password. Please enter phone number associated with your account</p>
           <Formik
             enableReinitialize={true}
             initialValues={phone}

@@ -63,9 +63,9 @@ const AntiParasiticRecord = (props) => {
           setCurrentPage(current_page);
           setNextPageUrl(next_page_url);
           setPerPage(per_page);
-        
+
           if (serverRespone.length > 0) {
-             if (current_page != 1) {
+            if (current_page != 1) {
               serverRespone = [...records, ...serverRespone]
             }
             let dateMap = {}
@@ -85,7 +85,7 @@ const AntiParasiticRecord = (props) => {
             });
             setRecords(serverRespone);
           }
-          
+
           setIsBottom(false);
         }
       }
@@ -138,13 +138,20 @@ const AntiParasiticRecord = (props) => {
       {records && records.length > 0 ? (
         records.map((val, index) => (
           <div key={index} className="box recordCard">
-            {val.due_date && <div className={`dueDate ${getDuedate(val)}`}>Due: {(val.due_date) ? showFormattedDate(val?.due_date, false) : ''}</div>}
+
+            {<div className={`dueDate  ${val.status == "completed" ? "green" : getDuedate(val)}`}>
+              {val.status == "pending" && <span>Due: {(val.due_date) ? showFormattedDate(val?.due_date, false) : ''} </span>}
+              {val.status == "completed" && <span>Completed</span>}
+            </div>}
+
+
+
             <div className="recordDate">
               <span>{(val.d_date) ? formatDate(val?.d_date, 1, false) : ''}</span>
               <p>{(val.d_date) ? formatDate(val?.d_date, 2, false) : ''}</p>
             </div>
-            <p><label>Medication:</label><span>{val?.type}</span></p>
-            <p><label>Type:</label><span>{val?.medicine_administered}</span></p>
+            <p><label>Medication:</label><span>{val?.medicine_administered}</span></p>
+            <p><label>Type:</label><span>{val?.type}</span></p>
           </div>
         ))
 
