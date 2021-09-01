@@ -2,7 +2,7 @@ import { axiosApi, apiUrl, objectToQuery } from "patient-portal-utils/HttpServic
 
 export const getPets = async (formData) => {
   try {
-    let response = await axiosApi.get(`${apiUrl}/pets/${formData}`);
+    let response = await axiosApi.get(`${apiUrl}/pets/${formData}/1`);
     return response.data;
   } catch (error) {
     return error.response.data;
