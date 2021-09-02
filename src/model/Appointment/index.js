@@ -1,7 +1,7 @@
 import { action, thunk } from "easy-peasy";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import { getPastAppointments, getUpcomingAppointments, getDates, getTimeSlot, updateAppointment, getClinicInfo, cancelAppointment, getAppointmentDetail, getCancellationPolicy, getAllClinics, getClinicServices, getProviders, getProviderSchedule, getProviderSlots, createAppointment, getProviderName, getFeedbackDetail, saveFeedback, getQuestionnaireDetail, uploadFile, saveQuestionnaire } from "patient-portal-api/AppointmentApi.js";
+import { getPastAppointments, getUpcomingAppointments, getDates, getTimeSlot, updateAppointment, getClinicInfo, cancelAppointment, getAppointmentDetail, getCancellationPolicy, getAllClinics, getClinicServices, getProviders, getProviderSchedule, getProviderSlots, createAppointment, getProviderName, getFeedbackDetail, saveFeedback, getQuestionnaireDetail, uploadFile, saveQuestionnaire, getPet } from "patient-portal-api/AppointmentApi.js";
 const appointmentModel = {
   response: [],
   isRescheduled: false,
@@ -284,7 +284,18 @@ const appointmentModel = {
       await actions.setResponse(response);
       getStoreActions().common.setLoading(false);
     }
-  })
+  }),
+  getPet: thunk(async (actions, payload, { getStoreActions }) => {
+    getStoreActions().common.setLoading(true);
+    let response = await getPet(payload);
+    if (response.statuscode != 200) {
+      toast.error(<ToastUI message={response.message} type={"Error"} />);
+      getStoreActions().common.setLoading(false);
+    } else {
+      await actions.setResponse(response);
+      getStoreActions().common.setLoading(false);
+    }
+  }),
   
 };
 

@@ -183,3 +183,11 @@ export const saveQuestionnaire = async (formData) => {
     return error.response.data;
   }
 };
+export const getPet = async (formData) => {
+  try {
+    let response = await axiosApi.get(`${apiUrl}/pet/edit/${formData}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

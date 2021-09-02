@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, forwardRef, useRef } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import CROSS_IMAGE from "patient-portal-images/cross.svg";
+import { numberFormat } from "patient-portal-utils/Service";
 
 const Service = (props) => {
   return (
@@ -21,7 +22,7 @@ const Service = (props) => {
 
               <div className="serviceDetailRow">
                 <label>Price</label>
-                <div>{props?.data?.price}</div>
+                <div>{numberFormat(props?.data?.price, 'currency', 2, 2)}</div>
               </div>
             </div>
           </div>

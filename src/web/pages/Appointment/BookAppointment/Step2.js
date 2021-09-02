@@ -37,7 +37,7 @@ const Step2 = (props) => {
                             props.data && props.data.length > 0 && props.data.map((val, index) => (
                                 <label key={index} className="customCheckbox">
                                     <input type="radio" checked={(val?.id == props.formData?.clinic_id) ? true : false} onChange={(e) => props.onSubmit(e, val)} name="client_id" value={val?.id} /> {val?.clinic_name}
-                                    <img onClick={() => showContact(val?.id)} class="infoIcon" src={I_IMAGE} />
+                                    <img onClick={() => showContact(val?.id)} className="infoIcon" src={I_IMAGE} />
                                 </label>
                             ))
                         }

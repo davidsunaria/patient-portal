@@ -6,7 +6,6 @@ import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
-import Step5 from "./Step5";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import _ from "lodash";
 import moment from "moment";
@@ -14,7 +13,7 @@ import { getLoggedinUserId, getUser } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 const BookAppointment = (props) => {
-  const {id} = useParams();
+  const { id } = useParams();
   let { firstname, lastname, email, phone_code } = getUser();
   const history = useHistory();
   const [formData, setFormData] = useState({ type: "", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: "", appointment_notes: "", duration: "", service_for: "" });
@@ -35,14 +34,16 @@ const BookAppointment = (props) => {
   const getProviderSlots = useStoreActions((actions) => actions.appointment.getProviderSlots);
   const createAppointment = useStoreActions((actions) => actions.appointment.createAppointment);
   const getProviderName = useStoreActions((actions) => actions.appointment.getProviderName);
+  const getPet = useStoreActions((actions) => actions.appointment.getPet);
 
   const response = useStoreState((state) => state.appointment.response);
   const isBooked = useStoreState((state) => state.appointment.isBooked);
-  useEffect(() => {
-    if(id){
+  useEffect(async () => {
+    if (id) {
       let formPayload = { ...formData };
       formPayload.pet_id = id;
       setFormData(formPayload);
+      await getPet(id);
     }
   }, [id]);
   //Set First Step Data
@@ -148,28 +149,48 @@ const BookAppointment = (props) => {
         // Set Providers Schedule
         if (data?.enabledDates) {
           let enabledDatesArray = [];
-          _.forOwn(data.enabledDates, function (value, key) {
-            enabledDatesArray.push(new Date(value));
-          });
+          if (data.enabledDates.length > 0) {
+            _.forOwn(data.enabledDates, function (value, key) {
+              enabledDatesArray.push(new Date(value));
+            });
+          }
+
           setCalenderData(enabledDatesArray);
+          if (data.enabledDates.length > 0) {
+            setFormData({ ...formData, date: new Date(data.enabledDates[0]).toISOString() });
+          }
+          else {
+            setFormData({ ...formData, date: "" });
+          }
         }
 
         // Set Timeslot 
         if (data?.timeSlots) {
           if (data.timeSlots) {
             setTimeSlot(data.timeSlots);
+            if (data.timeSlots.length > 0) {
+              setFormData({ ...formData, slot: data.timeSlots[0] });
+            }
+            else {
+              setFormData({ ...formData, slot: "" });
+            }
+
           }
         }
 
         //Appointment Created
         if (data?.appointmentId) {
-          console.log("data?.appointmentId", data?.appointmentId);
           history.push(`/appointment-detail/${data?.appointmentId}`);
         }
 
         // Set Timeslot 
         if (data?.doctorData) {
           setDoctorData(data.doctorData);
+        }
+
+        //Set Pet name
+        if (data?.pet) {
+          setOtherData({ ...otherData, pet_name: data?.pet.name, species: data?.pet.speciesmap?.species });
         }
       }
     }
@@ -427,12 +448,11 @@ const BookAppointment = (props) => {
               subHeading={"Start your process to book your appointment"}
               hasBtn={false}
             />
-           
+            {/* {JSON.stringify(formData)} */}
             {currentPage == 1 && <Step1 page={currentPage} onSubmit={handleStepOne} />}
             {currentPage == 2 && <Step2 other={otherData} formData={formData} data={allClinics} page={currentPage} onSubmit={handleStepTwo} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 3 && <Step3 other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 4 && <Step4 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
-            {currentPage == 5 && <Step5 page={currentPage} onSubmit={handleStepFive} onNext={handleNext} onBack={handleBack} />}
           </main>
         </div>
       </div>

@@ -1070,7 +1070,7 @@ select.fieldInput{
 }
 
 .AppointmentDate{
-    width:235px;
+    width:254px;
     background:#ffffff;
     @include border-radius(5px);
     padding-left:80px;
@@ -2214,4 +2214,13 @@ color: red!important;
 }
 .modal-footer button{
     height: 35px;
+}
+.appointmentDatePicker {
+    position: absolute;
+    z-index: 1;
+    opacity: 0;
+}
+.button[disabled]{
+    opacity:0.5;
+    cursor: not-allowed;
 }

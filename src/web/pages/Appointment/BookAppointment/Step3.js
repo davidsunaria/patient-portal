@@ -21,7 +21,6 @@ const Step3 = (props) => {
     const [serviceDetail, setServiceDetail] = useState({});
 
     const showServiceDetail = async (e) => {
-        console.log("geyy", e)
         setServiceModal(!serviceModal);
         setServiceDetail(e);
     }
@@ -34,6 +33,9 @@ const Step3 = (props) => {
     const showTime = (e) => {
         console.log(e?.target, props?.formData?.date, openTimePopup)
         if (props.formData.date) {
+            setOpenTimePopup(!openTimePopup);
+        }
+        else if(props?.enabledDates[0]){
             setOpenTimePopup(!openTimePopup);
         }
     }
@@ -112,8 +114,9 @@ const Step3 = (props) => {
                                                 <span className="serviceName">
                                                     {value?.name}
                                                 </span>
-                                                <span className="serviceTime">{value?.duration} Minutes</span>
-                                                <img onClick={() => showServiceDetail(value)} class="infoIcon" src={I_IMAGE} />
+                                                <span className="serviceTime"><span className="mr-3">{value?.duration} Minutes</span>
+                                                <img onClick={() => showServiceDetail(value)} className="infoIcon" src={I_IMAGE} />
+                                                </span>
                                             </label>
 
                                         ))
@@ -125,6 +128,7 @@ const Step3 = (props) => {
                     ))
                 }
 
+                {props.data && props.data.length == 0 && <div className="box text-center">No service available</div>}
 
                 {props?.providers && props?.providers.length > 0 && <React.Fragment> <div className="subtitle mt-4 mb-3">Select Doctor</div>
                     <p className="p-text">
@@ -155,27 +159,49 @@ const Step3 = (props) => {
                         </div>
                     </div></React.Fragment>
                 }
-                {/* Slot-{JSON.stringify(props.slot)}<br/>
-               Date-  {JSON.stringify(props.formData.date)}<br/>
-               State-{JSON.stringify(openTimePopup)}<br/>
-               enabledDates-{JSON.stringify(props?.enabledDates.length)}<br/>
-               providers-{JSON.stringify(props?.providers.length)}<br/> */}
-
+                {/* Date-  {JSON.stringify(props.formData.date)}
+                Slot-{JSON.stringify(props.slot)}<br /><br />
+                State-{JSON.stringify(openTimePopup)}<br />
+                enabledDates-{JSON.stringify(props?.enabledDates[0])}<br />
+                providers-{JSON.stringify(props?.providers.length)}<br /> */}
                 {(props?.enabledDates.length > 0 || props?.providers.length > 0) && <div className="dateTimeOuter">
                     <div className="AppointmentDate">
 
                         <DatePicker
+                            wrapperClassName={props?.formData?.date ? "" : "appointmentDatePicker"}
+                            placeholderText="Select Date"
                             includeDates={props.enabledDates}
-                            selected={props.formData.date}
+                            selected={props?.formData?.date}
                             onChange={(e) => props.onSubmit(e, 'date', props.formData?.date)}
                             customInput={<ExampleCustomInput />}
                         />
+
+                        {props?.formData?.date === "" && props?.enabledDates[0] &&
+                            <React.Fragment>
+                                <div className="react-datepicker-wrapper">
+                                    <div className="react-datepicker__input-container">
+                                        <span>
+                                            <div className="highlightDate">
+                                                {props?.enabledDates[0] && moment(props?.enabledDates[0]).format('MMM')}
+                                                <br />
+                                                {props?.enabledDates[0] && moment(props?.enabledDates[0]).format('DD')}
+                                            </div>
+                                            <label >
+                                                {props?.enabledDates[0] && moment(props?.enabledDates[0]).format('dddd')}
+                                                <br />
+                                                {props?.enabledDates[0] && moment(props?.enabledDates[0]).format('MMMM Do YYYY')}
+                                            </label>
+                                        </span>
+                                    </div></div></React.Fragment>
+                        }
+
                     </div>
-               
+                   
                     <div className="AppointmentDate timeSlot" >
+                     
                         <label ref={innerRef} onClick={(e) => showTime(e)}>{(selectedTimeSlot) ? selectedTimeSlot : props.formData.slot}</label>
-                        {props.formData && props.formData.date != undefined && <div className={(openTimePopup == false) ? "timeslotPopup d-none" : "timeslotPopup"}>
-                            
+                        {props.formData && (props.formData.date != undefined || props?.enabledDates[0]) && <div className={(openTimePopup == false) ? "timeslotPopup d-none" : "timeslotPopup"}>
+
                             {props.slot && Object.values(props.slot).map((val, index) => (
                                 <span key={index} onClick={(e) => handleTimeSelect(e, "slot", val)}>{val}</span>
                             ))}
@@ -190,7 +216,7 @@ const Step3 = (props) => {
                 </p>}
                 <div className="appointmentBtns">
                     <button className="button default mr-2" onClick={() => props.onBack(2)}>Back</button>
-                    <button className="button primary ml-auto" onClick={() => props.onNext(4)}>Continue</button>
+                    <button className="button primary ml-auto" disabled={props.data && props.data.length == 0} onClick={() => props.onNext(4)}>Continue</button>
                 </div>
 
             </div>
