@@ -44,6 +44,12 @@ const PetInfoCard = (props) => {
   const removePet = (id) => {
     props.onDeletePet(id)
   }
+  //Close The Confimation Modal
+  useEffect(() => {
+    if(props.onDeleted){
+      setDeletePetModal(false);
+    }
+  }, [props.onDeleted]);
   return (
     <React.Fragment>
         <DeletePet modal={deletePetModal} petId={petId} toggle={delPet} onDeletePet={removePet} />

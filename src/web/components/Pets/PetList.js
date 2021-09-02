@@ -53,7 +53,7 @@ const PetList = (props) => {
 
         {petsData && petsData.length > 0 ? (
           petsData.map((result, index) => (
-            <PetInfoCard onDeletePet={onDeletePet} mode="edit" data={result} key={index} />
+            <PetInfoCard onDeleted={isPetDeleted} onDeletePet={onDeletePet} mode="edit" data={result} key={index} />
           ))
         ) : (
           <div className="box p-0 noRecord">
