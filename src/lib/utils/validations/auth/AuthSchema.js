@@ -1,6 +1,7 @@
 import { useContext, useMemo } from "react";
 import { LanguageContext } from "patient-portal-context/LanguageContext.js";
 import * as Yup from "yup";
+import {  USER_NAME_REQUIRED, CONFIRM_PASSWORD_REQUIRED, PASSWORD_REQUIRED, OTP_REQUIRED, EMAIL_REQUIRED, CONFIRM_PASSWORD_MATCH, PHONE_REQUIRED, REENTER_PASSWORD } from "patient-portal-message";
 
 const useAuthValidation = (props) => {
   const { labelData } = useContext(LanguageContext);
@@ -8,54 +9,54 @@ const useAuthValidation = (props) => {
   const LoginSchema = useMemo(() => Yup.object({
     user_name: Yup
       .string()
-      .required("Please enter email address or phone"),
+      .required(USER_NAME_REQUIRED),
 
     password: Yup
       .string()
-      .required("Please enter password"),
+      .required(PASSWORD_REQUIRED),
   }), [labelData]);
 
   const VerifyOtpSchema = useMemo(() => Yup.object({
     otp: Yup
       .string()
-      .required("Please enter OTP"),//labelData.frontLabels.welcome_back
+      .required(OTP_REQUIRED),//labelData.frontLabels.welcome_back
   }), [labelData]);
 
   const SignupSchema = useMemo(() => Yup.object({
     email: Yup
       .string()
       .email()
-      .required("Please enter email"),
+      .required(EMAIL_REQUIRED),
     password: Yup
       .string()
-      .required("Please enter password"),
+      .required(PASSWORD_REQUIRED),
     password_confirmation: Yup
       .string()
-      .required("Please enter confirm password")
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required(CONFIRM_PASSWORD_REQUIRED)
+      .oneOf([Yup.ref('password'), null], CONFIRM_PASSWORD_MATCH)
   }), [labelData]);
 
   const ForgotPasswordSchema = useMemo(() => Yup.object({
     phone: Yup
       .string()
-      .required("Please enter phone number"),
+      .required(PHONE_REQUIRED),
   }), [labelData]);
 
   const RegisterSchema = useMemo(() => Yup.object({
     phone: Yup
       .string()
-      .required("Please enter phone number"),
+      .required(PHONE_REQUIRED),
   }), [labelData]);
 
   const ResetPasswordSchema = useMemo(() => Yup.object({
 
     password: Yup
       .string()
-      .required("Please enter password"),
+      .required(PASSWORD_REQUIRED),
     password_confirmation: Yup
       .string()
-      .required("Please re-enter new password")
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required(REENTER_PASSWORD)
+      .oneOf([Yup.ref('password'), null], CONFIRM_PASSWORD_MATCH)
   }), [labelData]);
 
   return { LoginSchema, VerifyOtpSchema, SignupSchema, ForgotPasswordSchema, RegisterSchema, ResetPasswordSchema };

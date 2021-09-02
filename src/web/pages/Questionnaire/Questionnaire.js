@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import _ from "lodash";
 import { getLoggedinUserId } from "patient-portal-utils/Service";
+import { FILE_SELECT,FILE_UNSELECT } from "patient-portal-message";
 
 const Questionnaire = () => {
   const { id } = useParams();
@@ -106,7 +107,7 @@ const Questionnaire = () => {
     if (imageFile) {
 
       if (!imageFile.name.match(/\.(jpg|jpeg|png|gif)$/)) {
-        toast.error(<ToastUI message={'Please select a valid image.'} type={"Error"} />);
+        toast.error(<ToastUI message={FILE_SELECT} type={"Error"} />);
         return false;
       }
 
@@ -120,7 +121,7 @@ const Questionnaire = () => {
       val[index]['error'] = val[index]['required'] == 1 ? true : false;
       setQuestions(val);
       toast.dismiss();
-      toast.error(<ToastUI message={'Upload canceled, no files selected.'} type={"Error"} />);
+      toast.error(<ToastUI message={FILE_UNSELECT} type={"Error"} />);
     };
   };
 

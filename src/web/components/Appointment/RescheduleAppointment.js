@@ -8,6 +8,8 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import _ from "lodash";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
+import { SELECT_DATE,SELECT_TIME } from "patient-portal-message";
+
 const RescheduleAppointment = (props) => {
   const calendarRef = useRef();
   const [formData, setFormData] = useState({});
@@ -67,10 +69,10 @@ const RescheduleAppointment = (props) => {
     formData.append('date',moment(date).format("YYYY-MM-DD"));
     formData.append('slot', time);
     if(!formData.date){
-      toast.error(<ToastUI message={"Please select date"} type={"Error"} />);
+      toast.error(<ToastUI message={SELECT_DATE} type={"Error"} />);
     }
     else if(!formData.slot){
-      toast.error(<ToastUI message={"Please select time"} type={"Error"} />);
+      toast.error(<ToastUI message={SELECT_TIME} type={"Error"} />);
     }
     else{
       await updateAppointment(formData);

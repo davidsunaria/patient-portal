@@ -6,6 +6,7 @@ import { getProfileCompleted } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import Button from "patient-portal-components/Button/Button.js";
+import { PROFILE_SETUP } from "patient-portal-message";
 
 const Header = (props) => {
   const history = useHistory();
@@ -19,7 +20,7 @@ const Header = (props) => {
     if (type == "book-appointment") {
       let isCompleted = getProfileCompleted();
       if (isCompleted.isPetCompleted == 0 || isCompleted.isProfileCompleted == 0) {
-        toast.error(<ToastUI message={"Please set up your and you pet\'s profile to have a better experience"} type={"Error"} />);
+        toast.error(<ToastUI message={PROFILE_SETUP} type={"Error"} />);
         if(isCompleted.isProfileCompleted == 0){
           history.push(`/edit-profile`);
         }

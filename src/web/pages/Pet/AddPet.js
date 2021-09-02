@@ -22,6 +22,7 @@ import { getLoggedinUserId, getProfileCompleted } from "patient-portal-utils/Ser
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import DEFAULT_PET from "patient-portal-images/default-pet.png";
 import { addDays } from 'date-fns';
+import { FILE_SELECT,FILE_UNSELECT } from "patient-portal-message";
 
 
 // https://stackoverflow.com/questions/57594045/validation-using-formik-with-yup-and-react-select
@@ -138,13 +139,13 @@ const AddPet = (props) => {
     if (imageFile) {
 
       if (!imageFile.name.match(/\.(jpg|jpeg|png|gif)$/)) {
-        toast.error(<ToastUI message={'Please select a valid image.'} type={"Error"} />);
+        toast.error(<ToastUI message={FILE_SELECT} type={"Error"} />);
         return false;
       }
       setFile(imageFile);
     } else {
       toast.dismiss();
-      toast.error(<ToastUI message={'Upload canceled, no files selected.'} type={"Error"} />);
+      toast.error(<ToastUI message={FILE_UNSELECT} type={"Error"} />);
     };
   };
 

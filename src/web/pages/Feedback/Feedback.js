@@ -7,6 +7,7 @@ import { formatDate } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { getLoggedinUserId } from "patient-portal-utils/Service";
+import { SELECT_ANSWER } from "patient-portal-message";
 
 const Feedback = (props) => {
     const { id } = useParams();
@@ -64,7 +65,7 @@ const Feedback = (props) => {
         let val = [...questions];
         const isError = val.filter((row) => row.error == true);
         if (isError && isError.length > 0) {
-            toast.error(<ToastUI message={"Please answer each question"} type={"Error"} />);
+            toast.error(<ToastUI message={SELECT_ANSWER} type={"Error"} />);
         }
         else {
             let payload = [];

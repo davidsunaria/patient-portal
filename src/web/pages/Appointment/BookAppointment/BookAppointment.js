@@ -12,6 +12,8 @@ import moment from "moment";
 import { getLoggedinUserId, getUser } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
+import { SELECT_CLINIC, SELECT_SERVICE, SELECT_PROVIDER, SELECT_PET, SELECT_APPOINTMENT_NOTES, SELECT_DATE, SELECT_TIME } from "patient-portal-message";
+
 const BookAppointment = (props) => {
   const { id } = useParams();
   let { firstname, lastname, email, phone_code } = getUser();
@@ -400,7 +402,7 @@ const BookAppointment = (props) => {
     let response = false;
     if (page == 3) {
       if (!formData.clinic_id) {
-        toast.error(<ToastUI message={"Please select clinic"} type={"Error"} />);
+        toast.error(<ToastUI message={SELECT_CLINIC} type={"Error"} />);
       }
       else {
         response = true;
@@ -408,17 +410,17 @@ const BookAppointment = (props) => {
     }
     if (page == 4) {
       if (!formData.service_id) {
-        toast.error(<ToastUI message={"Please select service"} type={"Error"} />);
+        toast.error(<ToastUI message={SELECT_SERVICE} type={"Error"} />);
       }
       else if (formData.service_for == "provider" && !formData.provider_id?.value) {
-        toast.error(<ToastUI message={"Please select provider"} type={"Error"} />);
+        toast.error(<ToastUI message={SELECT_PROVIDER} type={"Error"} />);
       }
 
       else if (!formData.date) {
-        toast.error(<ToastUI message={"Please select date"} type={"Error"} />);
+        toast.error(<ToastUI message={SELECT_DATE} type={"Error"} />);
       }
       else if (!formData.slot) {
-        toast.error(<ToastUI message={"Please select time slot"} type={"Error"} />);
+        toast.error(<ToastUI message={SELECT_TIME} type={"Error"} />);
       }
       else {
         response = true;
@@ -426,10 +428,10 @@ const BookAppointment = (props) => {
     }
     if (page == 5) {
       if (!formData.pet_id) {
-        toast.error(<ToastUI message={"Please select pet"} type={"Error"} />);
+        toast.error(<ToastUI message={SELECT_PET} type={"Error"} />);
       }
       else if (!formData.appointment_notes) {
-        toast.error(<ToastUI message={"Please enter appointment notes"} type={"Error"} />);
+        toast.error(<ToastUI message={SELECT_APPOINTMENT_NOTES} type={"Error"} />);
       }
       else {
         response = true;

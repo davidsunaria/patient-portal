@@ -1,27 +1,28 @@
 import { useContext, useMemo } from "react";
 import { LanguageContext } from "patient-portal-context/LanguageContext.js";
 import * as Yup from "yup";
+import { FIRST_NAME_REQUIRED, LAST_NAME_REQUIRED, EMAIL_REQUIRED, GENDER_REQUIRED } from "patient-portal-message";
 
 const useProfileValidation = (props) => {
   const { labelData } = useContext(LanguageContext);
   const ProfileSchema = useMemo(() => Yup.object({
     firstname: Yup
       .string()
-      .required("Please enter first name"),
+      .required(FIRST_NAME_REQUIRED),
     lastname: Yup
       .string()
-      .required("Please enter last name"),
+      .required(LAST_NAME_REQUIRED),
     email: Yup
       .string()
       .email()
-      .required("Please enter email"),
-      email_2: Yup
+      .required(EMAIL_REQUIRED),
+    email_2: Yup
       .string()
       .email()
       .nullable().notRequired(),
     gender: Yup
       .string()
-      .required("Please select gender")
+      .required(GENDER_REQUIRED)
   }), [labelData]);
 
   return { ProfileSchema };

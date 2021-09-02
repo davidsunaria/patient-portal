@@ -15,6 +15,7 @@ import IntlTelInput from 'react-intl-tel-input';
 import 'react-intl-tel-input/dist/main.css';
 import * as _ from "lodash";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
+import { FILE_SELECT,FILE_UNSELECT } from "patient-portal-message";
 
 const EditProfile = (props) => {
   const history = useHistory();
@@ -123,13 +124,13 @@ const EditProfile = (props) => {
     if (imageFile) {
 
       if (!imageFile.name.match(/\.(jpg|jpeg|png|gif)$/)) {
-        toast.error(<ToastUI message={'Please select a valid image.'} type={"Error"} />);
+        toast.error(<ToastUI message={FILE_SELECT} type={"Error"} />);
         return false;
       }
       setFile(imageFile);
     } else {
       toast.dismiss();
-      toast.error(<ToastUI message={'Upload canceled, no files selected.'} type={"Error"} />);
+      toast.error(<ToastUI message={FILE_UNSELECT} type={"Error"} />);
     };
   };
   useEffect(() => {
