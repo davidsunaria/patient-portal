@@ -209,7 +209,9 @@ export function formatDate(date, fragment, isTime = false) {
   if (date && fragment == 6) {
     return moment().day(date).format("dddd")
   }
-
+  if (date && fragment == 7) {
+    return moment(date).format("MMM DD, YYYY")
+  }
 
 }
 
