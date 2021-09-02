@@ -5,8 +5,10 @@ import EDIT_PET_IMG from "patient-portal-images/editPet.svg";
 import DELETE_PET_IMG from "patient-portal-images/deletePet.svg";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-
+import DeletePet from "patient-portal-components/Pets/DeletePet"
 const PetInfoCard = (props) => {
+  const [deletePetModal, setDeletePetModal] = useState(false);
+  const [petId, setPetId] = useState();
   const history = useHistory();
   const goToProfile = (id) => {
     history.push(`/pet-profile/${id}`);
@@ -35,22 +37,16 @@ const PetInfoCard = (props) => {
     return string.join(',');
   }
   const delPet = (id) => {
-    confirmAlert({
-      message: 'Are you sure to remove this pet?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: () => props.onDeletePet(id)
-        },
-        {
-          label: 'No',
-          onClick: () => {}
-        }
-      ]
-    });
+    setPetId(id);
+    setDeletePetModal(!deletePetModal);
   };
+  
+  const removePet = (id) => {
+    props.onDeletePet(id)
+  }
   return (
     <React.Fragment>
+        <DeletePet modal={deletePetModal} petId={petId} toggle={delPet} onDeletePet={removePet} />
       {props.mode === "edit" ? (
         <div className="PetBlock" >
 
