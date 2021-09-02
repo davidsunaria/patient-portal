@@ -1564,9 +1564,11 @@ input:checked + .slider:after {
                 padding-top:4px;
                 padding-bottom:4px;
                 
-
-                &:hover{
-                    color:$primary;
+                a{
+                    color:$p-color;
+                    &:hover{
+                        color:$primary;
+                    }
                 }
 
                 img{
