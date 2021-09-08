@@ -40,6 +40,7 @@ const EditProfile = (props) => {
     preferred_clinic: '',
     company: ''
   };
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
   const [preview, setPreview] = useState();
   const [file, setFile] = useState("");
   const [userData, setUserData] = useState(initvalues);
@@ -58,12 +59,13 @@ const EditProfile = (props) => {
    
  useEffect(() => {
    if(isProfileUpdated){
-    history.push("/profile");
+    history.push("/pets");
    }
  }, [isProfileUpdated]); 
   useEffect(async () => {
     await getMyProfile(getLoggedinUserId());
     await getClinics();
+    setIsPageLoaded(true);
   }, []);
 
   useEffect(() => {
@@ -76,7 +78,17 @@ const EditProfile = (props) => {
           setUserData(payload);
         }
         if (data?.clientData) {
-          setUserData(data?.clientData);
+          let payload = { ...data?.clientData };
+          setUserData(payload);
+          setPhone({ ...phone, dialCode: `${!data?.clientData?.dialCode1 ? "" : data?.clientData?.dialCode1}`, phone: `${!data?.clientData?.phoneNumber ? "" : data?.clientData?.phoneNumber}` });
+          setTimeout(
+            () => 
+            {
+              setPhone2({...phone2, dialCode: `${!data?.clientData?.dialCode2 ? "" : data?.clientData?.dialCode2}`, phone: `${!data?.clientData?.phoneNumber_2 ? "" : data?.clientData?.phoneNumber_2}` });
+            }, 
+            1000
+          );
+          
         }
         if (data?.countries) {
           setCountries(data?.countries);
@@ -88,7 +100,6 @@ const EditProfile = (props) => {
     }
   }, [response]);
 
-
   const editUser = async (payload) => {
 
     let formData = new FormData();
@@ -96,12 +107,16 @@ const EditProfile = (props) => {
     formData.append("firstname", payload?.firstname);
     formData.append("lastname", payload?.lastname);
     formData.append("email", payload?.email);
-    formData.append("phone", `${(phone.phone) ? phone.phone.replace(/[ `~!@#$%^&*()_|\-=?;:'",.<>\{\}\[\]\\\/]/gi, '') : ''}`);
-    formData.append("countryCode", `${(phone.phone) ? "+" + phone.dialCode : ''}`);
+    //console.log(phone, phone2,userData )
+      formData.append("phone", `${(phone.phone) ? phone.phone.replace(/[ `~!@#$%^&*()_|\-=?;:'",.<>\{\}\[\]\\\/]/gi, '') : ''}`);
+      formData.append("countryCode", `${(phone.phone) ? "+" + phone.dialCode : ''}`);
+    
     formData.append("gender", (payload?.gender == null || payload?.gender == 'null') ? "" : payload?.gender);
     formData.append("nick_name", payload?.nick_name);
-    formData.append("phone_code2", `${(phone2.phone) ? "+" + phone2.dialCode : ''}`);
-    formData.append("phoneNumber_2", `${(phone2.phone) ? phone2.phone.replace(/[ `~!@#$%^&*()_|\-=?;:'",.<>\{\}\[\]\\\/]/gi, '') : ''}`);
+    
+      formData.append("phone_code2", `${(phone2.phone) ? "+" + phone2.dialCode : ''}`);
+      formData.append("phoneNumber_2", `${(phone2.phone) ? phone2.phone.replace(/[ `~!@#$%^&*()_|\-=?;:'",.<>\{\}\[\]\\\/]/gi, '') : ''}`);
+    
     formData.append("email_2", payload?.email_2);
     formData.append("address", payload?.address);
     formData.append("pincode", payload?.pincode);
@@ -116,7 +131,7 @@ const EditProfile = (props) => {
     if (file && file !== undefined) {
       formData.append("profile_image", file);
     }
-    console.log("formData", payload);
+    //console.log("formData", formData);
     await updateMyProfile(formData);
   }
   const onFileChange = async event => {
@@ -263,13 +278,13 @@ const EditProfile = (props) => {
                           <div className="fieldOuter TelInput">
                             <label className="fieldLabel">Mobile Number<span className="required">*</span></label>
                             <div className="fieldBox">
-
-                              {userData.phone_code &&
+                              {/* {JSON.stringify(userData.phone_code)}
+                              {JSON.stringify(phone)} */}
+                              {
                                 <IntlTelInput
-                                  disabled
                                   preferredCountries={['IN']}
                                   css={['intl-tel-input']}
-                                  defaultValue={`${userData.phone_code}`}
+                                  value={`${phone.phone}`}
                                   fieldName='phone'
                                   separateDialCode={`true`}
                                   autoComplete={`phone`}
@@ -334,15 +349,18 @@ const EditProfile = (props) => {
                             </div>
                           </div>
                         </div>
+                        
                         <div className="col-sm-6">
                           <div className="fieldOuter TelInput">
                             <label className="fieldLabel">Mobile number</label>
                             <div className="fieldBox">
-                              {userData.phone_code2 &&
+                            {/* {JSON.stringify(userData.phone_code2)}
+                              {JSON.stringify(phone2)} */}
+                              {isPageLoaded &&
                                 <IntlTelInput
                                   preferredCountries={['IN']}
                                   css={['intl-tel-input']}
-                                  defaultValue={`${userData.phone_code2}`}
+                                  value={`${phone2.phone}`}
                                   fieldName='phone2'
                                   separateDialCode={`true`}
                                   autoComplete={`phone2`}

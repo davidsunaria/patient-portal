@@ -68,7 +68,7 @@ const ProfileView = (props) => {
         <div className="right_content_col">
           <main>
             <Header backEnabled={true}
-              backTitle={"Back to profile"}
+              backTitle={"Back to pets"}
               backAction={"pets"} heading={"Profile"} subHeading={"Here we can add or edit pet information"} />
             <PetProfile data={petData} />
             <Divider />

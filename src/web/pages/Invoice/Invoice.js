@@ -16,6 +16,8 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import _ from "lodash";
 import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
 import NoRecord from "patient-portal-components/NoRecord";
+import { subDays } from "date-fns";
+
 
 const Invoice = (props) => {
     const calendarRef = useRef();
@@ -28,7 +30,7 @@ const Invoice = (props) => {
     const [nextPageUrl, setNextPageUrl] = useState(null);
 
     const [isOpen, setIsOpen] = useState(false);
-    const [dateRange, setDateRange] = useState([null, null]);
+    const [dateRange, setDateRange] = useState([new Date(), subDays(new Date(), 15)]);
     const [startDate, endDate] = dateRange;
     const [petId, setPetId] = useState({ value: "", label: "All Pets" });
     const [clinicId, setClinicId] = useState({ value: "", label: "All Clinics" });
@@ -143,13 +145,16 @@ const Invoice = (props) => {
         if (startDate && endDate) {
             formData = { ...formData, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD") };
         }
-        if (petId) {
+        if (petId.value) {
             formData = { ...formData, pet_id: petId.value };
         }
-        if (clinicId) {
+        if (clinicId.value) {
             formData = { ...formData, clinic_id: clinicId.value };
         }
-        await getInvoices({ clientId: getLoggedinUserId(), query: formData });
+        if(formData !== undefined){
+            await getInvoices({ clientId: getLoggedinUserId(), query: formData });
+        }
+        
     }, [startDate, endDate, petId, clinicId]);
 
     useEffect(async () => {
@@ -222,8 +227,9 @@ const Invoice = (props) => {
                             <div className="box mb-3">
                                 <div className="fieldOuter d-sm-inline-block mr-sm-2 mb-2 mb-lg-0">
                                     <div className="fieldBox fieldIcon">
-
+                                        
                                         <DatePicker
+                                            dateFormat="yyyy-MM-dd"
                                             placeholderText="Date"
                                             ref={calendarRef}
                                             className="fieldInput calendarFilter expandCalender"

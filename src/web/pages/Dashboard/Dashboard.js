@@ -138,7 +138,7 @@ const Dashboard = (props) => {
           <main>
             <Header
               backEnabled={false}
-              heading={`Hello, ${userData?.firstname} ${" "} ${userData?.lastname}`}
+              heading={`Hello, ${ (!userData?.firstname) ? "there!" : userData?.firstname} ${" "} ${!userData?.lastname ? "" : userData?.lastname}`}
               subHeading={"Today’s Recommendations"}
               hasBtn={true}
               btnName={"calendar"}

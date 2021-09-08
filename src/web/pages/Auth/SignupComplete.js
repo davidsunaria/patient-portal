@@ -50,7 +50,7 @@ const SignupComplete = (props) => {
         <div className="loginBox">
           <div className="loginLogo"><img src={DCCLOGO} /></div>
           <div className="loginTitle mb-2">Welcome Back!</div>
-          <p className="loginTitleInfo mb-4">Create your new login credentials to login your DCC Mobile App.</p>
+          <p className="loginTitleInfo mb-4">Create credentials to activate your DCC login account.</p>
           <Formik
             enableReinitialize={true}
             initialValues={formData}
@@ -145,7 +145,7 @@ const SignupComplete = (props) => {
                   <button disabled={isLoading} className="loginBtn">{isLoading && <Spinner animation="border" size="sm" />}
                     {(isLoading) ? 'Processing' : 'Log In'}</button>
                   <div className="alreadyAccount">
-                    <p>Already have a account?</p>
+                    <p>Already have an account?</p>
                     <Link to="/login">Sign In</Link>
                   </div>
 

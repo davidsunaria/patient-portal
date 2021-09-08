@@ -20,7 +20,7 @@ import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
 import { getLoggedinUserId, getProfileCompleted } from "patient-portal-utils/Service";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import DEFAULT_PET from "patient-portal-images/default-pet.png";
+import DEFAULT_PET from "patient-portal-images/ic_pet_placeholder.png";
 import { addDays } from 'date-fns';
 import { FILE_SELECT,FILE_UNSELECT } from "patient-portal-message";
 

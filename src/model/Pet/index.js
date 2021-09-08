@@ -21,6 +21,8 @@ const petModel = {
   }),
   getPets: thunk(async (actions, payload, { getStoreActions }) => {
     await actions.setIsPetUpdated(false);
+    await actions.setIsPetDeleted(false);
+    await actions.setIsPetCreated(false);
     getStoreActions().common.setLoading(true);
     let response = await getPets(payload);
     if (response.statuscode != 200) {
@@ -33,6 +35,8 @@ const petModel = {
   }),
   getPet: thunk(async (actions, payload, { getStoreActions }) => {
     await actions.setIsPetUpdated(false);
+    await actions.setIsPetDeleted(false);
+    await actions.setIsPetCreated(false);
     getStoreActions().common.setLoading(true);
     let response = await getPet(payload);
     if (response.statuscode != 200) {

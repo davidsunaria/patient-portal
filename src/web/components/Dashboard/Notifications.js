@@ -14,6 +14,7 @@ import VISIT_IMG from "patient-portal-images/noti-visit.svg";
 import FEEDBACK_IMG from "patient-portal-images/noti-feedback.svg";
 import QUESTIONNAIRE_IMG from "patient-portal-images/noti-questionnaire.svg";
 import NOTI_CROSS from "patient-portal-images/noti-cross.svg";
+import SMILY from "patient-portal-images/smily.svg";
 
 const Notifications = (props) => {
   const history = useHistory();
@@ -96,8 +97,8 @@ const Notifications = (props) => {
               </div>
             ))
           ) : (
-            <div className="notify">
-              <p>No recommendations found</p>
+            <div className="notify border-0 p-0 justify-content-center">
+              <p>No recommendations <img src={SMILY}/></p>
             </div>
           )}
         </div>
@@ -118,8 +119,8 @@ const Notifications = (props) => {
               </div>
             ))
           ) : (
-            <div className="notify">
-              <p>No recommendations found</p>
+            <div className="notify border-0 p-0 justify-content-center">
+              <p>No recommendations <img src={SMILY}/></p>
             </div>
           )}
         </div>

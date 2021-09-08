@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import CALENDER_IMAGE from "patient-portal-images/calendarDrop.svg";
 import CANCEL_IMAGE from "patient-portal-images/cancelDrop.svg";
 import CONTACT_IMAGE from "patient-portal-images/contactDrop.svg";
-import JOIN_IMAGE from "patient-portal-images/joinDrop.svg";
+import JOIN_IMAGE from "patient-portal-images/joinIcon.svg";
 import DIRECTION_IMAGE from "patient-portal-images/directionDrop.svg";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { formatDate } from "patient-portal-utils/Service";
@@ -108,9 +108,16 @@ const AppointmentCard = (props) => {
                     // 
                     <div key={index} className="box mb-2 onHover" >
                         <div className="appointmentList">
+                             {(props.type == "upcoming" && val.status != "canceled" && val.appointment_type == "virtual") && 
+                                        <a onClick={() => joinMeeting(val?.meetingId)}>
+                                             <div className="joinBtn"><img src={JOIN_IMAGE}/> Join</div>
+                                        </a>
+                                   }
+
+                           
                             <div className="dropdownArrow">
                                 <ul className="dropdownOption">
-
+                                
                                     {(props.type == "upcoming" && val.status != "canceled") && <li>
                                         <a className="onHover" onClick={() => toggle(val)}>
                                             <img src={CALENDER_IMAGE} />
@@ -130,12 +137,7 @@ const AppointmentCard = (props) => {
                                             Contact
                                         </a>
                                     </li>
-                                    {(props.type == "upcoming" && val.status != "canceled" && val.appointment_type == "virtual") && <li>
-                                        <a onClick={() => joinMeeting(val?.meetingId)}>
-                                            <img src={JOIN_IMAGE} />
-                                            Join
-                                        </a>
-                                    </li>}
+                                   
                                     {(props.type == "past" || val.appointment_type == "in_person") && <li>
                                     <a target="_blank" href={`http://maps.google.com/?${val?.clinic?.address}`}>
                                             <img src={DIRECTION_IMAGE} />

@@ -8,9 +8,11 @@ const useProfileValidation = (props) => {
   const ProfileSchema = useMemo(() => Yup.object({
     firstname: Yup
       .string()
+      .nullable()
       .required(FIRST_NAME_REQUIRED),
     lastname: Yup
       .string()
+      .nullable()
       .required(LAST_NAME_REQUIRED),
     email: Yup
       .string()
@@ -22,6 +24,7 @@ const useProfileValidation = (props) => {
       .nullable().notRequired(),
     gender: Yup
       .string()
+      .nullable()
       .required(GENDER_REQUIRED)
   }), [labelData]);
 

@@ -10,6 +10,7 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import USER_LOCATION_IMG from "patient-portal-images/userLocation.svg";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { setUser } from "patient-portal-utils/Service.js";
+import DEFAULT_USER_IMG from "patient-portal-images/default-user.png";
 
 const Profile = () => {
   const history = useHistory();
@@ -140,12 +141,12 @@ const Profile = () => {
                   <div className="profilePic">
                   
 
-              {!userData?.user_image && <img  src={`https://via.placeholder.com/150`} />}
+              {!userData?.user_image && <img  src={DEFAULT_USER_IMG} />}
               {userData?.user_image && <img  src={`${process.env.REACT_APP_MEDIA_URL}${userData?.user_image}`} />}
                     
                   </div>
                   <div className="userName">{userData?.firstname} {userData?.lastname}</div>
-                  <div className="userLocation"><img src={USER_LOCATION_IMG} />{userData?.city}, {userData?.country}</div>
+                  <div className="userLocation"><img src={USER_LOCATION_IMG} />{ (userData?.city) ? userData?.city+"," : ""} {userData?.country}</div>
 
                   <section>
                     <div className="settingLinkTitle">Settings</div>

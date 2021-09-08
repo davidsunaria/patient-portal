@@ -1532,11 +1532,29 @@ input:checked + .slider:after {
         color:$text-color
     }
 }
+.joinBtn{
+    background-color: $primary;
+    height:24px;
+    padding:5px 10px;
+    font-size:12px;
+    color:#ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 38px;
+    top: -5px;
+    @include border-radius(50px);
+
+    img{
+        margin-right: 5px;
+    }
+}
 .dropdownArrow{
     position:absolute;
     width:25px;
     height:22px;
-    background:url('~patient-portal-images/dropdownArrow.svg');
+    background:url('~patient-portal-images/threeDots.svg');
     background-repeat:no-repeat;
     right:0px;
     z-index: 1;
