@@ -2,6 +2,8 @@ import { action, thunk } from "easy-peasy";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { getMyProfile, getPets, updateMyProfile, getClinics, getSettings, updateSettings } from "patient-portal-api/ProfileApi.js";
+import {  getProfileCompleted } from "patient-portal-utils/Service";
+
 const profileModel = {
   response: [],
   isProfileUpdated: false,
@@ -44,6 +46,12 @@ const profileModel = {
     } else {
       await actions.setIsProfileUpdated(true);
       getStoreActions().common.setLoading(false);
+      let res = getProfileCompleted();
+          let data = {
+            isPetCompleted: res.isPetCompleted,
+            isProfileCompleted: 1
+          }
+          localStorage.setItem("profileStatus", JSON.stringify(data));
       toast.success(<ToastUI message={response.message} type={"Success"} />);
       await actions.setResponse(response);
     }

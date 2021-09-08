@@ -7,7 +7,7 @@ import Sidebar from "patient-portal-components/Sidebar/Sidebar.js";
 import DEFAULT_USER_IMG from "patient-portal-images/default-user.png";
 import EDIT_PROFILE_IMG from "patient-portal-images/edit-profile.svg";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import { getLoggedinUserId } from "patient-portal-utils/Service";
+import { getLoggedinUserId, getProfileCompleted } from "patient-portal-utils/Service";
 import { Formik, ErrorMessage } from "formik";
 import { useProfileValidation } from "patient-portal-utils/validations/profile/ProfileSchema";
 
@@ -59,7 +59,14 @@ const EditProfile = (props) => {
    
  useEffect(() => {
    if(isProfileUpdated){
-    history.push("/pets");
+     let profileStatus = getProfileCompleted();
+     if(profileStatus.isProfileCompleted === 1 && profileStatus.isPetCompleted == 0){
+      history.push("/create-pet");
+     }
+     else{
+      history.push("/pets");
+     }
+    
    }
  }, [isProfileUpdated]); 
   useEffect(async () => {
