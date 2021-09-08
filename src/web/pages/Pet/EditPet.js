@@ -234,7 +234,7 @@ const EditPet = (props) => {
                        
                       <div className="editPic">
                       {file && <img src={`${preview}`} />}
-                      {!file && !values?.pet_image && <img  src={`https://via.placeholder.com/130`} />}
+                      {!file && !values?.pet_image && <img  src={DEFAULT_PET} />}
                       {!file && values?.pet_image &&  <img src={values.pet_image} />}
                         <a className="editPicOverlay">
                           <img src={EDIT_PROFILE_IMAGE} />
