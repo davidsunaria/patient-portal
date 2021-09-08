@@ -63,7 +63,7 @@ const Notifications = (props) => {
       src = INVOICE_IMG;
       class_used = "invoiceNotification";
     }
-    if (value.event_type === "questionnaire") {
+    if (value.event_type === "questionnaire" || value.event_type === "appointment_questionnarie") {
       src = QUESTIONNAIRE_IMG;
       class_used = "questionnaireNotification";
     }

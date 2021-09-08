@@ -37,7 +37,6 @@ export const getPetByVisit = async (formData) => {
   }
 };
 export const getPetIdInfo = async (formData) => {
-  console.log("res", formData);
   try {
     let response = await axiosApi.get(`${apiUrl}/get/pet_id/${formData.event}/${formData.id}`);
     return response.data;

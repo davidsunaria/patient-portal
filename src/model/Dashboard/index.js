@@ -18,7 +18,7 @@ const dashboardModel = {
   }),
   getDashboard: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
-
+    getStoreActions().appointment.setIsQuestionnaireSubmitted(false);
     let response = await getDashboard(payload);
     if (response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);

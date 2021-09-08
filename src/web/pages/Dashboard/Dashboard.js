@@ -64,8 +64,12 @@ const Dashboard = (props) => {
   const handleNotiEvent = useCallback((event) => {
     switch (event.event_type) {
 
+      case "appointment_questionnarie":
+        history.push(`/questionnaire/${event.event_id}/appointment-questionnaire`);
+        break;
+
       case "questionnaire":
-        history.push(`/questionnaire/${event.event_id}`);
+        history.push(`/questionnaire/${event.event_id}/questionnaire`);
         break;
       case "appointment_cancel":
         history.push(`/appointment-detail/${event.event_id}`);

@@ -107,7 +107,7 @@ const Routes = () => {
 						<PrivateRoute path={"/create-pet"} component={AddPet} exact />
 
 						
-						<PrivateRoute path={"/questionnaire/:id"} component={Questionnaire} exact />
+						<PrivateRoute path={"/questionnaire/:id/:type"} component={Questionnaire} exact />
 						<Route
 							path="/"
 							render={() => <Redirect to="/login" />}

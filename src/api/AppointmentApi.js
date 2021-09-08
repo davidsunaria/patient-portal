@@ -191,3 +191,20 @@ export const getPet = async (formData) => {
     return error.response.data;
   }
 };
+export const getAppointmentQuestionnaireDetail = async (formData) => {
+  try {
+    let response = await axiosApi.get(`${apiUrl}/get_appointment_questionnaire_details/${formData}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const saveAppointmentQuestionnaire = async (formData) => {
+  try {
+    let response = await axiosApi.post(`${apiUrl}/save/appointment/questionnaire`, formData);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

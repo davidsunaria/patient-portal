@@ -1,7 +1,7 @@
 import { action, thunk } from "easy-peasy";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import { getPastAppointments, getUpcomingAppointments, getDates, getTimeSlot, updateAppointment, getClinicInfo, cancelAppointment, getAppointmentDetail, getCancellationPolicy, getAllClinics, getClinicServices, getProviders, getProviderSchedule, getProviderSlots, createAppointment, getProviderName, getFeedbackDetail, saveFeedback, getQuestionnaireDetail, uploadFile, saveQuestionnaire, getPet } from "patient-portal-api/AppointmentApi.js";
+import { getPastAppointments, getUpcomingAppointments, getDates, getTimeSlot, updateAppointment, getClinicInfo, cancelAppointment, getAppointmentDetail, getCancellationPolicy, getAllClinics, getClinicServices, getProviders, getProviderSchedule, getProviderSlots, createAppointment, getProviderName, getFeedbackDetail, saveFeedback, getQuestionnaireDetail, uploadFile, saveQuestionnaire, getPet, getAppointmentQuestionnaireDetail, saveAppointmentQuestionnaire } from "patient-portal-api/AppointmentApi.js";
 const appointmentModel = {
   response: [],
   isRescheduled: false,
@@ -249,6 +249,7 @@ const appointmentModel = {
   }),
   
   getQuestionnaireDetail: thunk(async (actions, payload, { getStoreActions }) => {
+    await actions.setIsQuestionnaireSubmitted(false);
     getStoreActions().common.setLoading(true);
     let response = await getQuestionnaireDetail(payload);
     if (response.statuscode != 200) {
@@ -296,7 +297,32 @@ const appointmentModel = {
       getStoreActions().common.setLoading(false);
     }
   }),
-  
+  getAppointmentQuestionnaireDetail: thunk(async (actions, payload, { getStoreActions }) => {
+    await actions.setIsQuestionnaireSubmitted(false);
+    getStoreActions().common.setLoading(true);
+    let response = await getAppointmentQuestionnaireDetail(payload);
+    if (response.statuscode != 200) {
+      toast.error(<ToastUI message={response.message} type={"Error"} />);
+      getStoreActions().common.setLoading(false);
+    } else {
+      await actions.setResponse(response);
+      getStoreActions().common.setLoading(false);
+    }
+  }),
+  saveAppointmentQuestionnaire: thunk(async (actions, payload, { getStoreActions }) => {
+    getStoreActions().common.setLoading(true);
+    await actions.setIsQuestionnaireSubmitted(false);
+    let response = await saveAppointmentQuestionnaire(payload);
+    if (response.statuscode != 200) {
+      toast.error(<ToastUI message={response.message} type={"Error"} />);
+      getStoreActions().common.setLoading(false);
+    } else {
+      toast.success(<ToastUI message={response.message} type={"Success"} />);
+      await actions.setIsQuestionnaireSubmitted(true);
+      await actions.setResponse(response);
+      getStoreActions().common.setLoading(false);
+    }
+  }),
 };
 
 export default appointmentModel;
