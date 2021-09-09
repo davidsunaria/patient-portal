@@ -44,7 +44,7 @@ const TreatmentRecord = (props) => {
       await downloadReport({ url: '/prescription/download/', id: result.id });
     }
     if (type == "invoice") {
-      await downloadReport({ url: '/download/invoice/', id: result.id });
+      await downloadReport({ url: '/download/invoice/', id: result.invoice.id });
     }
     if (type == "file") {
       history.push(`/treatment-record-reports/${result.id}`);
@@ -81,6 +81,7 @@ const TreatmentRecord = (props) => {
                   {(result.prescription.length > 0 || result.invoice) && <div className="dropdownArrow">
                     <ul className="dropdownOption">
                       {result.prescription[0]?.id && <li className="onHover" onClick={() => downloadData(result, "prescription")}><img src={PRESCRIPTION_IMAGE} />Prescription</li>}
+                      
                       {result.invoice?.id && <li className="onHover" onClick={() => downloadData(result, "invoice")}><img src={INVOICE_IMAGE} />Invoice</li>}
                       {result.file && <li className="onHover" onClick={() => downloadData(result, "file")}><img src={REPORT_IMAGE} />Reports</li>}
                     </ul>
