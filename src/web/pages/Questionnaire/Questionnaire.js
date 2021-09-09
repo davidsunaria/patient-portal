@@ -10,6 +10,7 @@ import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import _, { forEach } from "lodash";
 import { getLoggedinUserId } from "patient-portal-utils/Service";
 import { FILE_SELECT, FILE_UNSELECT } from "patient-portal-message";
+import { FIELD_REQUIRED } from "patient-portal-message";
 
 const Questionnaire = () => {
   const { id, type } = useParams();
@@ -72,7 +73,8 @@ const Questionnaire = () => {
       if (statuscode && statuscode === 200) {
 
         if (data?.details?.id) {
-          setCanEdit(data?.details?.can_edit);
+          setCanEdit(false);
+          //setCanEdit(data?.details?.can_edit);
           setPatientQuestionnaireId(data?.details?.id);
         }
         if (data?.details?.questionnaire?.questions) {
@@ -206,7 +208,15 @@ const Questionnaire = () => {
     }
   }
 
-
+  const getMultipleChoiceAnswer = (answers) => {
+    let result = [];
+    _.forOwn(answers, (value, index) => {
+      if(value.answer_title){
+        result.push(value.answer_title.question_option);
+      }
+    });
+    return result.join(", ");
+  }
   return (
     <React.Fragment>
       <div className="content_outer">
@@ -228,16 +238,17 @@ const Questionnaire = () => {
                     <label className="fieldLabel">
                       {result?.question}
                     </label>
-                    <div className="questionFont">{result.description > 0 && result?.description_text}</div>
+                    {canEdit && <div className="questionFont">{result.description > 0 && result?.description_text}</div>}
                     {
-                      result?.question_type == "Textbox" && <div className="fieldBox">
+                      canEdit && result?.question_type == "Textbox" && <div className="fieldBox">
                         <textarea className="fieldTextarea" name={`Textbox`} value={result?.answer} onChange={(e) => handleInputChange(e, index, 'text')}></textarea>
-                        {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">This field is required</span>}
+                        {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                       </div>
+                     
                     }
-
+                    {!canEdit  && result?.question_type == "Textbox" &&  <div>{result?.answer} </div>}
                     {
-                      result?.question_type == "Yes/No" && <div className="fieldBox  fieldIcon mt-2">
+                      canEdit && result?.question_type == "Yes/No" && <div className="fieldBox  fieldIcon mt-2">
                         {result.qoptions && result.qoptions.length > 0 && result.qoptions.map((v, innerIndex) => (
                           <label key={innerIndex} className="customRadio d-inline-block mr-3">
                             <input type="radio" name={`Yes/No`} checked={v?.question_option == result?.answer} value={v?.question_option} onChange={(e) => handleInputChange(e, index, 'yesno')} /> {v?.question_option}
@@ -245,24 +256,27 @@ const Questionnaire = () => {
                         ))
 
                         }
-                        {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">This field is required</span>}
+                        {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                       </div>
                     }
+                    {!canEdit  && result?.question_type == "Yes/No" &&  <div>{result?.answer} </div>}
 
                     {
-                      result?.question_type == "Single Choice" && <div className="fieldBox fieldIcon mt-2">
+                      canEdit && result?.question_type == "Single Choice" && <div className="fieldBox fieldIcon mt-2">
                         {result.qoptions && result.qoptions.length > 0 && result.qoptions.map((v, innerIndex) => (
                           <label key={innerIndex} className="customRadio d-inline-block mr-3">
                             <input type="radio" name={`SingleChoice`} checked={v?.id == result?.answer} value={v?.id} onChange={(e) => handleInputChange(e, index, 'single')} /> {v?.question_option}
                           </label>
                         ))
                         }
-                        {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">This field is required</span>}
+                        {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                       </div>
                     }
+                    {!canEdit  && result?.question_type == "Single Choice" &&  <div>{getMultipleChoiceAnswer(result?.app_question_answer  )} </div>}
 
+                    
                     {
-                      result?.question_type == "Multiple Choice" && <div className="fieldBox">
+                     canEdit &&  result?.question_type == "Multiple Choice" && <div className="fieldBox">
                         {result.qoptions && result.qoptions.length > 0 && result.qoptions.map((v, innerIndex) => (
                          
                           <label key={innerIndex} className="customCheckbox1 d-inline-block mr-3">
@@ -270,41 +284,42 @@ const Questionnaire = () => {
                           </label>
                         ))
                         }
-                        {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">This field is required</span>}
+                        {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                       </div>
                     }
+                    {!canEdit  && result?.question_type == "Multiple Choice" &&  <div>{getMultipleChoiceAnswer(result?.app_question_answer  )} </div>}
 
                     {
-                      result?.question_type == "Opinion Scale" && <div className="fieldBox appRating">
+                      canEdit &&  result?.question_type == "Opinion Scale" && <div className="fieldBox appRating">
                         {result.qoptions && result.qoptions.length > 0 && result.qoptions.map((item, i) => {
                           const selected = i < selectedScale;
                           return (
                             <div onClick={() => onselectScale(i, index, item.id)} key={i} className={selected ? "active" : ""}><span>{i + 1}</span></div>
                           )
                         })}
-                        {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">This field is required</span>}
+                        {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                       </div>
 
                     }
+                    {!canEdit  && result?.question_type == "Opinion Scale" &&  <div>{selectedScale} </div>}
                     {
                       result?.question_type == "File Upload" &&
                       <div className="fieldBox row">
                         <div className=" col-sm-4">
                           {result.answer && <img height="100" src={`${process.env.REACT_APP_MEDIA_URL}questionnarie/${result.answer}`}/>}
-                          <input type="file" name="file" onChange={(e) => onFileChange(e, index)} className="fieldInput p-2" />
+                          {canEdit && <input type="file" name="file" onChange={(e) => onFileChange(e, index)} className="fieldInput p-2" />}
 
-                          {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">This field is required</span>}
+                          {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                         </div>
                       </div>
                     }
                   </div>
                 ))
               }
-              <div className="mt-2 mb-3">
-                <button className="button primary" disabled={canEdit == true ? false : true} onClick={handleSubmit} >Submit</button>
-              </div>
+              { canEdit && <div className="mt-2 mb-3">
+                <button className="button primary" onClick={handleSubmit} >Submit</button>
+              </div>}
             </div>
-
           </main>
         </div>
       </div>

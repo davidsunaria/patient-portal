@@ -35,3 +35,6 @@ export const SPECIES_REQUIRED = "Please select species";
 export const BREED_SELECT_REQUIRED = "Please select breed";
 export const DOB_REQUIRED = "Please select dob";
 export const NAME_REQUIRED = "Please enter name";
+
+export const FIELD_REQUIRED = "This field is required";
+
