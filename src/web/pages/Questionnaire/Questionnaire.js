@@ -73,8 +73,7 @@ const Questionnaire = () => {
       if (statuscode && statuscode === 200) {
 
         if (data?.details?.id) {
-          setCanEdit(false);
-          //setCanEdit(data?.details?.can_edit);
+          setCanEdit(data?.details?.can_edit);
           setPatientQuestionnaireId(data?.details?.id);
         }
         if (data?.details?.questionnaire?.questions) {
