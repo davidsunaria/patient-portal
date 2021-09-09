@@ -151,24 +151,17 @@ const Invoice = (props) => {
         if (clinicId.value) {
             formData = { ...formData, clinic_id: clinicId.value };
         }
-        if(formData !== undefined){
+        if (formData !== undefined) {
+            formData = { ...formData, page: 1, pagesize: 20 };
             await getInvoices({ clientId: getLoggedinUserId(), query: formData });
         }
-        
-    }, [startDate, endDate, petId, clinicId]);
-
-    useEffect(async () => {
-        let formData = {
-            page: 1, pagesize: 20
-        }
-        await getInvoices({ clientId: getLoggedinUserId(), query: formData });
         window.addEventListener('scroll', (e) => handleScroll(e), true);
         return () => {
             window.removeEventListener('scroll', (e) => handleScroll(e))
         };
-    }, []);
+    }, [startDate, endDate, petId, clinicId]);
 
-
+  
     useEffect(() => {
         if (isBottom) {
             if (nextPageUrl) {
@@ -227,7 +220,7 @@ const Invoice = (props) => {
                             <div className="box mb-3">
                                 <div className="fieldOuter d-sm-inline-block mr-sm-2 mb-2 mb-lg-0">
                                     <div className="fieldBox fieldIcon">
-                                        
+
                                         <DatePicker
                                             dateFormat="yyyy-MM-dd"
                                             placeholderText="Date"
