@@ -159,7 +159,12 @@ const BookAppointment = (props) => {
 
           setCalenderData(enabledDatesArray);
           if (data.enabledDates.length > 0) {
-            setFormData({ ...formData, date: new Date(data.enabledDates[0]).toISOString() });
+            setTimeout(
+              () => {
+                setFormData({ ...formData, date: new Date(data.enabledDates[0]) })
+              },
+              0
+            );
           }
           else {
             setFormData({ ...formData, date: "" });
@@ -277,32 +282,6 @@ const BookAppointment = (props) => {
       setOtherData({ ...otherData, date: "", slot: "" })
       await getProviders({ formData: formData, type: formData.service_id });
     }
-    /*if (formData.service_id && formData.clinic_id && formData.service_for == "provider") {
-      console.log("Service selected and ", formData);
-      await getProviders({ formData: formData, type: formData.service_id });
-    } else {
-      console.log("Service selected clinic wiase ", formData);
-      //reset provider list
-      setAllProviders([]);
-      setCalenderData([]);
-      setTimeSlot([]);
-      let finalPayload = { ...formData };
-      finalPayload["date"] = "";
-      finalPayload["slot"] = "";
-      finalPayload["provider_name"] = "";
-
-      let finalOtherPayload = { ...otherData, date: "", slot: "", provider_name: "" };
-      setFormData(finalPayload);
-      setOtherData(finalOtherPayload);
-
-      let request = {
-        clinicId: formData.clinic_id,
-        serviceId: formData.service_id,
-        providerId: 0,
-        appType: formData.type
-      }
-      await getProviders({ formData: formData, type: formData.service_id });
-    }*/
   }, [formData.service_id]);
 
   // Get Provider Schedules
