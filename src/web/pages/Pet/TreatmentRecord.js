@@ -37,12 +37,7 @@ const TreatmentRecord = (props) => {
   }, [response]);
 
   const getDate = (result, type) => {
-    if (result.appointment) {
-      return formatDate(result?.appointment?.appointment_datetime, type, false);
-    }
-    else {
       return formatDate(result?.visit_date, type, false);
-    }
   }
   const downloadData = async (result, type) => {
     if (type == "prescription") {
