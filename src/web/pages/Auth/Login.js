@@ -11,10 +11,9 @@ import { Formik, ErrorMessage } from "formik";
 import { Spinner } from 'react-bootstrap';
 import { useAuthValidation } from "patient-portal-utils/validations/auth/AuthSchema";
 
-
 const Login = (props) => {
   const history = useHistory();
-  const [formData, setFormData] = useState({ user_name: '', password: '' });
+  const [formData, setFormData] = useState({ user_name: '', password: '', device_token:  new Buffer(window.navigator.userAgent).toString('base64')});
   const { labelData } = useContext(LanguageContext);
   const login = useStoreActions((actions) => actions.auth.login);
   const isLogin = useStoreState((state) => state.auth.isLogin);
@@ -33,14 +32,12 @@ const Login = (props) => {
 
   return (
     <React.Fragment>
-
-
       <div className="loginOuter">
         <div className="loginBox">
           <div className="loginLogo"><img src={DCCLOGO} /></div>
           <div className="loginTitle"> Welcome Back!</div>
           <div className="loginIntro">If you are an existing client, Please sign in below. If you are new to our practice, Please complete signup to activate your account.</div>
-
+        
           <Formik
             enableReinitialize={true}
             initialValues={formData}

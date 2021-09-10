@@ -23,7 +23,8 @@ const SignupComplete = (props) => {
     phone: '',
     email: '',
     password: '',
-    password_confirmation: ''
+    password_confirmation: '',
+    device_token:  new Buffer(window.navigator.userAgent).toString('base64')
   });
 
   const createUser = async (payload) => {
