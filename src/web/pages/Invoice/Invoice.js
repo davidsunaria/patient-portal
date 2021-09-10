@@ -30,7 +30,7 @@ const Invoice = (props) => {
     const [nextPageUrl, setNextPageUrl] = useState(null);
 
     const [isOpen, setIsOpen] = useState(false);
-    const [dateRange, setDateRange] = useState([new Date(), subDays(new Date(), 15)]);
+    const [dateRange, setDateRange] = useState([subDays(new Date(), 15), new Date()]);
     const [startDate, endDate] = dateRange;
     const [petId, setPetId] = useState({ value: "", label: "All Pets" });
     const [clinicId, setClinicId] = useState({ value: "", label: "All Clinics" });
