@@ -9,6 +9,7 @@ import _ from "lodash";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { SELECT_DATE,SELECT_TIME } from "patient-portal-message";
+import CROSS_IMAGE from "patient-portal-images/cross.svg";
 
 const RescheduleAppointment = (props) => {
   const calendarRef = useRef();
@@ -64,10 +65,12 @@ const RescheduleAppointment = (props) => {
     setTime(val);
   }
   const rescheduleApp = async() => {
-    let formData = new FormData();
-    formData.append('id', id);
-    formData.append('date',moment(date).format("YYYY-MM-DD"));
-    formData.append('slot', time);
+    let formData = {
+      id: id,
+      date: moment(date).format("YYYY-MM-DD"),
+      slot: time
+    };
+    //console.log('formData', formData);
     if(!formData.date){
       toast.error(<ToastUI message={SELECT_DATE} type={"Error"} />);
     }
@@ -86,13 +89,10 @@ const RescheduleAppointment = (props) => {
           <div className="popupWrapper">
             <div className="popupTitle mb-3">Reschedule Appointment
               <a className="cross" onClick={props.toggle}>
-                <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17.25 5.75L5.75 17.25" stroke="#444444" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round" />
-                  <path d="M5.75 5.75L17.25 17.25" stroke="#444444" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+                <img src={CROSS_IMAGE} />
               </a>
             </div>
-
+        
             <div className="fieldOuter">
               <label className="fieldLabel">Select Date</label>
               <div className="fieldBox fieldIcon">
@@ -108,13 +108,13 @@ const RescheduleAppointment = (props) => {
                 <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
               </div>
             </div>
-
+                 
             <div className="fieldOuter">
               <label className="fieldLabel">Select Timeslot</label>
               <div className="fieldBox">
                 <div className="timeslotPopup">
-                  {date && timeslots && timeslots.length > 0 ? (
-                    timeslots.map((val, index) => (
+                  {date && timeslots  ? (
+                    Object.values(timeslots).map((val, index) => (
                       <span className={ (val == time) ? "active" : ''} key={index} onClick={() => selectTime(val)}>{val}</span>
                     ))
                   ) : (
