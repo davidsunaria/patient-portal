@@ -167,9 +167,18 @@ const BookAppointment = (props) => {
             );
           }
           else {
-            setFormData({ ...formData, date: "" });
+           
+            setTimeout(
+              () => {
+                setFormData({ ...formData, date: "" });
+              },
+              0
+            );
+            
           }
+         
         }
+        
 
         // Set Timeslot 
         if (data?.timeSlots) {
@@ -179,7 +188,9 @@ const BookAppointment = (props) => {
               setFormData({ ...formData, slot: data.timeSlots[0] });
             }
             else {
-              setFormData({ ...formData, slot: "" });
+             
+                  setFormData({ ...formData, slot: "" });
+               
             }
 
           }
@@ -295,6 +306,7 @@ const BookAppointment = (props) => {
         appType: formData.type
       }
       console.log("Doctor Selected", request);
+      setFormData({ ...formData, slot: "" });
       await getProviderSchedule(request);
     }
   }, [formData.provider_id]);
