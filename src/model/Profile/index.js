@@ -48,7 +48,7 @@ const profileModel = {
       getStoreActions().common.setLoading(false);
       let res = getProfileCompleted();
           let data = {
-            isPetCompleted: res.isPetCompleted,
+            isPetCompleted: (res?.isPetCompleted) ? res?.isPetCompleted : 0,
             isProfileCompleted: 1
           }
           localStorage.setItem("profileStatus", JSON.stringify(data));
