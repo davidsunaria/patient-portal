@@ -11,6 +11,7 @@ import USER_LOCATION_IMG from "patient-portal-images/userLocation.svg";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { setUser } from "patient-portal-utils/Service.js";
 import DEFAULT_USER_IMG from "patient-portal-images/default-user.png";
+import CROSS_IMAGE from "patient-portal-images/cross.svg";
 
 const Profile = () => {
   const history = useHistory();
@@ -80,10 +81,7 @@ const Profile = () => {
             <div className="popupWrapper">
               <div className="popupTitle mb-3">Notification Settings
                 <a className="cross" onClick={toggle}>
-                  <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M17.25 5.75L5.75 17.25" stroke="#444444" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M5.75 5.75L17.25 17.25" stroke="#444444" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
+                  <img src={CROSS_IMAGE}/>
                 </a>
               </div>
               <p className="p-text mb-4">We recommend you keep push notifications turned on to keep you up-to-date on your pets’ health.</p>
