@@ -109,8 +109,8 @@ const AppointmentCard = (props) => {
                     <div key={index} className="box mb-2 onHover" >
                         <div className="appointmentList">
                              {(props.type == "upcoming" && val.status != "canceled" && val.appointment_type == "virtual") && 
-                                        <a onClick={() => joinMeeting(val?.meetingId)}>
-                                             <div className="joinBtn"><img src={JOIN_IMAGE}/> Join</div>
+                                        <a className="joinBtn" onClick={() => joinMeeting(val?.meetingId)}>
+                                             <img src={JOIN_IMAGE}/> Join
                                         </a>
                                    }
 
