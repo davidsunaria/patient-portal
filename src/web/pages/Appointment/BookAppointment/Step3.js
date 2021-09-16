@@ -211,7 +211,7 @@ const Step3 = (props) => {
                         }
 
                     </div>
-                    selectedTimeSlot{JSON.stringify(selectedTimeSlot)}
+                   
                     <div className="AppointmentDate timeSlot" >
 
                         <label ref={innerRef} onClick={(e) => showTime(e)}>{(selectedTimeSlot) ? selectedTimeSlot : props.formData.slot}</label>
