@@ -62,6 +62,7 @@ const BookAppointment = (props) => {
     else {
       setCurrentPage(2);
     }
+    setOtherData({...otherData, type: payload});
   }
   //Set Second Step Data
   const handleStepTwo = (e, otherInfo) => {

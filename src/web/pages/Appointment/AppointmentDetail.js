@@ -16,6 +16,7 @@ const AppointmentDetail = () => {
   const [categoryData, setCategoryData] = useState({});
   const [otherData, setOtherData] = useState({});
   const [petData, setPetData] = useState({});
+  const [accountInfo, setAccountInfo] = useState({});
 
   const getAppointmentDetail = useStoreActions((actions) => actions.appointment.getAppointmentDetail);
   const response = useStoreState((state) => state.appointment.response);
@@ -33,6 +34,7 @@ const AppointmentDetail = () => {
           setCategoryData(data.categoryData);
           setPetData(data.pet_info);
           setOtherData(data.otherData);
+          setAccountInfo(data.accountInfo);
         }
       }
     }
@@ -62,13 +64,28 @@ const AppointmentDetail = () => {
                     <div className="col-xl-4 col-md-6">
                       <div className="appointmentConfirmSection">
                         <div className="appointmentConfirmTitle">Facility</div>
-                        <div className="appointmentConfirmClinic">{appointmentData?.clinic?.clinic_name}</div>
-                        <div className="appointmentConfirmText">{appointmentData?.clinic?.address}</div>
 
+                        {appointmentData?.appointment_type == "in_person" && <>
+                          <div className="appointmentConfirmClinic">{appointmentData?.clinic?.clinic_name}</div>
+                          <div className="appointmentConfirmText">{appointmentData?.clinic?.address}</div></>
+                        }
+
+                        {appointmentData?.appointment_type == "virtual" && <>
+                          <div className="appointmentConfirmClinic">{accountInfo?.name}</div>
+                          <div className="appointmentConfirmText">{accountInfo?.address}</div></>
+                        }
                         <div className="appointmentConfirmIcons">
-                        {appointmentData?.status == "canceled" && <spanc className="appointmentConfirmText colorRed">Canceled</spanc>}
-                          {appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`http://maps.google.com/?${appointmentData?.clinic?.address}`}><img src={LOCATION_IMAGE} /></a>
-                            <a href={`tel:${appointmentData?.phone_code}`}><img src={CONTACT_IMAGE} /></a></React.Fragment>}
+                          {appointmentData?.status == "canceled" && <spanc className="appointmentConfirmText colorRed">Canceled</spanc>}
+
+                          {appointmentData?.appointment_type == "in_person" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`http://maps.google.com/?${appointmentData?.clinic?.address}`}><img src={LOCATION_IMAGE} /></a>
+                            <a href={`tel:${appointmentData?.phone_code}`}><img src={CONTACT_IMAGE} /></a></React.Fragment>
+                          }
+
+                          {appointmentData?.appointment_type == "virtual" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`http://maps.google.com/?${accountInfo?.address}`}>
+                            <img src={LOCATION_IMAGE} /></a>
+                          </React.Fragment>
+                          }
+
                         </div>
                       </div>
                       <div className="appointmentConfirmSection">

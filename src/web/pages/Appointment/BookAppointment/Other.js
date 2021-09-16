@@ -6,8 +6,9 @@ const Other = (props) => {
     <React.Fragment>
       <div className="col-md-4">
         <div className="box appointmentDetail">
+          {/* {JSON.stringify(props)} */}
           <section>
-            <label>Location</label>
+            <label> {props?.other?.type == "in_person" ? "Location" : "Doctor"}</label>
             <p>{props.other?.clinic_name}</p>
             <p>{props.other?.clinic_address}</p>
             <p>{(props.other?.provider_name != "Any") ? props.other?.provider_name : ""}</p>
