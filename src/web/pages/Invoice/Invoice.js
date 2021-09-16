@@ -197,6 +197,11 @@ const Invoice = (props) => {
             status = "Awaiting Payment";
             cls = "orange";
         }
+        
+        if(value === "ready"){
+            status = "Ready For Payment";
+            cls = "orange";
+        }
         if (type == 1) {
             return cls;
         }
