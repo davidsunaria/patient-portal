@@ -38,3 +38,5 @@ export const NAME_REQUIRED = "Please enter name";
 
 export const FIELD_REQUIRED = "This field is required";
 
+export const TITLE_REQUIRED = "Title is required";
+export const BODY_REQUIRED = "Message is required";

@@ -170,3 +170,11 @@ export const getReportDetail = async (formData) => {
   }
 };
 
+export const contactUs = async (formData) => {
+  try {
+    let response = await axiosApi.post(`${apiUrl}/contact`, formData);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

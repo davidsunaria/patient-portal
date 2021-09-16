@@ -9,7 +9,7 @@ const ToastUI = (props) => {
         <div className={props.type == "Success" ? "successIcon" : "errorIcon"}>
         {props.type == "Success" ? <i className="fa fa-check" /> : <i className="fa fa-times" />}
         </div>
-        <h5>{props.type}</h5>
+        {/* <h5>{props.type}</h5> */}
         <p>{props.message}</p>
         {/* <a className="alertCross"><img src={TOAST_CROSS_IMG} /></a> */}
       </div>

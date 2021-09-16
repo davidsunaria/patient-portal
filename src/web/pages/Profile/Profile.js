@@ -28,11 +28,13 @@ const Profile = () => {
   const response = useStoreState((state) => state.profile.response);
   const updateSettings = useStoreActions((actions) => actions.profile.updateSettings);
   const getSettings = useStoreActions((actions) => actions.profile.getSettings);
+  const resetContactUs = useStoreActions((actions) => actions.pet.resetContactUs);
 
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
 
   useEffect(async () => {
+    resetContactUs();
     await getMyProfile(getLoggedinUserId());
     await getSettings(getLoggedinUserId());
   }, []);
@@ -150,6 +152,7 @@ const Profile = () => {
                     <div className="settingLinkTitle">Settings</div>
                     <Link to="/edit-profile">Edit Profile</Link>
                     <a onClick={toggle}>Notification Settings</a>
+                    <Link to="/contact-us">Contact Us</Link>
                   </section>
                   <section>
                     <a href={`${process.env.REACT_APP_BOOKING_PORTAL_URL}pages/privacy-policy`} target="_blank">Privacy Policy</a>

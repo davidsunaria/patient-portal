@@ -105,7 +105,7 @@ const VerifyOtp = (props) => {
                   <button type="submit" className="button primary w-100 mb-2 w-100">Verify OTP</button>
                   <button type="button" className="button primary w-100" onClick={resendOtp}>Resend OTP</button>
                   <div className="alreadyAccount">
-                    <p>Already have a account?</p>
+                    <p>Already have an account?</p>
                     <Link to="/login">Sign In</Link>
                   </div>
                 </form>

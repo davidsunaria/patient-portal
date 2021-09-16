@@ -45,7 +45,7 @@ axiosApi.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   if (!error.response) {
-    handleInvalidToken();
+   // handleInvalidToken();
   }
   else {
     if (error.response.status == 500) {

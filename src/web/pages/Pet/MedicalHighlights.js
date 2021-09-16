@@ -97,7 +97,7 @@ const MedicalHighlights = (props) => {
           {records && records.length > 0 ? (
             records.map((val, index) => (
 
-              <div className="timelineSection">
+              <div className="timelineSection" key={index}>
                 <div className="timelineTime">{(val.d_date) ? formatDate(val?.d_date, 1, false) : ''} {(val.d_date) ? formatDate(val?.d_date, 2, false) : ''}</div>
                 <div className="timelineDetail">
                   <div>
