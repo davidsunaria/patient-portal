@@ -25,7 +25,7 @@ export function clearUserData() {
 
 }
 export function getAccountData() {
-  return localStorage.getItem("accountData");
+  return JSON.parse(localStorage.getItem("accountData"));
 }
 export function setAccountData(payload) {
   setDateFormat(payload.date_format);

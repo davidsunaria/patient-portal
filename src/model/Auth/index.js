@@ -11,6 +11,7 @@ const authModel = {
 	isSignupCompleted: false,
 	isPasswordReset: false,
 	isLoggedOut: false,
+	response:{},
 	setTranslations: action((state, payload) => {
 		state.translations = payload;
 	}),
@@ -31,6 +32,9 @@ const authModel = {
 	}),
 	setIsPasswordReset: action((state, payload) => {
 		state.isPasswordReset = payload;
+	}),
+	setResponse: action((state, payload) => {
+		state.response = payload;
 	}),
 	sendOTP: thunk(async (actions, payload, { getStoreActions }) => {
 		getStoreActions().common.setLoading(true);
@@ -59,6 +63,7 @@ const authModel = {
 
 	}),
 	login: thunk(async (actions, payload, { getStoreActions }) => {
+		await actions.setResponse({});
 		getStoreActions().common.setLoading(true);
 		let response = await login(payload);
 		if (response.statuscode != 200) {
@@ -68,6 +73,7 @@ const authModel = {
 			setToken(response.data.token);
 			setUser(response.data.client);
 			setAccountData(response.data.accountInfo);
+			await actions.setResponse(response.data);
 			await actions.setIsLogin(true);
 			getStoreActions().common.setLoading(false);
 		}

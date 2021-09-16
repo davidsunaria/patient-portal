@@ -12,24 +12,40 @@ import { Spinner } from 'react-bootstrap';
 import { useAuthValidation } from "patient-portal-utils/validations/auth/AuthSchema";
 
 const Login = (props) => {
+  const [title, setTitle] = useState("");
   const history = useHistory();
-  const [formData, setFormData] = useState({ user_name: '', password: '', device_token:  new Buffer(window.navigator.userAgent).toString('base64')});
+  const [formData, setFormData] = useState({ user_name: '', password: '', device_token: new Buffer(window.navigator.userAgent).toString('base64') });
   const { labelData } = useContext(LanguageContext);
   const login = useStoreActions((actions) => actions.auth.login);
   const isLogin = useStoreState((state) => state.auth.isLogin);
   const isLoading = useStoreState((state) => state.common.isLoading);
   const { LoginSchema } = useAuthValidation();
-
+  const response = useStoreState((state) => state.auth.response);
 
   const signIn = async (values) => {
     await login(values);
   }
   useEffect(() => {
     if (isLogin) {
-      history.push("/dashboard");
+     
     }
   }, [isLogin])
 
+  useEffect(() => {
+    if (response) {
+      let { accountInfo } = response;
+        if (accountInfo) {
+          setTitle(accountInfo.name);
+        }
+    }
+  }, [response]);
+
+  useEffect(() => {
+    if (title) {
+      document.title = (title) ? title : "Patient Portal";
+       history.push("/dashboard");
+    }
+  }, [title]);
   return (
     <React.Fragment>
       <div className="loginOuter">
@@ -37,7 +53,7 @@ const Login = (props) => {
           <div className="loginLogo"><img src={DCCLOGO} /></div>
           <div className="loginTitle"> Welcome Back!</div>
           <div className="loginIntro">If you are an existing client, Please sign in below. If you are new to our practice, Please complete signup to activate your account.</div>
-        
+
           <Formik
             enableReinitialize={true}
             initialValues={formData}
@@ -78,7 +94,7 @@ const Login = (props) => {
                         value={values.user_name}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                    autoComplete="off"
+                        autoComplete="off"
                       />
 
 
@@ -88,7 +104,7 @@ const Login = (props) => {
                   <div className="loginFieldGroup">
                     <label>Password
 
-                          <Link className="change-password" to="/forgot-password">Forgot Password</Link>
+                      <Link className="change-password" to="/forgot-password">Forgot Password</Link>
 
                     </label>
                     <div className={
