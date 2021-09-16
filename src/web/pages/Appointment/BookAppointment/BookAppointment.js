@@ -18,13 +18,14 @@ const BookAppointment = (props) => {
   const { id } = useParams();
   let { firstname, lastname, email, phone_code } = getUser();
   const history = useHistory();
-  const [formData, setFormData] = useState({ type: "", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: "", appointment_notes: "", duration: "", service_for: "" });
+  const [formData, setFormData] = useState({ type: "", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: "", appointment_notes: "", duration: "", service_for: "",telehealth_clinic_id: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [allClinics, setAllClinics] = useState([]);
   const [allServices, setAllServices] = useState([]);
   const [allProviders, setAllProviders] = useState([]);
   const [calenderData, setCalenderData] = useState([]);
   const [timeSlot, setTimeSlot] = useState([]);
+  const [timeSlotClinic, setTimeSlotClinic] = useState([]);
   const [otherData, setOtherData] = useState({
     name: firstname + " " + lastname, email: email, phone: phone_code
   });
@@ -54,7 +55,13 @@ const BookAppointment = (props) => {
     formPayload.type = payload;
     formPayload.client_id = getLoggedinUserId();
     setFormData(formPayload);
-    setCurrentPage(2);
+    //Reset Page For Virtual
+    if (payload == "virtual") {
+      setCurrentPage(3);
+    }
+    else {
+      setCurrentPage(2);
+    }
   }
   //Set Second Step Data
   const handleStepTwo = (e, otherInfo) => {
@@ -97,7 +104,9 @@ const BookAppointment = (props) => {
     else if (name && name !== undefined && name == "slot") {
       formPayload[name] = val;
     }
-
+    else if(name && name !== undefined && name == "telehealth_clinic_id"){
+      formPayload[name] = val;
+    }
     else if (name == undefined && e?.target !== undefined && e?.target?.name && e?.target?.value) {
       formPayload[e.target.name] = e?.target?.value;
     }
@@ -115,10 +124,7 @@ const BookAppointment = (props) => {
     setFormData(formPayload);
     updateOther(val, 4, name);
   }
-  const handleStepFive = () => {
-
-  }
-
+ 
   useEffect(async () => {
     await getAllClinics();
   }, []);
@@ -143,7 +149,7 @@ const BookAppointment = (props) => {
           });
           _.forOwn(data.providers, function (value, key) {
             resultSet.push({
-              value: value.id, label: `${value.title} ${value.firstname} ${value.lastname}`
+              value: value.user_id, label: `${value.title} ${value.firstname} ${value.lastname}`
             });
           });
           setAllProviders(resultSet);
@@ -162,38 +168,44 @@ const BookAppointment = (props) => {
             setTimeout(
               () => {
                 setFormData({ ...formData, date: new Date(data.enabledDates[0]) })
+                updateOther(data.enabledDates[0], 3, "date");
               },
               0
             );
           }
           else {
-           
+
             setTimeout(
               () => {
                 setFormData({ ...formData, date: "" });
+                updateOther("", 3, "date");
               },
               0
             );
-            
+
           }
-         
+
         }
-        
+
 
         // Set Timeslot 
         if (data?.timeSlots) {
           if (data.timeSlots) {
             setTimeSlot(data.timeSlots);
-            if (data.timeSlots.length > 0) {
-              setFormData({ ...formData, slot: data.timeSlots[0] });
+            if (data.timeSlots) {
+              let val = Object.values(data.timeSlots);
+              setFormData({ ...formData, slot: val[0] });
+              updateOther(val[0], 3, "slot");
             }
             else {
-             
-                  setFormData({ ...formData, slot: "" });
-               
+              setFormData({ ...formData, slot: "" });
+              updateOther("", 3, "slot");
             }
-
           }
+        }
+        if(data?.timeSlotsClinic){
+          //let val = Object.values(data.timeSlotsClinic);
+          setTimeSlotClinic(data.timeSlotsClinic);
         }
 
         //Appointment Created
@@ -258,6 +270,7 @@ const BookAppointment = (props) => {
       request.slot = "";
       request.provider_name = "";
       request.provider_id = "";
+      request.telehealth_clinic_id = "";
 
       requestOther.date = "";
       requestOther.slot = "";
@@ -272,14 +285,28 @@ const BookAppointment = (props) => {
       setFormData(request);
       setOtherData(requestOther);
     }
-    setCurrentPage(page);
+    //Reset Page For Virtual
+    if(formData.type == "virtual" && page == 2){
+      setCurrentPage(1);
+    }
+    else{
+      setCurrentPage(page);
+    }
+    
   }
-  // Get Services For The Selected Clinic
-
+  // Get Services For The Selected Clinic for in person, for virtual skip clinic and get all virtual services
   useEffect(async () => {
-    if (formData.type && formData.clinic_id) {
+   
+    if (formData.type == "in_person" && formData.clinic_id) {
       await getClinicServices(formData);
     }
+    if (formData.type == "virtual"){ 
+      let req = {
+        type: formData.type,
+      }
+      await getClinicServices(req);
+    }
+    
   }, [formData.type, formData.clinic_id]);
 
   // Get Provider Based On Service Selected
@@ -289,8 +316,8 @@ const BookAppointment = (props) => {
       setAllProviders([]);
       setCalenderData([]);
       setTimeSlot([]);
-      setFormData({ ...formData, date: "", slot: "", provider_name: "" })
-      setOtherData({ ...otherData, date: "", slot: "" })
+      setFormData({ ...formData, date: "", slot: "", provider_name: "",telehealth_clinic_id: ""  });
+      setOtherData({ ...otherData, date: "", slot: "" });
       await getProviders({ formData: formData, type: formData.service_id });
     }
   }, [formData.service_id]);
@@ -306,7 +333,7 @@ const BookAppointment = (props) => {
         appType: formData.type
       }
       console.log("Doctor Selected", request);
-      setFormData({ ...formData, slot: "" });
+      //setFormData({ ...formData, slot: "" });
       await getProviderSchedule(request);
     }
   }, [formData.provider_id]);
@@ -314,7 +341,7 @@ const BookAppointment = (props) => {
   // Get Provider Slots By Date
   useEffect(async () => {
     if (formData.date) {
-      console.log("on date selection");
+      console.log("on date selection", );
       let payload = {
         clinicId: formData.clinic_id,
         serviceId: formData.service_id,
@@ -366,10 +393,17 @@ const BookAppointment = (props) => {
         finalPayload = { ...otherData, provider_name: payload };
       }
       if (name && name == "date") {
-        finalPayload = { ...otherData, date: moment(payload).format('dddd, MMMM Do YYYY') };
+        if(payload){
+          finalPayload = { ...otherData, date: moment(payload).format('dddd, MMMM Do YYYY') };
+        }
+        else{
+          finalPayload = { ...otherData, date: "" };
+        }
+        
       }
       if (name && name == "slot") {
         finalPayload = { ...otherData, slot: payload };
+        
       }
     }
     if (step == 4) {
@@ -377,6 +411,7 @@ const BookAppointment = (props) => {
         finalPayload = { ...otherData, pet_name: payload?.name, species: payload?.speciesmap?.species };
       }
     }
+    console.log("Final Other Data Is", finalPayload);
     setOtherData(finalPayload);
   }
 
@@ -430,6 +465,16 @@ const BookAppointment = (props) => {
     }
     return response;
   }
+
+  useEffect(() => {
+      if(timeSlotClinic){
+        let val = Object.values(timeSlotClinic);
+        if(val.length > 0){
+          setFormData({ ...formData, telehealth_clinic_id: val[0] });
+        }
+        
+      }
+  }, [timeSlotClinic]);
   return (
     <React.Fragment>
       <div className="content_outer">
@@ -441,10 +486,11 @@ const BookAppointment = (props) => {
               subHeading={"Start your process to book your appointment"}
               hasBtn={false}
             />
-            {/* {JSON.stringify(formData)} */}
+            {/* {JSON.stringify(otherData)}
+            {JSON.stringify(formData)} */}
             {currentPage == 1 && <Step1 page={currentPage} onSubmit={handleStepOne} />}
             {currentPage == 2 && <Step2 other={otherData} formData={formData} data={allClinics} page={currentPage} onSubmit={handleStepTwo} onNext={handleNext} onBack={handleBack} />}
-            {currentPage == 3 && <Step3 other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
+            {currentPage == 3 && <Step3 timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 4 && <Step4 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
           </main>
         </div>

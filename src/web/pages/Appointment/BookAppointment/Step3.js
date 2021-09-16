@@ -31,11 +31,10 @@ const Step3 = (props) => {
         calendarRef.current.setOpen(!isOpen)
     };
     const showTime = (e) => {
-        console.log(e?.target, props?.formData?.date, openTimePopup)
         if (props.formData.date) {
             setOpenTimePopup(!openTimePopup);
         }
-        else if(props?.enabledDates[0]){
+        else if (props?.enabledDates[0]) {
             setOpenTimePopup(!openTimePopup);
         }
     }
@@ -59,19 +58,33 @@ const Step3 = (props) => {
     ));
 
     const handleTimeSelect = (e, name, val) => {
+        showTime();
+        if (props?.timeSlotClinic[val]) {
+            props.onSubmit("", "telehealth_clinic_id", props?.timeSlotClinic[val]);
+        }
         setSelectedTimeSlot(val);
         props.onSubmit(e, name, val);
-        showTime();
     }
     const handleAccordian = (index) => {
         setIsOpenAccordian(index);
     }
     useEffect(() => {
+        console.log("Date Changed For Child ", props);
         if (!props.formData.date) {
             setSelectedTimeSlot("");
         }
+       
     }, [props.formData.date]);
 
+    useEffect(() => {
+        if (props.slot) {
+            let val = Object.values(props.slot);
+            if (val.length > 0) {
+                setSelectedTimeSlot(val[0]);  
+            }
+
+        }
+    }, [props.slot]);
     const useOuterClick = (callback) => {
         const callbackRef = useRef(); // initialize mutable ref, which stores callback
         const innerRef = useRef(); // returned to client, who marks "border" element
@@ -115,7 +128,7 @@ const Step3 = (props) => {
                                                     {value?.name}
                                                 </span>
                                                 <span className="serviceTime"><span className="mr-3">{value?.duration} Minutes</span>
-                                                <img onClick={() => showServiceDetail(value)} className="infoIcon" src={I_IMAGE} />
+                                                    <img onClick={() => showServiceDetail(value)} className="infoIcon" src={I_IMAGE} />
                                                 </span>
                                             </label>
 
@@ -142,7 +155,7 @@ const Step3 = (props) => {
                     <div className="row my-3">
                         <div className="col-xl-4 col-md-6">
                             <div className="fieldOuter mb-0">
-                                <div className="fieldBox">
+                                <div className="fieldBox providerSelectBox">
 
                                     <Select
                                         placeholder={"Select provider"}
@@ -151,8 +164,10 @@ const Step3 = (props) => {
                                         id="provider_id"
                                         name="provider_id"
                                         options={props?.providers}
-                                        value={props.formData.provider_id}
-                                        onChange={(e) => props.onSubmit(e, "provider_id")}
+                                        value={props?.formData?.provider_id}
+                                        onChange={(e) => {
+                                            props.onSubmit(e, "provider_id")
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -160,8 +175,8 @@ const Step3 = (props) => {
                     </div></React.Fragment>
                 }
                 {/* Date-  {JSON.stringify(props.formData.date)}
-                Slot-{JSON.stringify(props.slot)}<br /><br />
-                State-{JSON.stringify(openTimePopup)}<br />
+                Slot-{JSON.stringify(props.formData.slot)}<br /><br /> */}
+                {/*State-{JSON.stringify(openTimePopup)}<br />
                 enabledDates-{JSON.stringify(props?.enabledDates[0])}<br />
                 providers-{JSON.stringify(props?.providers.length)}<br /> */}
                 {(props?.enabledDates.length > 0 || props?.providers.length > 0) && <div className="dateTimeOuter">
@@ -196,9 +211,9 @@ const Step3 = (props) => {
                         }
 
                     </div>
-                   
+                    selectedTimeSlot{JSON.stringify(selectedTimeSlot)}
                     <div className="AppointmentDate timeSlot" >
-                     
+
                         <label ref={innerRef} onClick={(e) => showTime(e)}>{(selectedTimeSlot) ? selectedTimeSlot : props.formData.slot}</label>
                         {props.formData && (props.formData.date != undefined || props?.enabledDates[0]) && <div className={(openTimePopup == false) ? "timeslotPopup d-none" : "timeslotPopup"}>
 

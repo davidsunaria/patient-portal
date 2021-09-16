@@ -86,8 +86,15 @@ export const getAllClinics = async (formData) => {
 };
 
 export const getClinicServices = async (formData) => {
+  let query;
+  if(formData.type == "virtual"){
+    query = `${apiUrl}/services/${formData.type}`;
+  }
+  else{
+    query = `${apiUrl}/services/${formData.type}/${formData.clinic_id}`;
+  }
   try {
-    let response = await axiosApi.get(`${apiUrl}/services/${formData.type}/${formData.clinic_id}`);
+    let response = await axiosApi.get(`${query}`);
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -96,8 +103,12 @@ export const getClinicServices = async (formData) => {
 
 
 export const getProviders = async (formData) => {
+  let clinicId;
+  if(formData?.formData?.clinic_id != ""){
+    clinicId = `/${formData?.formData?.clinic_id}`;
+  }
   try {
-    let response = await axiosApi.get(`${apiUrl}/service_for/${formData.formData.clinic_id}/${formData.type}`);
+    let response = await axiosApi.get(`${apiUrl}/service_for/${formData.type}${(clinicId) ? clinicId : ''}`);
     return response.data;
   } catch (error) {
     return error.response.data;
