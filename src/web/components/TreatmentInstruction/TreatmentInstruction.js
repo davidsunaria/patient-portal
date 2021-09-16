@@ -7,7 +7,7 @@ const TreatmentInstruction = (props) => {
   const history = useHistory();
   const getDate = (result, type) => {
     if (result.date && result.time) {
-      return formatDate(`${result.date} ${" "} ${result.time} `, type, false);
+      return formatDate(`${result.date}${" "}${result.time} `, type, false);
     }
   }
   return (
