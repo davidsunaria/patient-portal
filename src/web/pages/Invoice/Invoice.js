@@ -200,7 +200,7 @@ const Invoice = (props) => {
         
         if(value === "ready"){
             status = "Ready For Payment";
-            cls = "red";
+            cls = "red"; 
         }
         if (type == 1) {
             return cls;
