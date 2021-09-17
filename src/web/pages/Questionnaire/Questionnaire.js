@@ -106,7 +106,8 @@ const Questionnaire = () => {
     }
 
     if (type == "yesno") {
-      val[index]['answer'] = e.target.value === 'Yes' ? 'Yes' : 'No';
+      //val[index]['answer'] = e.target.value === 'Yes' ? 'Yes' : 'No';
+      val[index]['answer'] = e.target.value;
       val[index]['error'] = (e.target.value) ? false : true;
     }
     if (type == "single") {
@@ -250,7 +251,7 @@ const Questionnaire = () => {
                       canEdit && result?.question_type == "Yes/No" && <div className="fieldBox  fieldIcon mt-2">
                         {result.qoptions && result.qoptions.length > 0 && result.qoptions.map((v, innerIndex) => (
                           <label key={innerIndex} className="customRadio d-inline-block mr-3">
-                            <input type="radio" name={`Yes/No`} checked={v?.question_option == result?.answer} value={v?.question_option} onChange={(e) => handleInputChange(e, index, 'yesno')} /> {v?.question_option}
+                            <input type="radio" name={`Yes/No`} checked={v?.id == result?.answer} value={v?.id} onChange={(e) => handleInputChange(e, index, 'yesno')} /> {v?.question_option}
                           </label>
                         ))
 
