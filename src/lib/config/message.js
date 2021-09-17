@@ -40,3 +40,4 @@ export const FIELD_REQUIRED = "This field is required";
 
 export const TITLE_REQUIRED = "Title is required";
 export const BODY_REQUIRED = "Message is required";
+export const OTP_SENT = "OTP sent successfully";

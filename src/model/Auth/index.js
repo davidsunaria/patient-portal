@@ -3,6 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { sendOTP, getTranslations, login, verifyOtp, signUp, sendForgotPasswordOTP, resetPassword, logout } from "patient-portal-api/AuthApi.js";
 import { setToken, setAccountData, setUser, setTempData, removeTempData } from "patient-portal-utils/Service.js";
+import { OTP_SENT } from "patient-portal-message";
 const authModel = {
 	translations: [],
 	isLogin: false,
@@ -43,7 +44,7 @@ const authModel = {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 			getStoreActions().common.setLoading(false);
 		} else if (response && response.statuscode == 200) {
-			toast.success(<ToastUI message={"OTP sent successfully"} type={"Success"} />);
+			toast.success(<ToastUI message={OTP_SENT} type={"Success"} />);
 			payload.type = "signup";
 			setTempData(payload);
 			await actions.setIsOtpSend(true);
@@ -133,7 +134,7 @@ const authModel = {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 			getStoreActions().common.setLoading(false);
 		} else if (response && response.statuscode == 200) {
-			toast.success(<ToastUI message={"OTP sent successfully."} type={"Success"} />);
+			toast.success(<ToastUI message={OTP_SENT} type={"Success"} />);
 			getStoreActions().common.setLoading(false);
 			payload.type = "forgot_password";
 			setTempData(payload);
