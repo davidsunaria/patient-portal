@@ -11,11 +11,12 @@ import { getTempData } from "patient-portal-utils/Service";
 import { Spinner } from 'react-bootstrap';
 
 const SignupComplete = (props) => {
+  const [title, setTitle] = useState("");
   const history = useHistory();
   const signUp = useStoreActions((actions) => actions.auth.signUp);
   const isSignupCompleted = useStoreState((state) => state.auth.isSignupCompleted);
   const isLoading = useStoreState((state) => state.common.isLoading);
-
+  const response = useStoreState((state) => state.auth.response);
   const { SignupSchema } = useAuthValidation();
   const { labelData } = useContext(LanguageContext);
   const [formData, setFormData] = useState({
@@ -39,12 +40,27 @@ const SignupComplete = (props) => {
     await signUp(formData);
   }
 
-  useEffect(() => {
-    if (isSignupCompleted) {
-      history.push("/dashboard");
-    }
-  }, [isSignupCompleted])
+  // useEffect(() => {
+  //   if (isSignupCompleted) {
+  //     history.push("/dashboard");
+  //   }
+  // }, [isSignupCompleted])
 
+  useEffect(() => {
+    if (response) {
+      let { accountInfo } = response;
+        if (accountInfo) {
+          setTitle(accountInfo.name);
+        }
+    }
+  }, [response]);
+
+  useEffect(() => {
+    if (title) {
+      document.title = (title) ? title : "Patient Portal";
+       history.push("/dashboard");
+    }
+  }, [title]);
   return (
     <React.Fragment>
       <div className="loginOuter">

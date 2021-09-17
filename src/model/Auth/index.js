@@ -109,6 +109,7 @@ const authModel = {
 	}),
 	signUp: thunk(async (actions, payload, { getStoreActions }) => {
 		getStoreActions().common.setLoading(true);
+		await actions.setResponse({});
 		let response = await signUp(payload);
 		if (response && response.statuscode != 200) {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
@@ -121,6 +122,7 @@ const authModel = {
 			setAccountData(response.data?.accountInfo);
 			removeTempData(payload);
 			await actions.setIsSignupCompleted(true);
+			await actions.setResponse(response.data);
 		}
 		else {
 			getStoreActions().common.setLoading(false);

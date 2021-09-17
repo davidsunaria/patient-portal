@@ -17,7 +17,7 @@ const TreatmentInstruction = (props) => {
 
           <div key={index} className="box treatmentInstruction onHover" onClick={() => props.onTreatmentDetail(result.treatment_instruction_id)}>
             <div className="instrutionName">{result?.title}</div>
-            <div className="instrutionDate">{getDate(result, 3)} | {getDate(result, 4)}</div>
+            <div className="instrutionDate">{result?.treatment_date} | {result?.treatment_time}</div>
           </div>
         ))
       ) : (
