@@ -6,7 +6,7 @@ const petModel = {
   response: [],
   isPetDeleted: false,
   isPetCreated: false,
-  isPetUpdated:false,
+  isPetUpdated: false,
   setResponse: action((state, payload) => {
     state.response = payload;
   }),
@@ -25,12 +25,15 @@ const petModel = {
     await actions.setIsPetCreated(false);
     getStoreActions().common.setLoading(true);
     let response = await getPets(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getPet: thunk(async (actions, payload, { getStoreActions }) => {
@@ -39,206 +42,255 @@ const petModel = {
     await actions.setIsPetCreated(false);
     getStoreActions().common.setLoading(true);
     let response = await getPet(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getTreatmentRecord: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getTreatmentRecord(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getVaccinationRecord: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getVaccinationRecord(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getAntiParasiticRecord: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getAntiParasiticRecord(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getReports: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getReports(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   downloadReport: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await downloadReport(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getMedicalRecords: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getMedicalRecords(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   createPet: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     await actions.setIsPetCreated(false);
     let response = await createPet(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       toast.success(<ToastUI message={response.message} type={"Success"} />);
       getStoreActions().common.setLoading(false);
       await actions.setIsPetCreated(true);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   updatePet: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     await actions.setIsPetUpdated(false);
     let response = await updatePet(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       toast.success(<ToastUI message={response.message} type={"Success"} />);
       await actions.setIsPetUpdated(true);
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getSpecies: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getSpecies(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getBreeds: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getBreeds(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   deletePet: thunk(async (actions, payload, { getStoreActions }) => {
     await actions.setIsPetDeleted(false);
     getStoreActions().common.setLoading(true);
     let response = await deletePet(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       toast.success(<ToastUI message={response.message} type={"Success"} />);
       getStoreActions().common.setLoading(false);
       await actions.setIsPetDeleted(true);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getReportsByVisit: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getReportsByVisit(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getDewormingDetail: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getDewormingDetail(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getVaccinationDetail: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getVaccinationDetail(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getReportDetail: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getReportDetail(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   contactUs: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await contactUs(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       toast.success(<ToastUI message={response.message} type={"Success"} />);
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   resetContactUs: thunk(async (actions, payload, { getStoreActions }) => {
-    
-      await actions.setResponse([]);
-    
+    await actions.setResponse([]);
   })
 };
 

@@ -11,7 +11,7 @@ const authModel = {
 	isSignupCompleted: false,
 	isPasswordReset: false,
 	isLoggedOut: false,
-	response:{},
+	response: {},
 	setTranslations: action((state, payload) => {
 		state.translations = payload;
 	}),
@@ -39,25 +39,33 @@ const authModel = {
 	sendOTP: thunk(async (actions, payload, { getStoreActions }) => {
 		getStoreActions().common.setLoading(true);
 		let response = await sendOTP(payload);
-		if (response.statuscode != 200) {
+		if (response && response.statuscode != 200) {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 			getStoreActions().common.setLoading(false);
-		} else {
+		} else if (response && response.statuscode == 200) {
 			toast.success(<ToastUI message={"OTP sent successfully"} type={"Success"} />);
 			payload.type = "signup";
 			setTempData(payload);
 			await actions.setIsOtpSend(true);
 			getStoreActions().common.setLoading(false);
 		}
+		else {
+			getStoreActions().common.setLoading(false);
+			return true;
+		}
 	}),
 	getTranslations: thunk(async (actions, payload, { getStoreActions, getStoreState }) => {
 		if (getStoreState().auth.translations.length === 0) {
 			let response = await getTranslations();
-			if (response.statuscode != 200) {
+			if (response && response.statuscode != 200) {
 				toast.error(<ToastUI message={response.message} type={"Error"} />);
-			} else {
+			} else if (response && response.statuscode == 200) {
 				await actions.setTranslations(response.data);
 				return response.data;
+			}
+			else {
+				getStoreActions().common.setLoading(false);
+				return true;
 			}
 		}
 
@@ -66,10 +74,10 @@ const authModel = {
 		await actions.setResponse({});
 		getStoreActions().common.setLoading(true);
 		let response = await login(payload);
-		if (response.statuscode != 200) {
+		if (response && response.statuscode != 200) {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 			getStoreActions().common.setLoading(false);
-		} else {
+		} else if (response && response.statuscode == 200) {
 			setToken(response.data.token);
 			setUser(response.data.client);
 			setAccountData(response.data.accountInfo);
@@ -77,15 +85,23 @@ const authModel = {
 			await actions.setIsLogin(true);
 			getStoreActions().common.setLoading(false);
 		}
+		else {
+			getStoreActions().common.setLoading(false);
+			return true;
+		}
 	}),
 	verifyOtp: thunk(async (actions, payload, { getStoreActions }) => {
 		getStoreActions().common.setLoading(true);
 		let response = await verifyOtp(payload);
-		if (response.statuscode != 200) {
+		if (response && response.statuscode != 200) {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 			getStoreActions().common.setLoading(false);
-		} else {
+		} else if (response && response.statuscode == 200) {
 			await actions.setIsOtpVerified(true);
+			getStoreActions().common.setLoading(false);
+			return true;
+		}
+		else {
 			getStoreActions().common.setLoading(false);
 			return true;
 		}
@@ -93,10 +109,10 @@ const authModel = {
 	signUp: thunk(async (actions, payload, { getStoreActions }) => {
 		getStoreActions().common.setLoading(true);
 		let response = await signUp(payload);
-		if (response.statuscode != 200) {
+		if (response && response.statuscode != 200) {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 			getStoreActions().common.setLoading(false);
-		} else {
+		} else if (response && response.statuscode == 200) {
 			//toast.success(<ToastUI message={"Signup completed successfully. please login"} type={"Success"} />);
 			getStoreActions().common.setLoading(false);
 			setToken(response.data.token);
@@ -105,46 +121,62 @@ const authModel = {
 			removeTempData(payload);
 			await actions.setIsSignupCompleted(true);
 		}
+		else {
+			getStoreActions().common.setLoading(false);
+			return true;
+		}
 	}),
 	sendForgotPasswordOTP: thunk(async (actions, payload, { getStoreActions }) => {
 		getStoreActions().common.setLoading(true);
 		let response = await sendForgotPasswordOTP(payload);
-		if (response.statuscode != 200) {
+		if (response && response.statuscode != 200) {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 			getStoreActions().common.setLoading(false);
-		} else {
+		} else if (response && response.statuscode == 200) {
 			toast.success(<ToastUI message={"OTP sent successfully."} type={"Success"} />);
 			getStoreActions().common.setLoading(false);
 			payload.type = "forgot_password";
 			setTempData(payload);
 			await actions.setIsOtpSend(true);
 		}
+		else {
+			getStoreActions().common.setLoading(false);
+			return true;
+		}
 	}),
 	resetPassword: thunk(async (actions, payload, { getStoreActions }) => {
 		getStoreActions().common.setLoading(true);
 
 		let response = await resetPassword(payload);
-		if (response.statuscode != 200) {
+		if (response && response.statuscode != 200) {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 			getStoreActions().common.setLoading(false);
-		} else {
+		} else if (response && response.statuscode == 200) {
 			toast.success(<ToastUI message={response.message} type={"Success"} />);
 			getStoreActions().common.setLoading(false);
 			removeTempData();
 			await actions.setIsPasswordReset(true);
+		}
+		else {
+			getStoreActions().common.setLoading(false);
+			return true;
 		}
 	}),
 	logout: thunk(async (actions, payload, { getStoreActions }) => {
 		getStoreActions().common.setLoading(true);
 
 		let response = await logout(payload);
-		if (response.statuscode != 200) {
+		if (response && response.statuscode != 200) {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 			getStoreActions().common.setLoading(false);
-		} else {
+		} else if (response && response.statuscode == 200) {
 			toast.success(<ToastUI message={response.message} type={"Success"} />);
 			getStoreActions().common.setLoading(false);
 			await actions.setIsLoggedOut(true);
+		}
+		else {
+			getStoreActions().common.setLoading(false);
+			return true;
 		}
 	})
 };

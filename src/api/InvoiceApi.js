@@ -7,33 +7,33 @@ export const getInvoices = async (formData) => {
   }
   try {
     let response = await axiosApi.get(`${apiUrl}/invoices/${formData.clientId}?${query}`);
-    return response.data;
+    return response?.data;
   } catch (error) {
-    return error.response.data;
+    return error?.response?.data;
   }
 };
 export const getInvoice = async (formData) => {
   try {
     let response = await axiosApi.get(`${apiUrl}/get/invoice/${formData}`);
-    return response.data;
+    return response?.data;
   } catch (error) {
-    return error.response.data;
+    return error?.response?.data;
   }
 };
 export const downloadInvoice = async (formData) => {
   try {
     let response = await axiosApi.get(`${apiUrl}/download/invoice/${formData}`);
-    return response.data;
+    return response?.data;
   } catch (error) {
-    return error.response.data;
+    return error?.response?.data;
   }
 };
 export const getAllClinics = async (formData) => {
   try {
     let response = await axiosApi.get(`${apiUrl}/clinics`);
-    return response.data;
+    return response?.data;
   } catch (error) {
-    return error.response.data;
+    return error?.response?.data;
   }
 };
 

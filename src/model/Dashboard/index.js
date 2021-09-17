@@ -20,13 +20,17 @@ const dashboardModel = {
     getStoreActions().common.setLoading(true);
     getStoreActions().appointment.setIsQuestionnaireSubmitted(false);
     let response = await getDashboard(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200)  {
       setProfileCompleted(response);
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    }
+    else{
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   deleteNotification: thunk(async (actions, payload, { getStoreActions }) => {
@@ -34,13 +38,16 @@ const dashboardModel = {
     getStoreActions().common.setLoading(true);
 
     let response = await deleteNotification(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       toast.success(<ToastUI message={response.message} type={"Success"} />);
       getStoreActions().common.setLoading(false);
       await actions.setIsNotificationDeleted(true);
+    }else{
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
 
@@ -48,22 +55,25 @@ const dashboardModel = {
     getStoreActions().common.setLoading(true);
 
     let response = await getArticleDetail(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    }else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       await actions.setResponse(response);
+    }else{
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getPetByVisit: thunk(async (actions, payload, { getStoreActions }) => {
 
     getStoreActions().common.setLoading(true);
     let response = await getPetByVisit(payload.id);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       let type;
       if (payload.event == "anti_ectoparasite") {
@@ -87,6 +97,9 @@ const dashboardModel = {
         payload.history.push(`/pet-profile/${response.data.pet_visit.pet_id}/treatment-record/${response.data.pet_visit.id}`);
       }
 
+    }else{
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   
@@ -94,14 +107,17 @@ const dashboardModel = {
 
     getStoreActions().common.setLoading(true);
     let response = await getPetIdInfo(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       if (payload.event == "anti_ectoparasite" || payload.event == "deworming" || payload.event == "vaccination") {
         payload.history.push(`/book-appointment/${response.data.event_data.pet_id}`);
       }
+    }else{
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   })
 };

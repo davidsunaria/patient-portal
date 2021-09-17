@@ -10,45 +10,57 @@ const invoiceModel = {
   getInvoices: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getInvoices(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
       getStoreActions().common.setLoading(false);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getInvoice: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getInvoice(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
       getStoreActions().common.setLoading(false);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   downloadInvoice: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await downloadInvoice(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
       getStoreActions().common.setLoading(false);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getAllClinics: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getAllClinics(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
       getStoreActions().common.setLoading(false);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   })
 

@@ -10,23 +10,29 @@ const treatmentInstructionModel = {
   getInstructions: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getInstructions(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
       getStoreActions().common.setLoading(false);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   }),
   getInstructionDetail: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getInstructionDetail(payload);
-    if (response.statuscode != 200) {
+    if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
-    } else {
+    } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
       getStoreActions().common.setLoading(false);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
     }
   })
 };
