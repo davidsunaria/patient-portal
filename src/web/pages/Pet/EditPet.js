@@ -98,9 +98,8 @@ const EditPet = (props) => {
 
         if (data?.pet) {
           let pageData = { ...data?.pet };
-          console.log(pageData);
-          pageData.breed = {label: pageData.breedmap.name,value: pageData.breedmap.id};
-          pageData.species = {label: pageData.speciesmap.species,value: pageData.speciesmap.id};
+          pageData.breed = {label: pageData?.breedmap?.name,value: pageData?.breedmap?.id};
+          pageData.species = {label: pageData?.speciesmap?.species,value: pageData?.speciesmap?.id};
           pageData.tags = (pageData.tags && pageData.tags !== null) ? pageData.tags.split(",") : [];
           if(pageData.pet_image){
             pageData.pet_image = `${process.env.REACT_APP_MEDIA_URL + pageData.pet_image}`;
