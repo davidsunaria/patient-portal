@@ -33,7 +33,7 @@ const MedicalHighlights = (props) => {
   useEffect(async () => {
     if (props.petId) {
       let formData = {
-        page: 1, pagesize: 20
+        page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
       }
       await getMedicalRecords({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
       window.addEventListener('scroll', (e) => handleScroll(e));
@@ -102,6 +102,7 @@ const MedicalHighlights = (props) => {
                 <div className="timelineDetail">
                   <div>
                     <p><span>{val?.treatment}</span></p>
+                    <p className="mt-2"><span>{val?.description}</span></p>
                   </div>
                 </div>
               </div>

@@ -12,14 +12,6 @@ import { getLoggedinUserId } from "patient-portal-utils/Service";
 
 const Appointment = (props) => {
   const history = useHistory();
-  const getUpcomingAppointments = useStoreActions((actions) => actions.appointment.getUpcomingAppointments);
-  const getPastAppointments = useStoreActions((actions) => actions.appointment.getPastAppointments);
-  const cancelAppointment = useStoreActions((actions) => actions.appointment.cancelAppointment);
-  const response = useStoreState((state) => state.appointment.response);
-  const isRescheduled = useStoreState((state) => state.appointment.isRescheduled);
-  const isCancelled = useStoreState((state) => state.appointment.isCancelled);
-  
-  const [appointments, setAppointments] = useState([]);
   const [selectedTab, setSelectedTab] = useState("upcoming");
   const tabsData = [
     { name: "Upcoming Appointments", handler: "upcoming" },
@@ -29,40 +21,7 @@ const Appointment = (props) => {
   const tabsHandler = (tab) => {
     setSelectedTab(tab.handler);
   };
-  useEffect(async () => {
-    if (selectedTab == "upcoming") {
-      await getUpcomingAppointments(getLoggedinUserId());
-    }
-    if (selectedTab == "past") {
-      await getPastAppointments(getLoggedinUserId());
-    }
-  }, [selectedTab]);
-
-  useEffect(() => {
-    if (response) {
-      let { status, statuscode, data } = response;
-      if (statuscode && statuscode === 200) {
-        if (data?.appointments && data.appointmentType == "future") {
-          setAppointments(data?.appointments);
-        }
-        if (data?.appointments && data.appointmentType == "past") {
-          setAppointments(data?.appointments);
-        }
-      }
-    }
-  }, [response]);
-
-  useEffect(async () => {
-    if (isRescheduled || isCancelled) {
-      if (selectedTab == "upcoming") {
-        await getUpcomingAppointments(getLoggedinUserId());
-      }
-    }
-  }, [isRescheduled, isCancelled]);
-
-  const onCancelAppointment = async(id) => {
-    await cancelAppointment({ id: id, clientId: getLoggedinUserId() });
-  }
+  
   return (
     <React.Fragment>
       <div className="content_outer">
@@ -84,7 +43,7 @@ const Appointment = (props) => {
               selectedTab={selectedTab}
               tabsHandler={(tab) => tabsHandler(tab)}
             />
-            <AppointmentCard onCancelAppointment={onCancelAppointment} data={appointments} type={selectedTab} />
+            <AppointmentCard type={selectedTab} />
           </main>
         </div>
       </div>

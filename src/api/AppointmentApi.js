@@ -1,15 +1,23 @@
 import { axiosApi, apiUrl, objectToQuery } from "patient-portal-utils/HttpService.js";
 export const getPastAppointments = async (formData) => {
+  let query;
+  if(formData.query){
+    query = objectToQuery(formData.query);
+  }
 	try {
-		let response = await axiosApi.get(`${apiUrl}/past_appointments/${formData}/past`);
+		let response = await axiosApi.get(`${apiUrl}/past_appointments/${formData.clientId}/past?${query}`);
 		return response?.data;
 	} catch (error) {
 		return error?.response?.data;
 	}
 };
 export const getUpcomingAppointments = async (formData) => {
+  let query;
+  if(formData.query){
+    query = objectToQuery(formData.query);
+  }
 	try {
-		let response = await axiosApi.get(`${apiUrl}/upcoming_appointments/${formData}`);
+		let response = await axiosApi.get(`${apiUrl}/upcoming_appointments/${formData.clientId}?${query}`);
 		return response?.data;
 	} catch (error) {
 		return error?.response?.data;

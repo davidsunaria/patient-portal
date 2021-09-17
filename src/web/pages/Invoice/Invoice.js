@@ -152,7 +152,7 @@ const Invoice = (props) => {
             formData = { ...formData, clinic_id: clinicId.value };
         }
         if (formData !== undefined) {
-            formData = { ...formData, page: 1, pagesize: 20 };
+            formData = { ...formData, page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE };
             await getInvoices({ clientId: getLoggedinUserId(), query: formData });
         }
         window.addEventListener('scroll', (e) => handleScroll(e), true);

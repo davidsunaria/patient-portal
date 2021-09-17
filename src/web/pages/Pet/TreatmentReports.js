@@ -43,7 +43,7 @@ const TreatmentReports = () => {
   useEffect(async () => {
     if (id) {
       let formData = {
-        page: 1, pagesize: 20
+        page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
       }
       await getReportsByVisit({ id: id, query: formData });
       window.addEventListener('scroll', (e) => handleScroll(e), true);
