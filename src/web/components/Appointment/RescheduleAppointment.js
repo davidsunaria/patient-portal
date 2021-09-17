@@ -97,6 +97,7 @@ const RescheduleAppointment = (props) => {
               <label className="fieldLabel">Select Date</label>
               <div className="fieldBox fieldIcon">
                 <DatePicker
+                dateFormat="yyyy-MM-dd"
                   includeDates={enabledDates}
                   ref={calendarRef}
                   className="fieldInput"
