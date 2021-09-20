@@ -75,7 +75,6 @@ const Step3 = (props) => {
 
     useEffect(() => {
         if (props.slot) {
-            console.log("hhhh",selectedTimeSlot);
             let val = Object.values(props.slot);
             if (val.length > 0 && selectedTimeSlot) {
                 setSelectedTimeSlot(val[0]);  
