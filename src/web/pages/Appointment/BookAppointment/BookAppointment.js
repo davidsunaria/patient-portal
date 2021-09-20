@@ -73,7 +73,7 @@ const BookAppointment = (props) => {
   }
   //Set Third Step Data
   const handleStepThree = (e, name, val) => {
-
+    
     let formPayload = { ...formData };
     if (name && name !== undefined && name == "service_id") {
       formPayload["service_id"] = e?.target?.value;
@@ -104,14 +104,17 @@ const BookAppointment = (props) => {
     }
     else if (name && name !== undefined && name == "slot") {
       formPayload[name] = val;
+      if(formPayload.type == "virtual" && timeSlotClinic){
+        formPayload["telehealth_clinic_id"] = timeSlotClinic[val];
+      }
     }
-    else if(name && name !== undefined && name == "telehealth_clinic_id"){
-      formPayload[name] = val;
-    }
+    // else if(name && name !== undefined && name == "telehealth_clinic_id"){
+    //   formPayload[name] = val;
+    // }
     else if (name == undefined && e?.target !== undefined && e?.target?.name && e?.target?.value) {
       formPayload[e.target.name] = e?.target?.value;
     }
-
+    console.log("Setting Payload", formPayload);
     setFormData(formPayload);
     updateOther(val, 3, name);
   }
@@ -134,6 +137,10 @@ const BookAppointment = (props) => {
     if (response) {
       let { statuscode, data } = response;
       if (statuscode && statuscode === 200) {
+        if(data?.timeSlotsClinic){
+          setTimeSlotClinic(data.timeSlotsClinic);
+        }
+
         // Set Clinics Data
         if (data?.clinics) {
           setAllClinics(data?.clinics);
@@ -188,26 +195,27 @@ const BookAppointment = (props) => {
 
         }
 
-
+       
         // Set Timeslot 
         if (data?.timeSlots) {
           if (data.timeSlots) {
             setTimeSlot(data.timeSlots);
             if (data.timeSlots) {
+              let teleClinicId;
               let val = Object.values(data.timeSlots);
-              setFormData({ ...formData, slot: val[0] });
+              if(timeSlotClinic && val.length > 0){
+                teleClinicId = timeSlotClinic[val[0]];
+              }
+              setFormData({ ...formData, slot: val[0], telehealth_clinic_id: teleClinicId ?? "" });
               updateOther(val[0], 3, "slot");
             }
             else {
-              setFormData({ ...formData, slot: "" });
+              setFormData({ ...formData, slot: "", telehealth_clinic_id: "" });
               updateOther("", 3, "slot");
             }
           }
         }
-        if(data?.timeSlotsClinic){
-          //let val = Object.values(data.timeSlotsClinic);
-          setTimeSlotClinic(data.timeSlotsClinic);
-        }
+        
 
         //Appointment Created
         if (data?.appointmentId) {
@@ -412,7 +420,7 @@ const BookAppointment = (props) => {
         finalPayload = { ...otherData, pet_name: payload?.name, species: payload?.speciesmap?.species };
       }
     }
-    console.log("Final Other Data Is", finalPayload);
+    //console.log("Final Other Data Is", finalPayload);
     setOtherData(finalPayload);
   }
 
@@ -428,7 +436,10 @@ const BookAppointment = (props) => {
     //Validate clinics
     let response = false;
     if (page == 3) {
-      if (!formData.clinic_id) {
+      if (!formData.clinic_id && formData.type == "in_person") {
+        toast.error(<ToastUI message={SELECT_CLINIC} type={"Error"} />);
+      }
+      else if (!formData.telehealth_clinic_id && formData.type == "virtual") {
         toast.error(<ToastUI message={SELECT_CLINIC} type={"Error"} />);
       }
       else {
@@ -487,8 +498,7 @@ const BookAppointment = (props) => {
               subHeading={"Start your process to book your appointment"}
               hasBtn={false}
             />
-            {/* {JSON.stringify(otherData)}
-            {JSON.stringify(formData)} */}
+            {/* {JSON.stringify(formData)} */}
             {currentPage == 1 && <Step1 page={currentPage} onSubmit={handleStepOne} />}
             {currentPage == 2 && <Step2 other={otherData} formData={formData} data={allClinics} page={currentPage} onSubmit={handleStepTwo} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 3 && <Step3 timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}

@@ -112,7 +112,7 @@ export const getClinicServices = async (formData) => {
 
 export const getProviders = async (formData) => {
   let clinicId;
-  if(formData?.formData?.clinic_id != ""){
+  if(formData?.formData?.clinic_id != "" && formData?.formData?.clinic_id !== undefined){
     clinicId = `/${formData?.formData?.clinic_id}`;
   }
   try {

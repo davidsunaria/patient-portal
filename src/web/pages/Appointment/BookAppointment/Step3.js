@@ -59,9 +59,6 @@ const Step3 = (props) => {
 
     const handleTimeSelect = (e, name, val) => {
         showTime();
-        if (props?.timeSlotClinic[val]) {
-            props.onSubmit("", "telehealth_clinic_id", props?.timeSlotClinic[val]);
-        }
         setSelectedTimeSlot(val);
         props.onSubmit(e, name, val);
     }
@@ -78,8 +75,9 @@ const Step3 = (props) => {
 
     useEffect(() => {
         if (props.slot) {
+            console.log("hhhh",selectedTimeSlot);
             let val = Object.values(props.slot);
-            if (val.length > 0) {
+            if (val.length > 0 && selectedTimeSlot) {
                 setSelectedTimeSlot(val[0]);  
             }
 
@@ -107,6 +105,17 @@ const Step3 = (props) => {
     const innerRef = useOuterClick(ev => {
         setOpenTimePopup(false);
     });
+
+    const getSelectedClass = (val,selectedVal) => {
+        let currentValue = moment(val, 'HH:mm:ss: a').diff(moment().startOf('day'), 'seconds');
+        let selectedValue = moment(selectedVal, 'HH:mm:ss: a').diff(moment().startOf('day'), 'seconds');
+        if(currentValue === selectedValue){
+           return "active"; 
+        }
+        else{
+            return "";
+        }
+    }
     return (
         <div className="row">
             <Service data={serviceDetail} modal={serviceModal} toggle={showServiceDetail} />
@@ -174,6 +183,7 @@ const Step3 = (props) => {
                         </div>
                     </div></React.Fragment>
                 }
+               
                 {/* Date-  {JSON.stringify(props.formData.date)}
                 Slot-{JSON.stringify(props.formData.slot)}<br /><br /> */}
                 {/*State-{JSON.stringify(openTimePopup)}<br />
@@ -218,7 +228,7 @@ const Step3 = (props) => {
                         {props.formData && (props.formData.date != undefined || props?.enabledDates[0]) && <div className={(openTimePopup == false) ? "timeslotPopup d-none" : "timeslotPopup"}>
 
                             {props.slot && Object.values(props.slot).map((val, index) => (
-                                <span key={index} onClick={(e) => handleTimeSelect(e, "slot", val)}>{val}</span>
+                                <span className={ getSelectedClass(val, (selectedTimeSlot) ? selectedTimeSlot : props.formData.slot)} key={index} onClick={(e) => handleTimeSelect(e, "slot", val)}>{val}</span>
                             ))}
                         </div>
                         }
