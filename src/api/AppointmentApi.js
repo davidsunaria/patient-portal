@@ -116,7 +116,7 @@ export const getProviders = async (formData) => {
     clinicId = `/${formData?.formData?.clinic_id}`;
   }
   try {
-    let response = await axiosApi.get(`${apiUrl}/service_for/${formData.type}${(clinicId) ? clinicId : ''}`);
+    let response = await axiosApi.get(`${apiUrl}/service_for/${formData.type}${(clinicId && clinicId !== undefined) ? clinicId : ''}`);
     return response?.data;
   } catch (error) {
     return error?.response?.data;
