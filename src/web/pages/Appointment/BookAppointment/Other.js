@@ -42,9 +42,9 @@ const Other = (props) => {
           </section>
           <section>
             <label>Your Info</label>
-            <p>{props.other?.name}</p>
-            <p>{props.other?.email}</p>
-            <p>{props.other?.phone}</p>
+            <p>{(props.other?.name) || ""}</p>
+            <p>{props.other?.email || ""}</p>
+            <p>{props.other?.phone || ""}</p>
           </section>
         </div>
       </div>
