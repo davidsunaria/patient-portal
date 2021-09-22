@@ -8,6 +8,7 @@ import HIDE_SHOW from "patient-portal-images/arrowHideShow.svg";
 import USER_IMAGE from "patient-portal-images/user.png";
 import DOWN_ARROW from "patient-portal-images/down-arrow.svg";
 import DEFAULT_USER_IMG from "patient-portal-images/default-user.png";
+import LogoutConfirmation from "patient-portal-components/Logout/LogoutConfirmation"
 
 const Sidebar = (props) => {
   const history = useHistory();
@@ -18,7 +19,7 @@ const Sidebar = (props) => {
   const [menu, setMenu] = useState("");
   const logout = useStoreActions((actions) => actions.auth.logout);
   const isLoggedOut = useStoreState((state) => state.auth.isLoggedOut);
-
+  const [logoutModal, setLogoutModal] = useState(false);
   const toggleMenu = () => {
     setShowSubMenu(!showSubmenu);
   };
@@ -28,6 +29,7 @@ const Sidebar = (props) => {
   };
 
   const logoutMe = async () => {
+    setLogoutModal(false);
     await logout();
   };
   useEffect(() => {
@@ -35,7 +37,6 @@ const Sidebar = (props) => {
       clearUserData();
       setTimeout(() => {
         window.location.href = "/login";
-        //history.push("/login");
       })
       
     }
@@ -46,8 +47,13 @@ const Sidebar = (props) => {
         setUserData(props.data);
       }
   }, [props.data]);
+
+  const logoutUser = (id) => {
+    setLogoutModal(!logoutModal);
+  };
   return (
     <React.Fragment>
+       <LogoutConfirmation modal={logoutModal} toggle={logoutUser} onLogout={logoutMe} />
       <div>
         <a
           className={
@@ -135,7 +141,7 @@ const Sidebar = (props) => {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link logoutLink" href="#" onClick={logoutMe}>
+                <a className="nav-link logoutLink" onClick={logoutUser}>
                   <span>Logout</span>
                 </a>
               </li>

@@ -102,7 +102,7 @@ const MedicalHighlights = (props) => {
                 <div className="timelineDetail">
                   <div>
                     <p><span>{val?.treatment}</span></p>
-                    <p className="mt-2"><span>{val?.description}</span></p>
+                    <p className="mt-2">{val?.description}</p>
                   </div>
                 </div>
               </div>

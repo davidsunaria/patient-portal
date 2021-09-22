@@ -77,16 +77,20 @@ const dashboardModel = {
       getStoreActions().common.setLoading(false);
       let type;
       if (payload.event == "anti_ectoparasite") {
+        let responsePet = await getPetIdInfo(payload);
+
         type = "antiparasitic-record";
-        payload.history.push(`/pet-profile/${response.data.pet_visit.pet_id}/${type}/${response.data.pet_visit.id}`);
+        payload.history.push(`/pet-profile/${responsePet.data.event_data.pet_id}/${type}/${response.data.pet_visit.id}`);
       }
       else if (payload.event == "deworming") {
+        let responsePet = await getPetIdInfo(payload);
         type = "deworming";
-        payload.history.push(`/pet-profile/${response.data.pet_visit.pet_id}/${type}/${response.data.pet_visit.id}`);
+        payload.history.push(`/pet-profile/${responsePet.data.event_data.pet_id}/${type}/${response.data.pet_visit.id}`);
       }
       else if (payload.event == "vaccination") {
+        let responsePet = await getPetIdInfo(payload);
         type = "vaccination-record";
-        payload.history.push(`/pet-profile/${response.data.pet_visit.pet_id}/${type}/${response.data.pet_visit.id}`);
+        payload.history.push(`/pet-profile/${responsePet.data.event_data.pet_id}/${type}/${response.data.pet_visit.id}`);
       }
       else if (payload.event == "report") {
         type = "report";

@@ -90,15 +90,34 @@ const Dashboard = (props) => {
         break;
 
       case "deworming":
-        getPetId(event, "new");
+        if(event.type == "upcoming"){
+          //Book appointment page
+          getPetId(event, "new");
+          
+        }
+        else{
+          getPetId(event);
+        }
         break;
 
       case "anti_ectoparasite":
-        getPetId(event, "new");
+        if(event.type == "upcoming"){
+          //Book appointment page
+          getPetId(event, "new");
+        }
+        else{
+          getPetId(event);
+        }
         break;
-
       case "vaccination":
-        getPetId(event, "new");
+        if(event.type == "upcoming"){
+          //Book appointment page
+          getPetId(event, "new");
+         
+        }
+        else{
+          getPetId(event);
+        }
         break;
       case "invoice":
         history.push(`/invoice-detail/${event.event_id}`);
@@ -122,11 +141,11 @@ const Dashboard = (props) => {
   const getPetId = useCallback(async (event, type) => {
     
     if (type && type == "new") {
-      console.log("Heloo", event.event_id, event.event_type, type);
+      //console.log("Heloo", event.event_id, event.event_type, type);
       await getPetIdInfo({ id: event.event_id, event: event.event_type, history });
     }
     else {
-      alert("1")
+      //alert("1")
       await getPetByVisit({ id: event.event_id, event: event.event_type, history });
     }
   },

@@ -50,7 +50,6 @@ const AppointmentDetail = () => {
           <main>
             <Header
               heading={"Book an Appointment"}
-              subHeading={"Start your process to book your appointment"}
               hasBtn={false}
             />
 
@@ -90,7 +89,7 @@ const AppointmentDetail = () => {
                       </div>
                       <div className="appointmentConfirmSection">
                         <div className="appointmentConfirmTitle">Service</div>
-                        <div className="appointmentConfirmText"><b>{appointmentData?.service?.name}</b> - {appointmentData?.service?.duration} minutes {categoryData?.service_category}</div>
+                        <div className="appointmentConfirmText"><b>{appointmentData?.service?.name}</b> - {appointmentData?.service?.duration || appointmentData?.service?.custom_duration} minutes {categoryData?.service_category}</div>
                       </div>
                       <div className="appointmentConfirmSection">
                         <div className="appointmentConfirmTitle">Client Info</div>

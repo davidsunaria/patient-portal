@@ -19,11 +19,11 @@ const Service = (props) => {
                 <label>Description</label>
                 <div>{props?.data?.description}</div>
               </div>
-
-              <div className="serviceDetailRow">
+    
+             { props?.data?.service_type == "virtual" && props?.data?.collect_payment_before_booking == 1 && <div className="serviceDetailRow">
                 <label>Price</label>
                 <div>{numberFormat(props?.data?.price, 'currency', 2, 2)}</div>
-              </div>
+              </div>}
             </div>
           </div>
         </ModalBody>

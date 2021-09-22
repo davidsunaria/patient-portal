@@ -135,7 +135,7 @@ const Step3 = (props) => {
                                                 <span className="serviceName">
                                                     {value?.name}
                                                 </span>
-                                                <span className="serviceTime"><span className="mr-3">{value?.duration} Minutes</span>
+                                                <span className="serviceTime"><span className="mr-3">{value?.duration || value?.custom_duration} Minutes</span>
                                                     <img onClick={() => showServiceDetail(value)} className="infoIcon" src={I_IMAGE} />
                                                 </span>
                                             </label>
