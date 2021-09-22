@@ -244,7 +244,8 @@ const AppointmentCard = (props) => {
                                     </li>
 
                                     {(props.type == "past" || val.appointment_type == "in_person") && <li>
-                                        <a target="_blank" href={`http://maps.google.com/?${val?.clinic?.address}`}>
+                                    
+                                        <a target="_blank" href={`https://www.google.com/maps?saddr=My+Location&daddr=${val?.clinic?.address}`}>
                                             <img src={DIRECTION_IMAGE} />
                                             Get Direction
                                         </a>

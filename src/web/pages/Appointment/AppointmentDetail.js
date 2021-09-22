@@ -76,11 +76,11 @@ const AppointmentDetail = () => {
                         <div className="appointmentConfirmIcons">
                           {appointmentData?.status == "canceled" && <spanc className="appointmentConfirmText colorRed">Canceled</spanc>}
 
-                          {appointmentData?.appointment_type == "in_person" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`http://maps.google.com/?${appointmentData?.clinic?.address}`}><img src={LOCATION_IMAGE} /></a>
+                          {appointmentData?.appointment_type == "in_person" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`https://www.google.com/maps?saddr=My+Location&daddr=${appointmentData?.clinic?.address}`}><img src={LOCATION_IMAGE} /></a>
                             <a href={`tel:${appointmentData?.phone_code}`}><img src={CONTACT_IMAGE} /></a></React.Fragment>
                           }
 
-                          {appointmentData?.appointment_type == "virtual" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`http://maps.google.com/?${accountInfo?.address}`}>
+                          {appointmentData?.appointment_type == "virtual" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`https://www.google.com/maps?saddr=My+Location&daddr=${accountInfo?.address}`}>
                             <img src={LOCATION_IMAGE} /></a>
                           </React.Fragment>
                           }

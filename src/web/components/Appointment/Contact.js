@@ -51,7 +51,7 @@ const Contact = (props) => {
               <div className="addressInfo">
                 <label>Address</label>
                 <p>{props.data?.address}</p>
-                <a className="onHover" target="_blank" href={`http://maps.google.com/?${props.data?.address}`}><img src={MAP_IMAGE} className="map" /></a>
+                <a className="onHover" target="_blank" href={`https://www.google.com/maps?saddr=My+Location&daddr=${props.data?.address}`}><img src={MAP_IMAGE} className="map" /></a>
               </div>
             </div>
 
