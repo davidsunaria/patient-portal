@@ -79,7 +79,7 @@ const EditPet = (props) => {
     formData.append("weight", (pageData.weight !== null && pageData.weight !== undefined) ? pageData.weight : "");
     formData.append("tags", (pageData.tags) ? pageData.tags : "");
     formData.append("microchip_no", (pageData.microchip_no) ? pageData.microchip_no : '');
-    formData.append("mcd_no", (pageData.mcd_no) ? pageData.mcd_no : '');
+    formData.append("mcd_no", (pageData.mcd_no && pageData.mcd_no != undefined) ? pageData.mcd_no : '');
     formData.append("is_aggressive", "");
     formData.append("allergic_medicine", "");
     formData.append("antibiotic_reaction", "");
@@ -362,11 +362,11 @@ const EditPet = (props) => {
                             <label className="fieldLabel">Gender<span className="required">*</span></label>
                             <div className="fieldBox fieldIcon mt-2">
                               <label className="customRadio d-inline-block mr-3 mb-0">
-                                <input type="radio" checked={values.gender === 'Male'} name="gender" value={"Male"}
+                                <input type="radio" checked={(values.gender === 'Male' || values.gender === 'male')} name="gender" value={"Male"}
                                   onChange={handleChange}
                                   onBlur={handleBlur} /> Male</label>
                               <label className="customRadio d-inline-block mb-0">
-                                <input type="radio" checked={values.gender === 'Female'} name="gender" value={"Female"}
+                                <input type="radio" checked={(values.gender === 'Female' || values.gender === 'female')} name="gender" value={"Female"}
                                   onChange={handleChange}
                                   onBlur={handleBlur} /> Female</label>
 
