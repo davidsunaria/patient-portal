@@ -3,6 +3,8 @@ export const FILE_UNSELECT = "Upload canceled, no files selected";
 
 // Profile
 export const PROFILE_SETUP = "Please set up your and you pet\'s profile to have a better experience";
+export const PROFILE_COMPLETE = "Please complete your profile before booking an appointment";
+export const PET_PROFILE_COMPLETE = "Please add a pet before booking an appointment";
 
 // Book Appointment Module
 export const SELECT_CLINIC = "Please select clinic";

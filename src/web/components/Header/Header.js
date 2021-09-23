@@ -6,28 +6,39 @@ import { getProfileCompleted } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import Button from "patient-portal-components/Button/Button.js";
-import { PROFILE_SETUP } from "patient-portal-message";
+import { PROFILE_SETUP, PROFILE_COMPLETE, PET_PROFILE_COMPLETE } from "patient-portal-message";
 
 const Header = (props) => {
   const history = useHistory();
-
+  const [showWelcome, setWelcomeText] = useState(false);
   const goToUrl = () => {
     history.push("/profile");
   };
 
+  useEffect(() => {
+    let isCompleted = getProfileCompleted();
+    if (isCompleted.isPetCompleted == 0 || isCompleted.isProfileCompleted == 0) {
+      setWelcomeText(true);
+    }
+    else{
+      setWelcomeText(false);
+    }
+  }, []);
   const handleNav = (type) => {
     console.log("Type", type);
     if (type == "book-appointment") {
       let isCompleted = getProfileCompleted();
       if (isCompleted.isPetCompleted == 0 || isCompleted.isProfileCompleted == 0) {
-        toast.error(<ToastUI message={PROFILE_SETUP} type={"Error"} />);
-        if(isCompleted.isProfileCompleted == 0){
+
+        if (isCompleted.isProfileCompleted == 0) {
+          toast.error(<ToastUI message={PROFILE_COMPLETE} type={"Error"} />);
           history.push(`/edit-profile`);
         }
-        else if(isCompleted.isPetCompleted == 0){
+        else if (isCompleted.isPetCompleted == 0) {
+          toast.error(<ToastUI message={PET_PROFILE_COMPLETE} type={"Error"} />);
           history.push(`/create-pet`);
         }
-        
+
       }
       else {
         history.push(`/${type}`);
@@ -69,6 +80,11 @@ const Header = (props) => {
           />
         )}
       </div>
+     {showWelcome && <div className="box mb-4 welcomeText onHover" onClick={() => handleNav(props.onClick)}>
+        <span>Welcome to DCC PetConnect!</span>
+        <p >Please set up your & your pets’ profiles to have a better experience</p>
+      </div>}
+
     </React.Fragment>
   );
 };
