@@ -39,8 +39,10 @@ const Step3 = (props) => {
         }
     }
 
-    const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
-        <React.Fragment>
+    const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => {
+        console.log(value , onClick);
+        
+       return( <React.Fragment>
             <span onClick={onClick} ref={ref}>
                 <div className="highlightDate">
                     {props.formData.date && moment(value).format('MMM')}
@@ -54,8 +56,8 @@ const Step3 = (props) => {
                     {props.formData.date && moment(value).format('MMMM Do YYYY')}
                 </label>
             </span>
-        </React.Fragment>
-    ));
+        </React.Fragment>)
+    });
 
     const handleTimeSelect = (e, name, val) => {
         showTime();
@@ -183,22 +185,23 @@ const Step3 = (props) => {
                     </div></React.Fragment>
                 }
                
-                {/* Date-  {JSON.stringify(props.formData.date)}
+                {/* Date-  
                 Slot-{JSON.stringify(props.formData.slot)}<br /><br /> */}
                 {/*State-{JSON.stringify(openTimePopup)}<br />
                 enabledDates-{JSON.stringify(props?.enabledDates[0])}<br />
                 providers-{JSON.stringify(props?.providers.length)}<br /> */}
-                {(props?.enabledDates.length > 0 || props?.providers.length > 0) && <div className="dateTimeOuter">
+                 {JSON.stringify(props.formData.date)}
+                {(props?.enabledDates.length > 0 || props?.providers.length > 0 && props.formData.provider_id) && <div className="dateTimeOuter">
                     <div className="AppointmentDate">
 
-                        {props?.providers.length && <DatePicker
+                        <DatePicker
                             wrapperClassName={props?.formData?.date ? "" : "appointmentDatePicker"}
                             placeholderText="Select Date"
                             includeDates={props.enabledDates}
                             selected={props?.formData?.date}
                             onChange={(e) => props.onSubmit(e, 'date', props.formData?.date)}
                             customInput={<ExampleCustomInput />}
-                        />}
+                        />
 
                         {props?.formData?.date === "" && props?.enabledDates[0] &&
                             <React.Fragment>
