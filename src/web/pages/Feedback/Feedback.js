@@ -110,7 +110,7 @@ const Feedback = (props) => {
                             <div className="col-xl-7 col-md-4 mb-4">
                                 <div className="profileDetailCol">
                                     <label>Doctor</label>
-                                    <span>{visit?.doctor}</span>
+                                    <span>{visit?.doctor?.firstname} {visit?.doctor?.lastname}</span>
                                 </div>
                             </div>
                         </div>
