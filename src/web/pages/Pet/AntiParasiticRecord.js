@@ -139,8 +139,8 @@ const AntiParasiticRecord = (props) => {
         records.map((val, index) => (
           <div key={index} className="box recordCard">
 
-            {<div className={`dueDate  ${val.status == "completed" ? "green" : getDuedate(val)}`}>
-              {val.status == "pending" && <span>Due: {(val.due_date) ? showFormattedDate(val?.due_date, false) : ''} </span>}
+            {<div className={`  ${val.status == "completed" ? "dueDate green" : (val.due_date && "dueDate "+getDuedate(val))}`}>
+              {val.status == "pending" && <span> {(val.due_date) ? "Due:"+showFormattedDate(val?.due_date, false) : ''} </span>}
               {val.status == "completed" && <span>Completed</span>}
             </div>}
 

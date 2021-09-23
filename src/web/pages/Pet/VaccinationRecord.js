@@ -141,7 +141,7 @@ const VaccinationRecord = (props) => {
                 {records && records.length > 0 ? (
                     records.map((val, index) => (
                         <div key={index} className="box recordCard">
-                            {val.due_date && <div className={`dueDate ${getDuedate(val)}`}>Due: {(val.due_date) ? showFormattedDate(val?.due_date, false) : ''}</div>}
+                            {val.due_date && <div className={`dueDate ${getDuedate(val)}`}> {(val.due_date) ? "Due:"+showFormattedDate(val?.due_date, false) : ''}</div>}
                             <div className="recordDate">
                                 <span>{(val.d_date) ? formatDate(val?.d_date, 1, false) : ''}</span>
                                 <p>{(val.d_date) ? formatDate(val?.d_date, 2, false) : ''}</p>
