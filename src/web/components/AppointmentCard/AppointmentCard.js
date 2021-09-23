@@ -116,6 +116,7 @@ const AppointmentCard = (props) => {
     }
 
     useEffect(async () => {
+        setPage(1);
         if (props.type == "upcoming") {
             await getUpcomingAppointments({
                 clientId: getLoggedinUserId(), query: {

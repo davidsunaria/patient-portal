@@ -18,14 +18,10 @@ const Treatment = (props) => {
   const [title, setTitle] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
   const [showId, setShowId] = useState(null);
-  const [instructions, setInstructions] = useState([]);
-  const [tableData, setTableData] = useState([]);
   const [selectedTab, setSelectedTab] = useState('pre-treatment');
   const tabsData = [{ name: "Pre-Treatment", handler: "pre-treatment" }, { name: "Post-Treatment", handler: "post-treatment" }];
   const tableHeaders = ["Name", "Date & Time"];
-  const getInstructions = useStoreActions((actions) => actions.treatment.getInstructions);
-  const response = useStoreState((state) => state.treatment.response);
-
+ 
   const tabsHandler = (tab) => {
     setSelectedTab(tab.handler);
   }
@@ -33,28 +29,10 @@ const Treatment = (props) => {
   useEffect(async () => {
     console.log("Hiooks", selectedTab, id);
     if (selectedTab && !id) {
-      let type;
-      if (selectedTab === "pre-treatment") {
-        type = 'pre';
-      }
-      if (selectedTab === "post-treatment") {
-        type = 'post';
-      }
-      await getInstructions({ clientId: getLoggedinUserId(), type: type });
       setShowDetail(false);
     }
   }, [selectedTab, id]);
-
-  useEffect(() => {
-    if (response) {
-      let { message, statuscode, data } = response;
-      if (statuscode && statuscode === 200) {
-        if (data?.treatmentInstructions) {
-          setInstructions(data.treatmentInstructions);
-        }
-      }
-    }
-  }, [response]);
+ 
   const onTreatmentDetail = (id) => {
     setShowId(id);
     setShowDetail(true);
@@ -82,6 +60,9 @@ const Treatment = (props) => {
     setShowDetail(false);
     setSelectedTab(tab);
   } 
+  const onLoad = ()  => {
+    setShowDetail(false);
+  }
   return (
     <React.Fragment>
       <div className="content_outer">
@@ -99,7 +80,7 @@ const Treatment = (props) => {
             <Divider showIcon={false} />
             <Tabs key={1} tabsData={tabsData} selectedTab={selectedTab} tabsHandler={(tab) => tabsHandler(tab)} />
             {/* <Table headers={tableHeaders} tableData={tableData} /> */}
-            {!showDetail && <TreatmentInstruction data={instructions} onTreatmentDetail={onTreatmentDetail} />}
+            {!showDetail && <TreatmentInstruction selectedTab={selectedTab} id={id} onLoad={onLoad} onTreatmentDetail={onTreatmentDetail} />}
             {showDetail && <TreatmentDetail onRender={onRenderDetail} id={showId} />}
           </main>
         </div>
