@@ -17,7 +17,7 @@ const Header = (props) => {
 
   useEffect(() => {
     let isCompleted = getProfileCompleted();
-    if (isCompleted.isPetCompleted == 0 || isCompleted.isProfileCompleted == 0) {
+    if (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0) {
       setWelcomeText(true);
     }
     else{
