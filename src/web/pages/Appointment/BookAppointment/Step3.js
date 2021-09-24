@@ -196,7 +196,7 @@ const Step3 = (props) => {
 
                         
 
-                        {props?.formData?.date === "" && props?.enabledDates[0] &&
+                        {/* {props?.formData?.date === "" && props?.enabledDates[0] &&
                             <React.Fragment>
                                 <div className="react-datepicker-wrapper">
                                     <div className="react-datepicker__input-container">
@@ -213,7 +213,7 @@ const Step3 = (props) => {
                                             </label>
                                         </span>
                                     </div></div></React.Fragment>
-                        }
+                        } */}
                          <DatePicker
                             wrapperClassName={props?.formData?.date ? "" : "appointmentDatePicker"}
                             placeholderText="Select Date"
