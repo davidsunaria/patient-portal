@@ -194,14 +194,7 @@ const Step3 = (props) => {
                 {(props?.enabledDates.length > 0 || props?.providers.length > 0 && props.formData.provider_id) && <div className="dateTimeOuter">
                     <div className="AppointmentDate">
 
-                        <DatePicker
-                            wrapperClassName={props?.formData?.date ? "" : "appointmentDatePicker"}
-                            placeholderText="Select Date"
-                            includeDates={props.enabledDates}
-                            selected={props?.formData?.date}
-                            onChange={(e) => props.onSubmit(e, 'date', props.formData?.date)}
-                            customInput={<ExampleCustomInput />}
-                        />
+                        
 
                         {props?.formData?.date === "" && props?.enabledDates[0] &&
                             <React.Fragment>
@@ -221,7 +214,14 @@ const Step3 = (props) => {
                                         </span>
                                     </div></div></React.Fragment>
                         }
-
+                         <DatePicker
+                            wrapperClassName={props?.formData?.date ? "" : "appointmentDatePicker"}
+                            placeholderText="Select Date"
+                            includeDates={props.enabledDates}
+                            selected={props?.formData?.date}
+                            onChange={(e) => props.onSubmit(e, 'date', props.formData?.date)}
+                            customInput={<ExampleCustomInput />}
+                        />   
                     </div>
                    
                     <div className="AppointmentDate timeSlot" >
