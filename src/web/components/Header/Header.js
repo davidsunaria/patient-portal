@@ -28,7 +28,7 @@ const Header = (props) => {
     console.log("Type", type);
     if (type == "book-appointment") {
       let isCompleted = getProfileCompleted();
-      if (isCompleted.isPetCompleted == 0 || isCompleted.isProfileCompleted == 0) {
+      if (isCompleted && (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0)) {
 
         if (isCompleted.isProfileCompleted == 0) {
           toast.error(<ToastUI message={PROFILE_COMPLETE} type={"Error"} />);
