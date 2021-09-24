@@ -146,7 +146,7 @@ const Profile = () => {
                     
                   </div>
                   <div className="userName">{userData?.firstname} {userData?.lastname}</div>
-                  <div className="userLocation"><img src={USER_LOCATION_IMG} />{ (userData?.city) ? userData?.city+"," : ""} {userData?.country}</div>
+                  { (userData?.city || userData?.country)  && <div className="userLocation"><img src={USER_LOCATION_IMG} />{ (userData?.city) ? userData?.city+"," : ""} {userData?.country}</div>}
 
                   <section>
                     <div className="settingLinkTitle">Settings</div>
