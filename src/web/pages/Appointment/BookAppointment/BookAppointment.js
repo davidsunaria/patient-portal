@@ -179,7 +179,7 @@ const BookAppointment = (props) => {
                 setFormData({ ...formData, date: new Date(data.enabledDates[0]) })
                 updateOther(data.enabledDates[0], 3, "date");
               },
-              0
+              100
             );
           }
           else {
@@ -189,7 +189,7 @@ const BookAppointment = (props) => {
                 setFormData({ ...formData, date: "" });
                 updateOther("", 3, "date");
               },
-              0
+              100
             );
 
           }
