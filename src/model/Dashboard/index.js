@@ -92,10 +92,10 @@ const dashboardModel = {
         type = "vaccination-record";
         payload.history.push(`/pet-profile/${responsePet.data.event_data.pet_id}/${type}/${response.data.pet_visit.id}`);
       }
-      else if (payload.event == "report") {
-        type = "report";
-        payload.history.push(`/pet-profile/${response.data.pet_visit.pet_id}/${type}/${response.data.pet_visit.id}`);
-      }
+      // else if (payload.event == "report") {
+      //   type = "report";
+      //   payload.history.push(`/pet-profile/${response.data.pet_visit.pet_id}/${type}/${response.data.pet_visit.id}`);
+      // }
       
       else {
         payload.history.push(`/pet-profile/${response.data.pet_visit.pet_id}/treatment-record/${response.data.pet_visit.id}`);
@@ -116,7 +116,12 @@ const dashboardModel = {
       getStoreActions().common.setLoading(false);
     } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
-      if (payload.event == "anti_ectoparasite" || payload.event == "deworming" || payload.event == "vaccination") {
+      
+      if (payload.event == "report") {
+        let type = "report";
+        payload.history.push(`/pet-profile/${response.data.event_data.pet_id}/${type}/${payload.id}`);
+      }
+     else if (payload.event == "anti_ectoparasite" || payload.event == "deworming" || payload.event == "vaccination") {
         payload.history.push(`/book-appointment/${response.data.event_data.pet_id}`);
       }
     }else{

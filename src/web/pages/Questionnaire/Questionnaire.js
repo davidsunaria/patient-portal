@@ -220,7 +220,7 @@ const Questionnaire = () => {
   return (
     <React.Fragment>
       <div className="content_outer">
-        <Sidebar activeMenu="treatments" />
+        <Sidebar activeMenu="dashboard" />
         <div className="right_content_col">
           <main>
             <Header

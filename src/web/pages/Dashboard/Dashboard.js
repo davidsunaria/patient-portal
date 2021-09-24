@@ -128,7 +128,7 @@ const Dashboard = (props) => {
         break;
 
       case "report":
-        getPetId(event);
+        getPetId(event, "new");
         break;
 
       case "feedback":
