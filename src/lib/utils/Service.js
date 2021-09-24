@@ -1,5 +1,5 @@
 import moment from 'moment';
-
+import { format  } from "date-fns";
 export const apiDateFormat = (date) => {
   //return moment(date).format("YYYY-MM-DD");
 };
@@ -317,4 +317,23 @@ export function getAge(dob) {
     string.push(`${out[2]}D`);
   }
   return string.join(',');
+}
+
+
+export function appointmentDateFormat(date, toFormat){
+    console.log(date, toFormat);
+    if(date && toFormat){
+      toFormat = toFormat.replace("YYYY", 'yyyy')
+      toFormat = toFormat.replace("YYY", 'yyy')
+      toFormat = toFormat.replace("YY", 'yy')
+      toFormat = toFormat.replace("YY", 'yy')
+      toFormat = toFormat.replace("DDD", 'ddd')
+      toFormat = toFormat.replace("DD", 'dd')
+      toFormat = toFormat.replace("D", 'd')
+      toFormat = toFormat.replace("A", 'a')
+      toFormat = toFormat.replace("dddd", 'EEEE')
+      return format(date, toFormat)
+    }
+      
+  
 }

@@ -3,7 +3,7 @@ import DOWN_ARROW_IMAGE from "patient-portal-images/down-arrow.svg";
 import Select from 'react-select';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { formatDate } from "patient-portal-utils/Service";
+import { formatDate, appointmentDateFormat } from "patient-portal-utils/Service";
 import moment from "moment";
 import Other from "patient-portal-pages/Appointment/BookAppointment/Other.js"
 import I_IMAGE from "patient-portal-images/i.svg";
@@ -44,7 +44,20 @@ const Step3 = (props) => {
         
        return( <React.Fragment>
             <span onClick={onClick} ref={ref}>
-                <div className="highlightDate">
+           
+                 <div className="highlightDate">
+                    {props.formData.date && appointmentDateFormat(props.formData.date, "MMM")}
+                    <br />
+                    {props.formData.date && appointmentDateFormat(props.formData.date, "DD")}
+                </div>
+                <label >
+                    {props.formData.date && appointmentDateFormat(props.formData.date, "dddd")}
+                    <br />
+
+                    {props.formData.date && appointmentDateFormat(props.formData.date, "MMMM Do YYYY")}
+                </label>
+
+                {/* <div className="highlightDate">
                     {props.formData.date && moment(value).format('MMM')}
                     <br />
                     {props.formData.date && moment(value).format('DD')}
@@ -54,7 +67,7 @@ const Step3 = (props) => {
                     <br />
 
                     {props.formData.date && moment(value).format('MMMM Do YYYY')}
-                </label>
+                </label> */}
             </span>
         </React.Fragment>)
     });
@@ -191,6 +204,8 @@ const Step3 = (props) => {
                 enabledDates-{JSON.stringify(props?.enabledDates[0])}<br />
                 providers-{JSON.stringify(props?.providers.length)}<br /> */}
                  {/* {JSON.stringify(props.formData.date)} */}
+                 
+                 
                 {(props?.enabledDates.length > 0 || props?.providers.length > 0 && props.formData.provider_id) && <div className="dateTimeOuter">
                     <div className="AppointmentDate">
 
