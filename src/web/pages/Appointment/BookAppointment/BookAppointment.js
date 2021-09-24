@@ -173,6 +173,7 @@ const BookAppointment = (props) => {
 
           setCalenderData(enabledDatesArray);
           if (data.enabledDates.length > 0) {
+            toast.success(<ToastUI message={data.enabledDates.length} type={"Error"} />);
             setTimeout(
               () => {
                 setFormData({ ...formData, date: new Date(data.enabledDates[0]) })
@@ -182,7 +183,7 @@ const BookAppointment = (props) => {
             );
           }
           else {
-
+            toast.error(<ToastUI message={data.enabledDates.length} type={"Error"} />);
             setTimeout(
               () => {
                 setFormData({ ...formData, date: "" });
