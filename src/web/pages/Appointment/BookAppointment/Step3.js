@@ -40,8 +40,6 @@ const Step3 = (props) => {
     }
 
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => {
-        console.log(value , onClick);
-        
        return( <React.Fragment>
             <span onClick={onClick} ref={ref}>
            
@@ -203,7 +201,7 @@ const Step3 = (props) => {
                 {/*State-{JSON.stringify(openTimePopup)}<br />
                 enabledDates-{JSON.stringify(props?.enabledDates[0])}<br />
                 providers-{JSON.stringify(props?.providers.length)}<br /> */}
-                 {/* {JSON.stringify(props.formData.date)} */}
+                 {JSON.stringify(props.formData.date)}
                  
                  
                 {(props?.enabledDates.length > 0 || props?.providers.length > 0 && props.formData.provider_id) && <div className="dateTimeOuter">
