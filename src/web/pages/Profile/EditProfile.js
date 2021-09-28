@@ -16,6 +16,7 @@ import 'react-intl-tel-input/dist/main.css';
 import * as _ from "lodash";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { FILE_SELECT,FILE_UNSELECT } from "patient-portal-message";
+import { PROFILE_SETUP, PROFILE_COMPLETE, PET_PROFILE_COMPLETE } from "patient-portal-message";
 
 const EditProfile = (props) => {
   const history = useHistory();
@@ -60,8 +61,9 @@ const EditProfile = (props) => {
  useEffect(() => {
    if(isProfileUpdated){
      let profileStatus = getProfileCompleted();
-    
-      if(profileStatus && profileStatus?.isProfileCompleted === 1 && profileStatus?.isPetCompleted == 0){
+      //console.log('profileStatus', profileStatus);
+      if(profileStatus?.isProfileCompleted == 1 && profileStatus?.isPetCompleted == 0){
+        toast.success(<ToastUI message={PET_PROFILE_COMPLETE} type={"Success"} />);
       history.push("/create-pet");
      }
      else{

@@ -11,7 +11,7 @@ import { PROFILE_SETUP, PROFILE_COMPLETE, PET_PROFILE_COMPLETE } from "patient-p
 const Header = (props) => {
   const history = useHistory();
   const location = useLocation();
-  
+  const isProfileAndPetCompleted = useStoreState((state) => state.dashboard.isProfileAndPetCompleted);
   const [showWelcome, setWelcomeText] = useState(false);
   const goToUrl = () => {
     history.push("/profile");
@@ -19,18 +19,21 @@ const Header = (props) => {
 
   useEffect(() => {
     console.log(location.pathname);
-    let isCompleted = getProfileCompleted();
-    if (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0) {
-      if(location.pathname === "/dashboard"){
-        setWelcomeText(true);
+    if (isProfileAndPetCompleted) {
+      let isCompleted = getProfileCompleted();
+      if (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0) {
+        if (location.pathname === "/dashboard") {
+          setWelcomeText(true);
+        }
+      }
+      else {
+        setWelcomeText(false);
       }
     }
-    else{
-      setWelcomeText(false);
-    }
-  }, []);
+
+  }, [isProfileAndPetCompleted]);
   const handleNav = (type) => {
-   // console.log("Type", type);
+    // console.log("Type", type);
     if (type == "book-appointment") {
       let isCompleted = getProfileCompleted();
       if (isCompleted && (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0)) {
@@ -85,7 +88,7 @@ const Header = (props) => {
           />
         )}
       </div>
-     {showWelcome && <div className="box mb-4 welcomeText onHover" onClick={() => handleNav(props.onClick)}>
+      {showWelcome && <div className="box mb-4 welcomeText onHover" onClick={() => handleNav(props.onClick)}>
         <span>Welcome to DCC PetConnect!</span>
         <p >Please set up your & your pets’ profiles to have a better experience</p>
       </div>}

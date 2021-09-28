@@ -24,7 +24,7 @@ const Dashboard = (props) => {
   const getPetByVisit = useStoreActions((actions) => actions.dashboard.getPetByVisit);
   const getDashboard = useStoreActions((actions) => actions.dashboard.getDashboard);
   const response = useStoreState((state) => state.dashboard.response);
-
+  
 
   useEffect(async () => {
     await getDashboard(getLoggedinUserId());

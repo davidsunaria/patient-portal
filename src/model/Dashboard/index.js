@@ -7,6 +7,7 @@ const dashboardModel = {
   response: [],
   petData: {},
   isNotificationDeleted: false,
+  isProfileAndPetCompleted:false,
   setResponse: action((state, payload) => {
     state.response = payload;
   }),
@@ -16,9 +17,13 @@ const dashboardModel = {
   setPetData: action((state, payload) => {
     state.petData = payload;
   }),
+  setIsProfileAndPetCompleted: action((state, payload) => {
+    state.isProfileAndPetCompleted = payload;
+  }),
   getDashboard: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     getStoreActions().appointment.setIsQuestionnaireSubmitted(false);
+    await actions.setIsProfileAndPetCompleted(false);
     let response = await getDashboard(payload);
     if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
@@ -26,6 +31,7 @@ const dashboardModel = {
     } else if (response && response.statuscode == 200)  {
       setProfileCompleted(response);
       getStoreActions().common.setLoading(false);
+      await actions.setIsProfileAndPetCompleted(true);
       await actions.setResponse(response);
     }
     else{
