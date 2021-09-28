@@ -69,9 +69,9 @@ const SignupComplete = (props) => {
     <React.Fragment>
       <div className="loginOuter">
         <div className="loginBox">
-          <div className="loginLogo"><img src={DCCLOGO} /></div>
+          <div className="loginLogo mb-2"><img src={DCCLOGO} /></div>
           <div className="loginTitle mb-2">Welcome Back!</div>
-          <p className="loginTitleInfo mb-4">Create credentials to activate your DCC login account.</p>
+          <p className="loginTitleInfo mb-2">Create credentials to activate your DCC login account.</p>
           <Formik
             enableReinitialize={true}
             initialValues={formData}
