@@ -36,11 +36,11 @@ const Header = (props) => {
       if (isCompleted && (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0)) {
 
         if (isCompleted.isProfileCompleted == 0) {
-          toast.error(<ToastUI message={PROFILE_COMPLETE} type={"Error"} />);
+          toast.success(<ToastUI message={PROFILE_COMPLETE} type={"Success"} />);
           history.push(`/edit-profile`);
         }
         else if (isCompleted.isPetCompleted == 0) {
-          toast.error(<ToastUI message={PET_PROFILE_COMPLETE} type={"Error"} />);
+          toast.success(<ToastUI message={PET_PROFILE_COMPLETE} type={"Success"} />);
           history.push(`/create-pet`);
         }
 
