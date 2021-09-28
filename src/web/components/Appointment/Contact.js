@@ -9,6 +9,7 @@ import WHATSAPP_IMAGE from "patient-portal-images/whatsapp.svg";
 import EMAIL_IMAGE from "patient-portal-images/emailGreen.svg";
 import CLOCK_IMAGE from "patient-portal-images/clock.svg";
 import { formatDate } from "patient-portal-utils/Service";
+import Select from 'react-select';
 
 const Contact = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -61,7 +62,7 @@ const Contact = (props) => {
               </div>
               <div className="addressInfo">
                 <label>Contact Number</label>
-                <p><img src={WHATSAPP_IMAGE} /> {props.data?.phone_no_code}</p>
+                <p> {props.data?.phone_no_code}</p>
               </div>
             </div>
 

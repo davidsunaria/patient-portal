@@ -43,3 +43,6 @@ export const FIELD_REQUIRED = "This field is required";
 export const TITLE_REQUIRED = "Title is required";
 export const BODY_REQUIRED = "Message is required";
 export const OTP_SENT = "OTP sent successfully";
+
+export const FIRSTNAME_REQUIRED = "Please enter first name";
+export const LASTNAME_REQUIRED = "Please enter last name";

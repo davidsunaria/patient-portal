@@ -313,7 +313,7 @@ export function getAge(dob) {
   if (out[1]) {
     string.push(`${out[1]}M`);
   }
-  if (out[2]) {
+  if (!out[0] && !out[1] && out[2]) {
     string.push(`${out[2]}D`);
   }
   return string.join(',');
@@ -335,5 +335,13 @@ export function appointmentDateFormat(date, toFormat){
       return format(date, toFormat)
     }
       
-  
+    
 }
+
+export function truncate(str, length, total) {
+      return str.length > length ? str.substring(0, total) + "..." : str;
+  }
+
+  export function getLoggedinPreferredClinic() {
+    return getUser()?.preferred_clinic;
+  }

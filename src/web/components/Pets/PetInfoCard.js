@@ -31,7 +31,7 @@ const PetInfoCard = (props) => {
     if(age.m){
       string.push(`${age.m}M`);
     }
-    if(age.d){
+    if(!age.y && !age.m && age.d){
       string.push(`${age.d}D`);
     }
     return string.join(',');
@@ -66,10 +66,10 @@ const PetInfoCard = (props) => {
           <div onClick={() => goToProfile(props.data.id)} className="onHover">
           <img src={renderImage(props.data)} />
           
-          <span className="breed">{props.data?.breedmap?.name}</span>
+          <span className="breed">{props.data?.name}</span>
           <div className="petDetail">
             <div>
-              <strong>{props.data?.name}</strong> | {props.data?.gender} | {renderAge(props.data?.age)}
+              <strong>{props.data?.breedmap?.name}</strong> | {props.data?.gender} | {renderAge(props.data?.age)}
             </div>
             <div className="ml-auto">{props.data?.speciesmap?.species}</div>
           </div>

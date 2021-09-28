@@ -10,22 +10,27 @@ import { PROFILE_SETUP, PROFILE_COMPLETE, PET_PROFILE_COMPLETE } from "patient-p
 
 const Header = (props) => {
   const history = useHistory();
+  const location = useLocation();
+  
   const [showWelcome, setWelcomeText] = useState(false);
   const goToUrl = () => {
     history.push("/profile");
   };
 
   useEffect(() => {
+    console.log(location.pathname);
     let isCompleted = getProfileCompleted();
     if (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0) {
-      setWelcomeText(true);
+      if(location.pathname === "/dashboard"){
+        setWelcomeText(true);
+      }
     }
     else{
       setWelcomeText(false);
     }
   }, []);
   const handleNav = (type) => {
-    console.log("Type", type);
+   // console.log("Type", type);
     if (type == "book-appointment") {
       let isCompleted = getProfileCompleted();
       if (isCompleted && (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0)) {

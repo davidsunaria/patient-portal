@@ -16,7 +16,6 @@ const Service = (props) => {
             </div>
             <div className="servicesDetail">
               <div className="serviceDetailRow">
-                <label>Description</label>
                 <div>{props?.data?.description}</div>
               </div>
     

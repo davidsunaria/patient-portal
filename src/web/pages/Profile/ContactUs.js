@@ -10,15 +10,24 @@ import _ from "lodash";
 import { getLoggedinUserId, getProfileCompleted } from "patient-portal-utils/Service";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import Header from "patient-portal-components/Header/Header.js";
+import Select from 'react-select';
 
 
 // https://stackoverflow.com/questions/57594045/validation-using-formik-with-yup-and-react-select
 const ContactUs = (props) => {
   const { ContactUsSchema } = useConactUsValidation();
   const history = useHistory();
+  const [subjects, setSubjects] = useState([
+    {value: "Suggestion",label: "Suggestion"},
+    {value: "Feedback",label: "Feedback"},
+    {value: "Question",label: "Question"},
+    {value: "Report Bug",label: "Report Bug"},
+    {value: "Incorrect/Missing Data",label: "Incorrect/Missing Data"},
+    {value: "Others",label: "Others"}
+  ]);
   const [formData, setFormData] = useState({
     client_id: getLoggedinUserId(),
-    title: "",
+    title: {value: "", label: ""},
     body: ""
   });
 
@@ -26,6 +35,7 @@ const ContactUs = (props) => {
   const resetContactUs = useStoreActions((actions) => actions.pet.resetContactUs);
   const response = useStoreState((state) => state.pet.response);
   const contact = async (payload) => {
+    payload.title = payload.title.value;
     await contactUs(payload);
   }
 
@@ -49,10 +59,11 @@ const ContactUs = (props) => {
           <main>
 
           <Header
-              heading={"Contact Us"}
+              heading={"Contact"}
               subHeading={"Here you can write your queries"}
              
             />
+            
             <div className="box">
               <Formik
                 enableReinitialize={true}
@@ -80,28 +91,26 @@ const ContactUs = (props) => {
                   return (
                     <form className="profileForm pl-0" onSubmit={handleSubmit}>
 
-                     
 
                       <div className="row">
                         <div className="col-sm-6">
                           <div className="fieldOuter">
                             <label className="fieldLabel">Subject<span className="required">*</span></label>
                             <div className="fieldBox">
-                              <input
-                                className={
-                                  errors.title && touched.title
-                                    ? "fieldInput error"
-                                    : "fieldInput"
-                                }
-                                placeholder="Subject"
-                                id="title"
-                                name="title"
-                                type="text"
-                                value={values.title}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                              />
-                              <ErrorMessage name="title" component="span" className="errorMsg" />
+
+                                          <Select
+                                            className={"customSelectBox petSelect"}
+                                            placeholder={"Select subject"}
+                                            isSearchable={true}
+                                            id="title"
+                                            name="title"
+                                            value={values.title || ""}
+                                            options={subjects}
+                                            onChange={e => setFieldValue('title', e)}
+                                        />
+
+                              
+                              <ErrorMessage name="[title.value]" component="span" className="errorMsg" />
                             </div>
                           </div>
                         </div>

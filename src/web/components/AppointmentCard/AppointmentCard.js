@@ -18,6 +18,7 @@ import NoRecord from "patient-portal-components/NoRecord";
 import { getLoggedinUserId } from "patient-portal-utils/Service";
 const AppointmentCard = (props) => {
     const lastScrollTop = useRef(0);
+    const [accountInfo,setAccountInfo] = useState();
     const [appointments, setAppointments] = useState([]);
     const [records, setRecords] = useState([]);
     const [page, setPage] = useState(0);
@@ -71,6 +72,9 @@ const AppointmentCard = (props) => {
             if (statuscode && statuscode === 200) {
                 if (data?.clinic) {
                     setClinicData(data?.clinic);
+                }
+                if (data?.accountInfo) {
+                    setAccountInfo(data?.accountInfo);
                 }
                 if (data.cancellationPolicy) {
                     setPolicyData(data.cancellationPolicy);
@@ -244,7 +248,7 @@ const AppointmentCard = (props) => {
                                         </a>
                                     </li>
 
-                                    {(props.type == "past" || val.appointment_type == "in_person") && <li>
+                                    {(props.type == "upcoming" && val.appointment_type == "in_person"  && val.status != "canceled") && <li>
                                     
                                         <a target="_blank" href={`https://www.google.com/maps?saddr=My+Location&daddr=${val?.clinic?.address}`}>
                                             <img src={DIRECTION_IMAGE} />
@@ -257,8 +261,14 @@ const AppointmentCard = (props) => {
                             <div onClick={() => history.push(`/appointment-detail/${val?.id}`)}>
                                 <div className="row">
                                     <div className="col pb-2">
-                                        <label>Clinic</label>
-                                        <h5>{val?.clinic?.clinic_name}</h5>
+                                        { val?.appointment_type == "virtual" && 
+                                        <><label>Clinic</label>
+                                        <h5>{accountInfo?.name}</h5></>}
+
+                                        { val?.appointment_type == "in_person" && 
+                                        <><label>Clinic</label>
+                                        <h5>{val?.clinic?.clinic_name}</h5></>}
+
                                         <span>{formatDate(val.appointment_datetime, 3)}, {formatDate(val.appointment_datetime, 4)}</span>
                                     </div>
                                 </div>
@@ -283,9 +293,6 @@ const AppointmentCard = (props) => {
                                         <label>Note</label>
                                         <p dangerouslySetInnerHTML={{  __html:(val?.appointment_notes && val?.appointment_notes.includes("Follow-up from a")) ? "Follow-up from a previous visit" : val?.appointment_notes}}/>
                                         
-
-                                       
-
                                     </div>
                                     {val?.status == "canceled" && <div className="col-lg-3 col-sm-6 py-2">
                                         <label>Status</label>

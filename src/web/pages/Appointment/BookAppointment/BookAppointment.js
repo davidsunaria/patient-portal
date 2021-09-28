@@ -9,7 +9,7 @@ import Step4 from "./Step4";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import _ from "lodash";
 import moment from "moment";
-import { getLoggedinUserId, getUser } from "patient-portal-utils/Service";
+import { getLoggedinUserId, getUser, getLoggedinPreferredClinic } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { SELECT_CLINIC, SELECT_SERVICE, SELECT_PROVIDER, SELECT_PET, SELECT_APPOINTMENT_NOTES, SELECT_DATE, SELECT_TIME } from "patient-portal-message";
@@ -54,6 +54,7 @@ const BookAppointment = (props) => {
     let formPayload = { ...formData };
     formPayload.type = payload;
     formPayload.client_id = getLoggedinUserId();
+    formPayload.clinic_id = getLoggedinPreferredClinic();
     setFormData(formPayload);
     //Reset Page For Virtual
     if (payload == "virtual") {

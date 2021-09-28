@@ -20,17 +20,21 @@ const SignupComplete = (props) => {
   const { SignupSchema } = useAuthValidation();
   const { labelData } = useContext(LanguageContext);
   const [formData, setFormData] = useState({
+    firstname:'',
+    lastname:'',
     code: '',
     phone: '',
     email: '',
     password: '',
     password_confirmation: '',
-    device_token:  new Buffer(window.navigator.userAgent).toString('base64')
+    device_token: new Buffer(window.navigator.userAgent).toString('base64')
   });
 
   const createUser = async (payload) => {
     let tempData = getTempData();
     let formData = {
+      firstname:payload?.firstname,
+      lastname:payload?.lastname,
       code: tempData.code,
       phone: tempData.phone,
       email: payload.email,
@@ -49,16 +53,16 @@ const SignupComplete = (props) => {
   useEffect(() => {
     if (response) {
       let { accountInfo } = response;
-        if (accountInfo) {
-          setTitle(accountInfo.name);
-        }
+      if (accountInfo) {
+        setTitle(accountInfo.name);
+      }
     }
   }, [response]);
 
   useEffect(() => {
     if (title) {
       document.title = (title) ? title : "Patient Portal";
-       history.push("/dashboard");
+      history.push("/dashboard");
     }
   }, [title]);
   return (
@@ -91,6 +95,48 @@ const SignupComplete = (props) => {
               } = props;
               return (
                 <form onSubmit={handleSubmit}>
+                  
+                  <div className="loginFieldGroup">
+                    <label>First name</label>
+                    <div className={
+                      errors.firstname && touched.firstname
+                        ? "loginField error"
+                        : "loginField"
+                    }>
+                      <input
+                        placeholder="First name"
+                        id="firstname"
+                        name="firstname"
+                        type="text"
+                        value={values.firstname}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <ErrorMessage name="firstname" component="span" className="errorMsg" />
+                  </div>
+
+                  <div className="loginFieldGroup">
+                    <label>Last name</label>
+                    <div className={
+                      errors.lastname && touched.lastname
+                        ? "loginField error"
+                        : "loginField"
+                    }>
+                      <input
+                        placeholder="Last name"
+                        id="lastname"
+                        name="lastname"
+                        type="text"
+                        value={values.lastname}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <ErrorMessage name="lastname" component="span" className="errorMsg" />
+                  </div>
 
                   <div className="loginFieldGroup">
                     <label>Email Address</label>
@@ -173,7 +219,7 @@ const SignupComplete = (props) => {
 
         </div>
       </div>
-     
+
     </React.Fragment>
 
   );

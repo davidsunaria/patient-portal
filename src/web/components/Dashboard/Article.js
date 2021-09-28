@@ -5,6 +5,7 @@ import { } from "patient-portal-message";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SHARE_IMG from "patient-portal-images/share1.svg";
+import { truncate } from "patient-portal-utils/Service";
 
 const Article = (props) => {
   const history = useHistory();
@@ -23,7 +24,7 @@ const Article = (props) => {
             {result.image && <img src={`${process.env.REACT_APP_MEDIA_URL}articles/${result.image}`} />}
              
             </div>
-            <p>{result?.title}</p>
+            <p>{truncate(result?.title, 10, 25)}</p>
           </div>
         ))
       ) : (

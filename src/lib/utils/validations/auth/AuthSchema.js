@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { LanguageContext } from "patient-portal-context/LanguageContext.js";
 import * as Yup from "yup";
-import {  USER_NAME_REQUIRED, CONFIRM_PASSWORD_REQUIRED, PASSWORD_REQUIRED, OTP_REQUIRED, EMAIL_REQUIRED, CONFIRM_PASSWORD_MATCH, PHONE_REQUIRED, REENTER_PASSWORD } from "patient-portal-message";
+import { USER_NAME_REQUIRED, CONFIRM_PASSWORD_REQUIRED, PASSWORD_REQUIRED, OTP_REQUIRED, EMAIL_REQUIRED, CONFIRM_PASSWORD_MATCH, PHONE_REQUIRED, REENTER_PASSWORD, FIRSTNAME_REQUIRED,LASTNAME_REQUIRED } from "patient-portal-message";
 
 const useAuthValidation = (props) => {
   const { labelData } = useContext(LanguageContext);
@@ -23,6 +23,12 @@ const useAuthValidation = (props) => {
   }), [labelData]);
 
   const SignupSchema = useMemo(() => Yup.object({
+    firstname: Yup
+      .string()
+      .required(FIRSTNAME_REQUIRED),
+    lastname: Yup
+      .string()
+      .required(LASTNAME_REQUIRED),
     email: Yup
       .string()
       .email()

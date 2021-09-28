@@ -152,12 +152,12 @@ const Profile = () => {
                     <div className="settingLinkTitle">Settings</div>
                     <Link to="/edit-profile">Edit Profile</Link>
                     <a onClick={toggle}>Notification Settings</a>
-                    <Link to="/contact-us">Contact Us</Link>
+                    <Link to="/contact-us">Contact</Link>
                   </section>
                   <section>
-                    <a href={`${process.env.REACT_APP_BOOKING_PORTAL_URL}pages/privacy-policy`} target="_blank">Privacy Policy</a>
-                    <a href={`${process.env.REACT_APP_BOOKING_PORTAL_URL}pages/refund-policy`} target="_blank">Refund Policy</a>
-                    <a href={`${process.env.REACT_APP_BOOKING_PORTAL_URL}pages/terms-and-conditions`} target="_blank">Terms And Conditions</a>
+                    <a href={`${process.env.REACT_APP_PAGES_URL}privacy-policy`} target="_blank">Privacy Policy</a>
+                    <a href={`${process.env.REACT_APP_PAGES_URL}refund-policy`} target="_blank">Refund Policy</a>
+                    <a href={`${process.env.REACT_APP_PAGES_URL}terms-and-conditions`} target="_blank">Terms And Conditions</a>
                   </section>
                 </div>
 
