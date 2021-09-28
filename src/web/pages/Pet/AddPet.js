@@ -23,12 +23,14 @@ import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import DEFAULT_PET from "patient-portal-images/ic_pet_placeholder.png";
 import { addDays } from 'date-fns';
 import { FILE_SELECT,FILE_UNSELECT } from "patient-portal-message";
+import AddNewPetConfirmation from "patient-portal-components/Pets/AddNewPetConfirmation"
 
 
 // https://stackoverflow.com/questions/57594045/validation-using-formik-with-yup-and-react-select
 const AddPet = (props) => {
   const history = useHistory();
   const calendarRef = useRef();
+  const [canAddPetModal, setCanAddPetModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState("");
   const [showBreedName, setShowBreedName] = useState(false);
@@ -165,16 +167,44 @@ const AddPet = (props) => {
     if(isPetCreated){
       
       let res = getProfileCompleted();
-      let data = {
-        isPetCompleted: 1,
-        isProfileCompleted: res.isProfileCompleted
+      console.log("res", res)
+      if(res.isPetCompleted == 1){
+        history.push("/pets");
       }
-      localStorage.setItem("profileStatus", JSON.stringify(data));
-      history.push("/pets");
+      else{
+        setCanAddPetModal(true);
+      }
     }
   }, [isPetCreated]);
+
+  const canAddPet = () => {
+    console.log("Yes");
+    let res = getProfileCompleted();
+    let data = {
+      isPetCompleted: 0,
+      isProfileCompleted: res.isProfileCompleted
+    }
+    localStorage.setItem("profileStatus", JSON.stringify(data));
+    setCanAddPetModal(false);
+  }
+  const onCancelPet = () => {
+    console.log("No");
+    let res = getProfileCompleted();
+    let data = {
+      isPetCompleted: 1,
+      isProfileCompleted: res.isProfileCompleted
+    }
+    localStorage.setItem("profileStatus", JSON.stringify(data));
+    setCanAddPetModal(false);
+    history.push("/pets");
+  }
+  
+  const canAdd = (id) => {
+    setCanAddPetModal(!canAddPetModal);
+  };
   return (
     <React.Fragment>
+      <AddNewPetConfirmation modal={canAddPetModal} toggle={canAdd} onCancelPet={onCancelPet} onAddPet={canAddPet} />
       <div className="content_outer">
         <Sidebar activeMenu="pets" />
         <div className="right_content_col">
