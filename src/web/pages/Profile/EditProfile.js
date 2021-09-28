@@ -60,7 +60,8 @@ const EditProfile = (props) => {
  useEffect(() => {
    if(isProfileUpdated){
      let profileStatus = getProfileCompleted();
-     if(profileStatus && profileStatus.isProfileCompleted && profileStatus.isProfileCompleted === 1 && profileStatus.isPetCompleted && profileStatus.isPetCompleted == 0){
+    
+      if(profileStatus && profileStatus?.isProfileCompleted === 1 && profileStatus?.isPetCompleted == 0){
       history.push("/create-pet");
      }
      else{
