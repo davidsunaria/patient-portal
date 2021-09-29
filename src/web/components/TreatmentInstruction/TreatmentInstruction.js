@@ -23,10 +23,10 @@ const TreatmentInstruction = (props) => {
       setCurrentPage(1);
       setPage(1);
       let type;
-      if (props.selectedTab === "pre-treatment") {
+      if (props.selectedTab === "before-treatment") {
         type = 'pre';
       }
-      if (props.selectedTab === "post-treatment") {
+      if (props.selectedTab === "after-treatment") {
         type = 'post';
       }
       await getInstructions({ clientId: getLoggedinUserId(), type: type, query: { page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE } });
@@ -94,10 +94,10 @@ const TreatmentInstruction = (props) => {
       console.log('Get next page ', page, props.selectedTab)
       console.log('Get next page payload ', formData)
       let type;
-      if (props.selectedTab === "pre-treatment") {
+      if (props.selectedTab === "before-treatment") {
         type = 'pre';
       }
-      if (props.selectedTab === "post-treatment") {
+      if (props.selectedTab === "after-treatment") {
         type = 'post';
       }
       await getInstructions({

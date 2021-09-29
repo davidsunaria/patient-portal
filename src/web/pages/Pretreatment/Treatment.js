@@ -18,8 +18,8 @@ const Treatment = (props) => {
   const [title, setTitle] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
   const [showId, setShowId] = useState(null);
-  const [selectedTab, setSelectedTab] = useState('pre-treatment');
-  const tabsData = [{ name: "Before Treatment", handler: "pre-treatment" }, { name: "After Treatment", handler: "post-treatment" }];
+  const [selectedTab, setSelectedTab] = useState('before-treatment');
+  const tabsData = [{ name: "Before Treatment", handler: "before-treatment" }, { name: "After Treatment", handler: "after-treatment" }];
   const tableHeaders = ["Name", "Date & Time"];
  
   const tabsHandler = (tab) => {
@@ -27,7 +27,7 @@ const Treatment = (props) => {
   }
 
   useEffect(async () => {
-    console.log("Hiooks", selectedTab, id);
+    //console.log("Hiooks", selectedTab, id);
     if (selectedTab && !id) {
       setShowDetail(false);
     }
@@ -46,15 +46,21 @@ const Treatment = (props) => {
   }, [id]);
 
   const onRenderDetail = (type) => {
-    setTitle(type);
+    if(type == "pre"){
+      setTitle("before");
+    }
+    else{
+      setTitle("after");
+    }
+    
   }
   const resetTab = async() => {
     let tab;
-    if(title == "pre"){
-      tab = "pre-treatment";
+    if(title == "before"){
+      tab = "before-treatment";
     }
     else{
-      tab = "post-treatment";
+      tab = "after-treatment";
     }
     history.push(`/treatments`);
     setShowDetail(false);

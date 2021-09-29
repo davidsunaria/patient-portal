@@ -11,8 +11,8 @@ import { formatDate } from "patient-portal-utils/Service";
 
 const TreatmentDetail = (props) => {
   const history = useHistory();
-  const [selectedTab, setSelectedTab] = useState('pre-treatment');
-  const tabsData = [{ name: "Pre-Treatment", handler: "pre-treatment" }, { name: "Post-Treatment", handler: "post-treatment" }];
+  const [selectedTab, setSelectedTab] = useState('before-treatment');
+  const tabsData = [{ name: "Before Treatment", handler: "before-treatment" }, { name: "After Treatment", handler: "after-treatment" }];
   const tableHeaders = ["Name", "Date & Time"];
   const [instruction, setInstruction] = useState([]);
 
