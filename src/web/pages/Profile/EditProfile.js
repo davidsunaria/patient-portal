@@ -62,12 +62,12 @@ const EditProfile = (props) => {
    if(isProfileUpdated){
      let profileStatus = getProfileCompleted();
       //console.log('profileStatus', profileStatus);
-      if(profileStatus?.isProfileCompleted == 1 && profileStatus?.isPetCompleted == 0){
+      if(profileStatus?.isPetCompleted == 0){
         toast.success(<ToastUI message={PET_PROFILE_COMPLETE} type={"Success"} />);
       history.push("/create-pet");
      }
      else{
-      history.push("/pets");
+      history.push("/profile");
      }
     
    }
