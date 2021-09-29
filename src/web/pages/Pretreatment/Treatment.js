@@ -46,11 +46,14 @@ const Treatment = (props) => {
   }, [id]);
 
   const onRenderDetail = (type) => {
+    //console.log("sdsdsd", type)
     if(type == "pre"){
       setTitle("before");
+      setSelectedTab('before-treatment');
     }
     else{
       setTitle("after");
+      setSelectedTab('after-treatment');
     }
     
   }
@@ -85,7 +88,7 @@ const Treatment = (props) => {
               hasBtn={false} />
             <Divider showIcon={false} />
             <Tabs key={1} tabsData={tabsData} selectedTab={selectedTab} tabsHandler={(tab) => tabsHandler(tab)} />
-            {/* <Table headers={tableHeaders} tableData={tableData} /> */}
+            
             {!showDetail && <TreatmentInstruction selectedTab={selectedTab} id={id} onLoad={onLoad} onTreatmentDetail={onTreatmentDetail} />}
             {showDetail && <TreatmentDetail onRender={onRenderDetail} id={showId} />}
           </main>
