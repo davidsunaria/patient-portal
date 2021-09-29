@@ -6,7 +6,7 @@ import { getProfileCompleted } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import Button from "patient-portal-components/Button/Button.js";
-import { PROFILE_SETUP, PROFILE_COMPLETE, PET_PROFILE_COMPLETE } from "patient-portal-message";
+import { PROFILE_SETUP, PROFILE_COMPLETE, PET_PROFILE_COMPLETE, PET_PROFILE_COMPLETE_DASHBOARD } from "patient-portal-message";
 
 const Header = (props) => {
   const history = useHistory();
@@ -33,7 +33,7 @@ const Header = (props) => {
 
   }, [isProfileAndPetCompleted]);
   const handleNav = (type) => {
-    // console.log("Type", type);
+    console.log("Type", type);
     if (type == "book-appointment") {
       let isCompleted = getProfileCompleted();
       if (isCompleted && (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0)) {
@@ -63,6 +63,21 @@ const Header = (props) => {
     }
 
   }
+  const handleDashboardNoti = () => {
+    let isCompleted = getProfileCompleted();
+      if (isCompleted && (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0)) {
+
+        if (isCompleted.isProfileCompleted == 0) {
+          toast.success(<ToastUI message={PROFILE_COMPLETE} type={"Success"} />);
+          history.push(`/edit-profile`);
+        }
+        else if (isCompleted.isPetCompleted == 0) {
+          toast.success(<ToastUI message={PET_PROFILE_COMPLETE_DASHBOARD} type={"Success"} />);
+          history.push(`/create-pet`);
+        }
+
+      }
+  }
   return (
     <React.Fragment>
       {props.backEnabled && (!props.backTitle || !props.backAction) && (
@@ -88,7 +103,7 @@ const Header = (props) => {
           />
         )}
       </div>
-      {showWelcome && <div className="box mb-4 welcomeText onHover" onClick={() => handleNav(props.onClick)}>
+      {showWelcome && <div className="box mb-4 welcomeText onHover" onClick={() => handleDashboardNoti()}>
         <span>Welcome to DCC PetConnect!</span>
         <p >Please set up your & your pet's profiles to have a better experience</p>
       </div>}
