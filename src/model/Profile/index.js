@@ -58,7 +58,10 @@ const profileModel = {
         isProfileCompleted: 1
       }
       localStorage.setItem("profileStatus", JSON.stringify(data));
-      toast.success(<ToastUI message={response.message} type={"Success"} />);
+      if(res?.isPetCompleted == 1){
+        toast.success(<ToastUI message={response.message} type={"Success"} />);
+      }
+      
       await actions.setResponse(response);
     } else {
       getStoreActions().common.setLoading(false);
