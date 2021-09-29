@@ -114,24 +114,24 @@ const EditProfile = (props) => {
 
     let formData = new FormData();
     formData.append("id", payload?.id);
-    formData.append("firstname", payload?.firstname);
-    formData.append("lastname", payload?.lastname);
-    formData.append("email", payload?.email);
+    formData.append("firstname", payload?.firstname ?? "");
+    formData.append("lastname", payload?.lastname ?? "");
+    formData.append("email", payload?.email ?? "");
     //console.log(phone, phone2,userData )
       formData.append("phone", `${(phone.phone) ? phone.phone.replace(/[ `~!@#$%^&*()_|\-=?;:'",.<>\{\}\[\]\\\/]/gi, '') : ''}`);
       formData.append("countryCode", `${(phone.phone) ? "+" + phone.dialCode : ''}`);
     
     formData.append("gender", (payload?.gender == null || payload?.gender == 'null') ? "" : payload?.gender);
-    formData.append("nick_name", payload?.nick_name);
+    formData.append("nick_name", payload?.nick_name ?? "");
     
       formData.append("phone_code2", `${(phone2.phone) ? "+" + phone2.dialCode : ''}`);
       formData.append("phoneNumber_2", `${(phone2.phone) ? phone2.phone.replace(/[ `~!@#$%^&*()_|\-=?;:'",.<>\{\}\[\]\\\/]/gi, '') : ''}`);
     
-    formData.append("email_2", payload?.email_2);
-    formData.append("address", payload?.address);
-    formData.append("pincode", payload?.pincode);
-    formData.append("city", payload?.city);
-    formData.append("state", payload?.state);
+    formData.append("email_2", payload?.email_2 ?? "");
+    formData.append("address", payload?.address ?? "");
+    formData.append("pincode", payload?.pincode ?? "");
+    formData.append("city", payload?.city ?? "");
+    formData.append("state", payload?.state ?? "");
     formData.append("country", (payload.country) ? payload.country : "");
     formData.append("gst_no", (payload?.gst_no) ? payload?.gst_no : "");
     formData.append("source", (payload?.source) ? payload?.source : "");

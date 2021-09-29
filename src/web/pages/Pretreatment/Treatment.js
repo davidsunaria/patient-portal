@@ -19,7 +19,7 @@ const Treatment = (props) => {
   const [showDetail, setShowDetail] = useState(false);
   const [showId, setShowId] = useState(null);
   const [selectedTab, setSelectedTab] = useState('pre-treatment');
-  const tabsData = [{ name: "Pre-Treatment", handler: "pre-treatment" }, { name: "Post-Treatment", handler: "post-treatment" }];
+  const tabsData = [{ name: "Before Treatment", handler: "pre-treatment" }, { name: "After Treatment", handler: "post-treatment" }];
   const tableHeaders = ["Name", "Date & Time"];
  
   const tabsHandler = (tab) => {

@@ -90,7 +90,7 @@ const Header = (props) => {
       </div>
       {showWelcome && <div className="box mb-4 welcomeText onHover" onClick={() => handleNav(props.onClick)}>
         <span>Welcome to DCC PetConnect!</span>
-        <p >Please set up your & your pets’ profiles to have a better experience</p>
+        <p >Please set up your & your pet's profiles to have a better experience</p>
       </div>}
 
     </React.Fragment>

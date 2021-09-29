@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, forwardRef, useRef } 
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import CROSS_IMAGE from "patient-portal-images/cross.svg";
 const AddNewPetConfirmation = (props) => {
- 
+
   return (
     <React.Fragment>
       <Modal isOpen={props.modal}  >
@@ -13,12 +13,9 @@ const AddNewPetConfirmation = (props) => {
                 <img src={CROSS_IMAGE} />
               </a>
             </div>
-
-
             <div>
-              <p className="p-text mt-4">Do you want to add pet?</p>
+              <p className="p-text mt-4">Do you wish to add details for another pet?</p>
             </div>
-
           </div>
         </ModalBody>
         <ModalFooter>
