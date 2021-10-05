@@ -321,7 +321,7 @@ export function getAge(dob) {
 
 
 export function appointmentDateFormat(date, toFormat){
-    console.log(date, toFormat);
+    //console.log(date, toFormat);
     if(date && toFormat){
       toFormat = toFormat.replace("YYYY", 'yyyy')
       toFormat = toFormat.replace("YYY", 'yyy')
@@ -343,5 +343,5 @@ export function truncate(str, length, total) {
   }
 
   export function getLoggedinPreferredClinic() {
-    return getUser()?.preferred_clinic;
+    return getUser()?.clinic;
   }

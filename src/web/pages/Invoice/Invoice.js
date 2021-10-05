@@ -190,17 +190,17 @@ const Invoice = (props) => {
             cls = "";
         }
         if (value === "partial") {
-            status = "Partially Paid";
+            status = "Partially";
             cls = "";
         }
         if (value === "cancel") {
-            status = "Awaiting Payment";
-            cls = "orange";
+            status = "Cancelled";
+            cls = "red";
         }
         
         if(value === "ready"){
-            status = "Ready For Payment";
-            cls = "red"; 
+            status = "Awaiting Payment";
+            cls = "orange"; 
         }
         if (type == 1) {
             return cls;

@@ -52,7 +52,7 @@ const Contact = (props) => {
               <div className="addressInfo">
                 <label>Address</label>
                 <p>{props.data?.address}</p>
-                <a className="onHover" target="_blank" href={`https://www.google.com/maps?saddr=My+Location&daddr=${props.data?.address}`}><img src={MAP_IMAGE} className="map" /></a>
+                <a className="onHover" target="_blank" href={`${props.data?.business_link}`}><img src={MAP_IMAGE} className="map" /></a>
               </div>
             </div>
 
@@ -72,7 +72,7 @@ const Contact = (props) => {
               </div>
               <div className="addressInfo">
                 <label>Email</label>
-                <p>{props.data?.appointment_notification_emails}</p>
+                <p>info@dccpets.in</p>
               </div>
             </div>
 

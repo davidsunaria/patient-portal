@@ -75,9 +75,9 @@ export const getAppointmentDetail = async (formData) => {
 	}
 };
 
-export const getCancellationPolicy = async () => {
+export const getCancellationPolicy = async (formData) => {
 	try {
-		let response = await axiosApi.get(`${apiUrl}/cancellation_policy`);
+		let response = await axiosApi.get(`${apiUrl}/cancellation_policy/${formData}`);
 		return response?.data;
 	} catch (error) {
 		return error?.response?.data;

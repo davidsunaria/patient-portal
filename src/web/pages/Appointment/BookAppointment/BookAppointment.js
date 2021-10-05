@@ -51,10 +51,11 @@ const BookAppointment = (props) => {
   }, [id]);
   //Set First Step Data
   const handleStepOne = (payload) => {
+    let clinicData = getLoggedinPreferredClinic();
     let formPayload = { ...formData };
     formPayload.type = payload;
     formPayload.client_id = getLoggedinUserId();
-    formPayload.clinic_id = getLoggedinPreferredClinic();
+    formPayload.clinic_id = clinicData.id;
     setFormData(formPayload);
     //Reset Page For Virtual
     if (payload == "virtual") {
@@ -63,7 +64,13 @@ const BookAppointment = (props) => {
     else {
       setCurrentPage(2);
     }
-    setOtherData({...otherData, type: payload});
+    if(clinicData && clinicData.id){
+      setOtherData({...otherData, type: payload, clinic_name: clinicData?.clinic_name, clinic_address: clinicData?.address });
+    }
+    else{
+      setOtherData({...otherData, type: payload});
+    }
+    
   }
   //Set Second Step Data
   const handleStepTwo = (e, otherInfo) => {
@@ -78,7 +85,7 @@ const BookAppointment = (props) => {
     let formPayload = { ...formData };
     if (name && name !== undefined && name == "service_id") {
       formPayload["service_id"] = e?.target?.value;
-      formPayload["duration"] = val?.duration;
+      formPayload["duration"] = val?.duration ? val?.duration : val?.custom_duration ;
       formPayload["service_for"] = val?.service_for;
 
       if (val?.service_for == "clinic") {
@@ -115,7 +122,6 @@ const BookAppointment = (props) => {
     else if (name == undefined && e?.target !== undefined && e?.target?.name && e?.target?.value) {
       formPayload[e.target.name] = e?.target?.value;
     }
-    console.log("Setting Payload", formPayload);
     setFormData(formPayload);
     updateOther(val, 3, name);
   }
@@ -154,11 +160,11 @@ const BookAppointment = (props) => {
         let resultSet = [];
         if (data?.providers) {
           resultSet.push({
-            value: "any", label: "Any"
+            value: "any", label: "Any", doctor_profile: ""
           });
           _.forOwn(data.providers, function (value, key) {
             resultSet.push({
-              value: value.user_id, label: `${value.title} ${value.firstname} ${value.lastname}`
+              value: value.user_id, label: `${value.title} ${value.firstname} ${value.lastname}`, doctor_profile: value?.doctor_profile
             });
           });
           setAllProviders(resultSet);
@@ -197,7 +203,6 @@ const BookAppointment = (props) => {
 
         }
 
-       
         // Set Timeslot 
         if (data?.timeSlots) {
           if (data.timeSlots) {
@@ -218,7 +223,6 @@ const BookAppointment = (props) => {
           }
         }
         
-
         //Appointment Created
         if (data?.appointmentId) {
           history.push(`/appointment-detail/${data?.appointmentId}`);
@@ -227,6 +231,7 @@ const BookAppointment = (props) => {
         // Set Timeslot 
         if (data?.doctorData) {
           setDoctorData(data.doctorData);
+          //updateOther({...otherData, "doctor_profile": data?.doctorData?.doctor_profile});
         }
 
         //Set Pet name
@@ -323,7 +328,7 @@ const BookAppointment = (props) => {
   // Get Provider Based On Service Selected
   useEffect(async () => {
     if (formData.service_id) {
-      console.log("Service selected and ", formData);
+      //console.log("Service selected and ", formData);
       setAllProviders([]);
       setCalenderData([]);
       setTimeSlot([]);
@@ -336,16 +341,17 @@ const BookAppointment = (props) => {
   // Get Provider Schedules
   useEffect(async () => {
     if (formData.provider_id) {
-
+      updateOther(formData?.provider_id?.doctor_profile,3, "doctor_profile");
       let request = {
         clinicId: formData.clinic_id,
         serviceId: formData.service_id,
         providerId: formData.provider_id.value,
         appType: formData.type
       }
-      console.log("Doctor Selected", request);
-      //setFormData({ ...formData, slot: "" });
+      console.log("Doctor Selected", request, formData.provider_id);
       await getProviderSchedule(request);
+
+      
     }
   }, [formData.provider_id]);
 
@@ -385,6 +391,7 @@ const BookAppointment = (props) => {
         await getProviderName(payload);
       }
     }
+    
   }, [formData.date, formData.provider_id]);
 
   const updateOther = (payload, step, name) => {
@@ -403,6 +410,11 @@ const BookAppointment = (props) => {
       if (name && name == "provider_name") {
         finalPayload = { ...otherData, provider_name: payload };
       }
+      if (name && name == "doctor_profile") {
+        console.log("Setting doc");
+        finalPayload = { ...otherData, doctor_profile: payload };
+      }
+      
       if (name && name == "date") {
         if(payload){
           finalPayload = { ...otherData, date: moment(payload).format('dddd, MMMM Do YYYY') };
@@ -428,9 +440,14 @@ const BookAppointment = (props) => {
 
   useEffect(() => {
     if (doctorData?.firstname) {
+      console.log("Doctor name setting", doctorData);
       let user_name = `${doctorData?.title} ${doctorData?.firstname} ${doctorData?.lastname}`;
-      updateOther(user_name, 3, "provider_name");
+      setOtherData({...otherData, provider_name: user_name, doctor_profile: doctorData?.doctor_profile});
+      
+      //updateOther(user_name, 3, "provider_name");
+      //updateOther(doctorData?.doctor_profile, 3, "doctor_profile");
     }
+   
   }, [doctorData]);
 
 
@@ -500,7 +517,7 @@ const BookAppointment = (props) => {
               subHeading={"Start your process to book your appointment"}
               hasBtn={false}
             />
-            {/* {JSON.stringify(formData)} */}
+            {/* {JSON.stringify(otherData)} */}
             {currentPage == 1 && <Step1 page={currentPage} onSubmit={handleStepOne} />}
             {currentPage == 2 && <Step2 other={otherData} formData={formData} data={allClinics} page={currentPage} onSubmit={handleStepTwo} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 3 && <Step3 timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}

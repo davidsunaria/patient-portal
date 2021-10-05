@@ -79,8 +79,8 @@ const Step3 = (props) => {
         setIsOpenAccordian(index);
     }
     useEffect(() => {
-        console.log("Date Changed For Child ", props);
-        if (!props.formData.date) {
+        console.log("Date Changed For Child ", !props.formData.date, props.formData.date == "" ? "empty": 'not');
+        if (props.formData.date == "") {
             setSelectedTimeSlot("");
         }
        
@@ -163,7 +163,7 @@ const Step3 = (props) => {
                 }
 
                 {props.data && props.data.length == 0 && <div className="box text-center">No service available</div>}
-
+                
                 {props?.providers && props?.providers.length > 0 && <React.Fragment> <div className="subtitle mt-4 mb-3">Select Doctor</div>
                     <p className="p-text">
                         We recommend selecting “Any” doctor to give you the most
@@ -197,7 +197,8 @@ const Step3 = (props) => {
                 }
                
                 {/* Date-  
-                Slot-{JSON.stringify(props.formData.slot)}<br /><br /> */}
+                Slot-{JSON.stringify(props.formData.slot)}<br /><br />
+                Selected-{JSON.stringify(selectedTimeSlot)}<br /><br /> */}
                 {/*State-{JSON.stringify(openTimePopup)}<br />
                 enabledDates-{JSON.stringify(props?.enabledDates[0])}<br />
                 providers-{JSON.stringify(props?.providers.length)}<br /> */}
@@ -206,27 +207,6 @@ const Step3 = (props) => {
                  
                 {(props?.enabledDates.length > 0 || props?.providers.length > 0 && props.formData.provider_id) && <div className="dateTimeOuter">
                     <div className="AppointmentDate">
-
-                        
-
-                        {/* {props?.formData?.date === "" && props?.enabledDates[0] &&
-                            <React.Fragment>
-                                <div className="react-datepicker-wrapper">
-                                    <div className="react-datepicker__input-container">
-                                        <span>
-                                            <div className="highlightDate">
-                                                {props?.enabledDates[0] && moment(props?.enabledDates[0]).format('MMM')}
-                                                <br />
-                                                {props?.enabledDates[0] && moment(props?.enabledDates[0]).format('DD')}
-                                            </div>
-                                            <label >
-                                                {props?.enabledDates[0] && moment(props?.enabledDates[0]).format('dddd')}
-                                                <br />
-                                                {props?.enabledDates[0] && moment(props?.enabledDates[0]).format('MMMM Do YYYY')}
-                                            </label>
-                                        </span>
-                                    </div></div></React.Fragment>
-                        } */}
                          <DatePicker
                             wrapperClassName={props?.formData?.date ? "" : "appointmentDatePicker"}
                             placeholderText="Select Date"
@@ -239,7 +219,7 @@ const Step3 = (props) => {
                    
                     <div className="AppointmentDate timeSlot" >
 
-                        <label ref={innerRef} onClick={(e) => showTime(e)}>{(selectedTimeSlot) ? selectedTimeSlot : props.formData.slot}</label>
+                        <label ref={innerRef} onClick={(e) => showTime(e)}>{(selectedTimeSlot) ? selectedTimeSlot : ( props.formData.date) ? props.formData.slot : ""}</label>
                         {props.formData && (props.formData.date != undefined || props?.enabledDates[0]) && <div className={(openTimePopup == false) ? "timeslotPopup d-none" : "timeslotPopup"}>
 
                             {props.slot && Object.values(props.slot).map((val, index) => (

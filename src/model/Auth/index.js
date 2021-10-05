@@ -100,6 +100,7 @@ const authModel = {
 		} else if (response && response.statuscode == 200) {
 			await actions.setIsOtpVerified(true);
 			getStoreActions().common.setLoading(false);
+			await actions.setResponse(response.data);
 			return true;
 		}
 		else {

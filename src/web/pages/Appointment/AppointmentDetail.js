@@ -17,6 +17,7 @@ const AppointmentDetail = () => {
   const [otherData, setOtherData] = useState({});
   const [petData, setPetData] = useState({});
   const [accountInfo, setAccountInfo] = useState({});
+  const [doctorData, setDoctorData] = useState({});
 
   const getAppointmentDetail = useStoreActions((actions) => actions.appointment.getAppointmentDetail);
   const response = useStoreState((state) => state.appointment.response);
@@ -35,6 +36,7 @@ const AppointmentDetail = () => {
           setPetData(data.pet_info);
           setOtherData(data.otherData);
           setAccountInfo(data.accountInfo);
+          setDoctorData(data.doctorData);
         }
       }
     }
@@ -76,11 +78,11 @@ const AppointmentDetail = () => {
                         <div className="appointmentConfirmIcons">
                           {appointmentData?.status == "canceled" && <spanc className="appointmentConfirmText colorRed">Canceled</spanc>}
 
-                          {appointmentData?.appointment_type == "in_person" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`https://www.google.com/maps?saddr=My+Location&daddr=${appointmentData?.clinic?.address}`}><img src={LOCATION_IMAGE} /></a>
+                          {appointmentData?.appointment_type == "in_person" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`${appointmentData?.clinic?.business_link}`}><img src={LOCATION_IMAGE} /></a>
                             <a href={`tel:${appointmentData?.phone_code}`}><img src={CONTACT_IMAGE} /></a></React.Fragment>
                           }
 
-                          {appointmentData?.appointment_type == "virtual" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`https://www.google.com/maps?saddr=My+Location&daddr=${accountInfo?.address}`}>
+                          {appointmentData?.appointment_type == "virtual" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`${accountInfo?.business_link}`}>
                             <img src={LOCATION_IMAGE} /></a>
                           </React.Fragment>
                           }
@@ -102,6 +104,11 @@ const AppointmentDetail = () => {
                         <div className="appointmentConfirmText">Name: {petData?.name}</div>
                         <div className="appointmentConfirmText">Breed: {petData?.breedmap?.name}</div>
                         <div className="appointmentConfirmText">Age: {getAge(petData?.dob)}</div>
+                      </div>
+                      <div className="appointmentConfirmSection">
+                        <div className="appointmentConfirmTitle">Doctor Info</div>
+                        <div className="appointmentConfirmText">Name: {doctorData?.firstname} {doctorData?.lastname}</div>
+                        <div className="appointmentConfirmText">Email: {doctorData?.email}</div>
                       </div>
                       <div className="appointmentConfirmSection border-0">
                         <div className="appointmentConfirmTitle">Date & Time</div>

@@ -466,7 +466,7 @@ const AddPet = (props) => {
                             </div>
                           </div>
                         </div>
-                        <div className="col-sm-6">
+                        {/* <div className="col-sm-6">
                           <div className="fieldOuter">
                             <label className="fieldLabel">Tags</label>
                             <div className="fieldBox">
@@ -481,7 +481,7 @@ const AddPet = (props) => {
                               />
                             </div>
                           </div>
-                        </div>
+                        </div> */}
 
                         <div className="col-sm-6">
                           <div className="fieldOuter">

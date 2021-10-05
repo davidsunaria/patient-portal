@@ -2271,3 +2271,44 @@ color: red!important;
         font-size: 13px;
     }
 }
+.doctorNameAppointment{
+    position:relative;
+    p{padding-right:10px;}
+    img{
+        position: absolute;
+        right:11px;
+        top:36px;
+    }
+}
+.servicePopupOuter.popupWrapper{
+    position:relative;
+    padding:5px 20px 20px;
+    .popupTitle{
+        min-height:10px;
+    }
+    .cross{
+        position:absolute;
+        top:0px;
+        right:-8px;
+    }
+    .servicesDetailPic{
+        width: 100px;
+        height: 100px;
+        float: left;
+        margin-right: 15px;
+        margin-bottom: 10px;
+        object-fit: cover;
+        object-position: center;
+        overflow: hidden;
+        border-radius: 100px;
+    }
+    .doctorName{
+        font-size:16px;
+        font-weight:600;
+    }
+    .doctorSpecilist{
+        font-size:12px;
+        margin-bottom:15px;
+        font-weight:600;
+    }
+}

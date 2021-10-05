@@ -17,7 +17,7 @@ const VerifyOtp = (props) => {
   const sendOTP = useStoreActions((actions) => actions.auth.sendOTP);
   const sendForgotPasswordOTP = useStoreActions((actions) => actions.auth.sendForgotPasswordOTP);
   const isOtpVerified = useStoreState((state) => state.auth.isOtpVerified);
-
+  const response = useStoreState((state) => state.auth.response);
   const { labelData } = useContext(LanguageContext);
   const [formData, setFormData] = useState({
     otp: "",
@@ -61,6 +61,7 @@ const VerifyOtp = (props) => {
     }
   }, [isOtpVerified])
 
+  
   return (
     <React.Fragment>
 

@@ -52,9 +52,13 @@ const SignupComplete = (props) => {
 
   useEffect(() => {
     if (response) {
-      let { accountInfo } = response;
+      console.log(response)
+      let { accountInfo, client } = response;
       if (accountInfo) {
         setTitle(accountInfo.name);
+      }
+      if(client){
+        setFormData({...formData, firstname:client?.firstname , lastname: client?.lastname, email: client?.email });
       }
     }
   }, [response]);

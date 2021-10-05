@@ -18,7 +18,9 @@ import NoRecord from "patient-portal-components/NoRecord";
 import { getLoggedinUserId } from "patient-portal-utils/Service";
 const AppointmentCard = (props) => {
     const lastScrollTop = useRef(0);
-    const [accountInfo,setAccountInfo] = useState();
+    const [cancellationPolicyStatus, setCancellationPolicyStatus] = useState("");
+    const [serviceId, setServiceId] = useState("");
+    const [accountInfo, setAccountInfo] = useState();
     const [appointments, setAppointments] = useState([]);
     const [records, setRecords] = useState([]);
     const [page, setPage] = useState(0);
@@ -78,10 +80,11 @@ const AppointmentCard = (props) => {
                 }
                 if (data.cancellationPolicy) {
                     setPolicyData(data.cancellationPolicy);
+                    setCancellationPolicyStatus(data.cancellationPolicy.cancellation_policy_status);
                 }
 
-                if(data?.appointments){
-                   
+                if (data?.appointments) {
+
                     const { current_page, next_page_url, per_page } = data.appointments;
 
                     setCurrentPage(current_page);
@@ -98,16 +101,16 @@ const AppointmentCard = (props) => {
                     }
                     setIsBottom(false);
                 }
-                
+
             }
         }
     }, [response]);
-    const cancelApp = async (e) => {
+    const cancelApp = async (e, service_id) => {
         if (!e.target) {
-            await getCancellationPolicy();
+            await getCancellationPolicy(service_id);
         }
         setAppointmentId(e);
-        setPolicyModal(!policyModal);
+        //setPolicyModal(!policyModal);
     };
     useEffect(() => {
         if (isCancelled) {
@@ -131,7 +134,7 @@ const AppointmentCard = (props) => {
         if (props.type == "past") {
             await getPastAppointments({
                 clientId: getLoggedinUserId(), query: {
-                    ...formData,page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
+                    ...formData, page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
                 }
             });
         }
@@ -154,7 +157,7 @@ const AppointmentCard = (props) => {
             }
         }
     }, [isRescheduled, isCancelled]);
-    
+
 
     const handleScroll = useCallback((e) => {
         const scrollTop = parseInt(Math.max(e?.srcElement?.scrollTop));
@@ -183,7 +186,7 @@ const AppointmentCard = (props) => {
         if (page && page > 1) {
             console.log('Get next page ', page)
             console.log('Get next page payload ', formData)
-            
+
             if (props.type == "upcoming") {
                 await getUpcomingAppointments({
                     clientId: getLoggedinUserId(), query: {
@@ -203,16 +206,31 @@ const AppointmentCard = (props) => {
         }
     }, [page]);
 
-    const onCancelAppointment = async(id) => {
+    const onCancelAppointment = async (id) => {
         await cancelAppointment({ id: id, clientId: getLoggedinUserId() });
-      }
+    }
+
+    useEffect(() => {
+        console.log("Cancel cancellationPolicyStatus", cancellationPolicyStatus);
+        if(cancellationPolicyStatus === 1){
+            setPolicyModal(true);
+        }
+        if(cancellationPolicyStatus === 0){
+           onCancelAppointment(appointmentId);
+        }
+    }, [cancellationPolicyStatus]);
+
+    const hideModal = () => {
+        setPolicyModal(false);
+        setCancellationPolicyStatus("");
+    }
     return (
         <React.Fragment>
             <RescheduleAppointment data={modalData} modal={modal} toggle={toggle} />
             <Contact data={clinicData} modal={contactModal} toggle={showContact} />
-            <CancellationPolicy onCancelAppointment={onCancelAppointment} id={appointmentId} data={policyData} modal={policyModal} toggle={cancelApp} />
+            <CancellationPolicy onCancelAppointment={onCancelAppointment} serviceId={serviceId} id={appointmentId} data={policyData} modal={policyModal} toggle={hideModal} />
 
-        {/* {JSON.stringify(records)} */}
+            {/* {JSON.stringify(records)} */}
             {records && records.length > 0 ? (
                 records.map((val, index) => (
                     // 
@@ -236,7 +254,7 @@ const AppointmentCard = (props) => {
                                     </li>
                                     }
                                     {(props.type == "upcoming" && val.status != "canceled") && <li>
-                                        <a onClick={() => cancelApp(val?.id)} >
+                                        <a onClick={() => cancelApp(val?.id, val?.service_id)} >
                                             <img src={CANCEL_IMAGE} />
                                             Cancel
                                         </a>
@@ -248,9 +266,9 @@ const AppointmentCard = (props) => {
                                         </a>
                                     </li>
 
-                                    {(props.type == "upcoming" && val.appointment_type == "in_person"  && val.status != "canceled") && <li>
-                                    
-                                        <a target="_blank" href={`https://www.google.com/maps?saddr=My+Location&daddr=${val?.clinic?.address}`}>
+                                    {(props.type == "upcoming" && val.appointment_type == "in_person" && val.status != "canceled") && <li>
+
+                                        <a target="_blank" href={`${val?.clinic?.business_link}`}>
                                             <img src={DIRECTION_IMAGE} />
                                             Get Direction
                                         </a>
@@ -261,13 +279,13 @@ const AppointmentCard = (props) => {
                             <div onClick={() => history.push(`/appointment-detail/${val?.id}`)}>
                                 <div className="row">
                                     <div className="col pb-2">
-                                        { val?.appointment_type == "virtual" && 
-                                        <><label>Clinic</label>
-                                        <h5>{accountInfo?.name}</h5></>}
+                                        {val?.appointment_type == "virtual" &&
+                                            <><label>Clinic</label>
+                                                <h5>{accountInfo?.name}</h5></>}
 
-                                        { val?.appointment_type == "in_person" && 
-                                        <><label>Clinic</label>
-                                        <h5>{val?.clinic?.clinic_name}</h5></>}
+                                        {val?.appointment_type == "in_person" &&
+                                            <><label>Clinic</label>
+                                                <h5>{val?.clinic?.clinic_name}</h5></>}
 
                                         <span>{formatDate(val.appointment_datetime, 3)}, {formatDate(val.appointment_datetime, 4)}</span>
                                     </div>
@@ -291,8 +309,8 @@ const AppointmentCard = (props) => {
                                     </div>
                                     <div className="col-lg-3 col-sm-6 py-2">
                                         <label>Note</label>
-                                        <p dangerouslySetInnerHTML={{  __html:(val?.appointment_notes && val?.appointment_notes.includes("Follow-up from a")) ? "Follow-up from a previous visit" : val?.appointment_notes}}/>
-                                        
+                                        <p dangerouslySetInnerHTML={{ __html: (val?.appointment_notes && val?.appointment_notes.includes("Follow-up from a")) ? "Follow-up from a previous visit" : val?.appointment_notes }} />
+
                                     </div>
                                     {val?.status == "canceled" && <div className="col-lg-3 col-sm-6 py-2">
                                         <label>Status</label>
