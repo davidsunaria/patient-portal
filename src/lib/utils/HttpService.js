@@ -78,5 +78,6 @@ const objectToQuery = (obj) => {
   return (obj) ? Object.entries(obj).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&") : '';
 }
 const apiUrl = process.env.REACT_APP_PATIENTPORTAL_API;
+const bookApiUrl = process.env.REACT_APP_BOOKING_PORTAL_URL;
 
-export { objectToQuery, axiosApi, apiUrl};
+export { objectToQuery, axiosApi, apiUrl, bookApiUrl};

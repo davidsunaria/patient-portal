@@ -17,6 +17,7 @@ const InvoiceDetail = (props) => {
     const [paymentRecords, setPaymentRecords] = useState([]);
     const getInvoice = useStoreActions((actions) => actions.invoice.getInvoice);
     const downloadInvoice = useStoreActions((actions) => actions.invoice.downloadInvoice);
+    const payInvoice = useStoreActions((actions) => actions.invoice.payInvoice);
 
     const response = useStoreState((state) => state.invoice.response);
     useEffect(async () => {
@@ -37,6 +38,10 @@ const InvoiceDetail = (props) => {
                     setDownloadUrl(data?.file_url);
                 }
 
+                if (data?.redirect_url) {
+                    window.open(data?.redirect_url,"_self");
+                }
+
             }
         }
     }, [response]);
@@ -50,6 +55,14 @@ const InvoiceDetail = (props) => {
         }
 
     }, [downloadUrl]);
+
+    const payNow = async(invoiceId) => {
+        let payload = {
+            id: invoiceId,
+            type: 'Web'
+        }
+        await payInvoice(payload);
+    }
     return (
         <React.Fragment>
             <div className="content_outer">
@@ -192,7 +205,9 @@ const InvoiceDetail = (props) => {
                                         <button className="button primary" onClick={() => download(invoiceData?.id)}>
                                             Download
                                         </button>
-
+                                    { (invoiceData?.status == "ready" || invoiceData?.status == "partial") &&   <button className="button primary" onClick={() => payNow(invoiceData?.id)}>
+                                            Pay Now
+                                        </button>}
                                     </div>
                                 </div>
                             </div>

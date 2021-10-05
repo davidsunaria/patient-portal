@@ -1,4 +1,4 @@
-import { axiosApi, apiUrl, objectToQuery } from "patient-portal-utils/HttpService.js";
+import { axiosApi, apiUrl, objectToQuery, bookApiUrl } from "patient-portal-utils/HttpService.js";
 
 export const getInvoices = async (formData) => {
   let query;
@@ -36,5 +36,11 @@ export const getAllClinics = async (formData) => {
     return error?.response?.data;
   }
 };
-
-
+export const payInvoice = async (formData) => {
+	try {
+		let response = await axiosApi.post(`${bookApiUrl}invoice-payment`, formData);
+		return response?.data;
+	} catch (error) {
+		return error?.response?.data;
+	}
+};

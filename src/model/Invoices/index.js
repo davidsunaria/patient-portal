@@ -1,7 +1,7 @@
 import { action, thunk } from "easy-peasy";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import { getInvoices, getInvoice, downloadInvoice, getAllClinics } from "patient-portal-api/InvoiceApi.js";
+import { getInvoices, getInvoice, downloadInvoice, getAllClinics, payInvoice } from "patient-portal-api/InvoiceApi.js";
 const invoiceModel = {
   response: [],
   setResponse: action((state, payload) => {
@@ -62,8 +62,21 @@ const invoiceModel = {
       getStoreActions().common.setLoading(false);
       return true;
     }
+  }),
+  payInvoice: thunk(async (actions, payload, { getStoreActions }) => {
+    getStoreActions().common.setLoading(true);
+    let response = await payInvoice(payload);
+    if (response && response.statuscode != 200) {
+      toast.error(<ToastUI message={response.message} type={"Error"} />);
+      getStoreActions().common.setLoading(false);
+    } else if (response && response.statuscode == 200) {
+      await actions.setResponse(response);
+      getStoreActions().common.setLoading(false);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
+    }
   })
-
 
 };
 
