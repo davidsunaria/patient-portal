@@ -22,14 +22,18 @@ import { getLoggedinUserId, getProfileCompleted } from "patient-portal-utils/Ser
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import DEFAULT_PET from "patient-portal-images/ic_pet_placeholder.png";
 import { addDays } from 'date-fns';
-import { FILE_SELECT,FILE_UNSELECT } from "patient-portal-message";
+import { FILE_SELECT, FILE_UNSELECT } from "patient-portal-message";
 import AddNewPetConfirmation from "patient-portal-components/Pets/AddNewPetConfirmation"
+import PetProfilePic from "patient-portal-components/Modal/PetProfilePic";
 
 
 // https://stackoverflow.com/questions/57594045/validation-using-formik-with-yup-and-react-select
 const AddPet = (props) => {
   const history = useHistory();
   const calendarRef = useRef();
+  const [modal, setModal] = useState(false);
+  const [modalData, setModalData] = useState("");
+  const [payloadData, setPayloadData] = useState();
   const [canAddPetModal, setCanAddPetModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState("");
@@ -58,7 +62,7 @@ const AddPet = (props) => {
   const getBreeds = useStoreActions((actions) => actions.pet.getBreeds);
   const response = useStoreState((state) => state.pet.response);
   const isPetCreated = useStoreState((state) => state.pet.isPetCreated);
-  
+
   const addPet = async (payload) => {
     let pageData = { ...payload };
     pageData.breed = pageData.breed.value;
@@ -81,8 +85,14 @@ const AddPet = (props) => {
     formData.append("is_aggressive", "");
     formData.append("allergic_medicine", "");
     formData.append("antibiotic_reaction", "");
-
-    await createPet(formData);
+    setPayloadData(formData);
+    if (!file) {
+      setModal(true);
+      setModalData(formData);
+    }
+    else{
+      await createPet(formData);
+    }
   }
   useEffect(async () => {
     await getSpecies();
@@ -138,6 +148,7 @@ const AddPet = (props) => {
 
   const onFileChange = async event => {
     const imageFile = event.target.files[0];
+    console.log("FIle", imageFile)
     if (imageFile) {
 
       if (!imageFile.name.match(/\.(jpg|jpeg|png|gif)$/)) {
@@ -164,14 +175,14 @@ const AddPet = (props) => {
 
   useEffect(() => {
     console.log("isPetCreated", isPetCreated)
-    if(isPetCreated){
-      
+    if (isPetCreated) {
+
       let res = getProfileCompleted();
       console.log("res", res)
-      if(res.isPetCompleted == 1){
+      if (res.isPetCompleted == 1) {
         history.push("/pets");
       }
-      else{
+      else {
         setCanAddPetModal(true);
       }
     }
@@ -198,12 +209,26 @@ const AddPet = (props) => {
     setCanAddPetModal(false);
     history.push("/pets");
   }
-  
+
   const canAdd = (id) => {
     setCanAddPetModal(!canAddPetModal);
   };
+
+  const toggle = async (data) => {
+    setModal(!modal);
+  }
+  const onAction = async(action) => {
+    setModal(false);
+    if (action === 'no') {
+      await createPet(payloadData);
+    }
+    if (action === 'yes') {
+      document.getElementById("file").click();
+    }
+  }
   return (
     <React.Fragment>
+      <PetProfilePic onAction={onAction} onNo={toggle} data={modalData} modal={modal} toggle={toggle} />
       <AddNewPetConfirmation modal={canAddPetModal} toggle={canAdd} onCancelPet={onCancelPet} onAddPet={canAddPet} />
       <div className="content_outer">
         <Sidebar activeMenu="pets" />
@@ -225,7 +250,7 @@ const AddPet = (props) => {
                 onSubmit={async (values, { resetForm }) => {
                   //setFormData(JSON.stringify(values, null, 2))
                   addPet(values);
-                  resetForm({});
+                  //resetForm({});
                 }}
                 validationSchema={AddEditPetSchema}
               >
@@ -249,7 +274,7 @@ const AddPet = (props) => {
                         {!file && <img src={DEFAULT_PET} />}
                         <a className="editPicOverlay">
                           <img src={EDIT_PROFILE_IMAGE} />
-                          <input type="file" onChange={onFileChange} />
+                          <input type="file" id="file" onChange={onFileChange} />
                         </a>
                         <p>Please upload pet photo</p>
                       </div>
@@ -298,7 +323,7 @@ const AddPet = (props) => {
                                 options={allSpecies}
                                 onChange={selectedOption => {
                                   let event = { target: { name: 'species', value: selectedOption } }
-                                 
+
                                   setSelectedSpecies(selectedOption.value);
                                   if (selectedOption.value != "Other") {
                                     props.setFieldValue("breed_name", "");
@@ -396,7 +421,7 @@ const AddPet = (props) => {
                             <div className="fieldBox fieldIcon">
 
                               <DatePicker
-                              maxDate={new Date()}
+                                maxDate={new Date()}
                                 placeholderText="DOB"
                                 ref={calendarRef}
                                 className="fieldInput"

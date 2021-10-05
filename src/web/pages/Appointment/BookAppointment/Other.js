@@ -11,17 +11,8 @@ const Other = (props) => {
   const toggle = async (data) => {
     setModal(!modal);
     setModalData(data);
-}
-
-
-  const openDoctorProfile = () => {
-    if(!props?.formData?.provider_id && props?.other?.doctor_profile){
-      console.log("Any")
-    }
-    if(props?.other?.provider_id?.doctor_profile){
-      console.log(2)
-    }
   }
+
   return (
     <React.Fragment>
       <DoctorProfile data={modalData} modal={modal} toggle={toggle} />

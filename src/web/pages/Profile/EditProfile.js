@@ -17,9 +17,13 @@ import * as _ from "lodash";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { FILE_SELECT,FILE_UNSELECT } from "patient-portal-message";
 import { PROFILE_SETUP, PROFILE_COMPLETE, PET_PROFILE_COMPLETE, PET_PROFILE_COMPLETE_DASHBOARD } from "patient-portal-message";
+import ProfilePic from "patient-portal-components/Modal/ProfilePic";
 
 const EditProfile = (props) => {
   const history = useHistory();
+  const [modal, setModal] = useState(false);
+  const [modalData, setModalData] = useState("");
+  const [payloadData, setPayloadData] = useState();
   const { ProfileSchema } = useProfileValidation();
   const initvalues = {
     id: '',
@@ -143,7 +147,14 @@ const EditProfile = (props) => {
       formData.append("profile_image", file);
     }
     //console.log("formData", formData);
-    await updateMyProfile(formData);
+    setPayloadData(formData);
+    if (!file && !userData?.user_image) {
+      setModal(true);
+      setModalData(formData);
+    }
+    else{
+      await updateMyProfile(formData);
+    }
   }
   const onFileChange = async event => {
     const imageFile = event.target.files[0];
@@ -169,9 +180,22 @@ const EditProfile = (props) => {
     // free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(objectUrl)
   }, [file]);
+
+  const toggle = async (data) => {
+    setModal(!modal);
+  }
+  const onAction = async(action) => {
+    setModal(false);
+    if (action === 'no') {
+      await updateMyProfile(payloadData);
+    }
+    if (action === 'yes') {
+      document.getElementById("file").click();
+    }
+  }
   return (
     <React.Fragment>
-
+<ProfilePic onAction={onAction} onNo={toggle} data={modalData} modal={modal} toggle={toggle} />
       <div className="content_outer">
         <Sidebar activeMenu="profile" />
         <div className="right_content_col">

@@ -22,6 +22,7 @@ import { getLoggedinUserId } from "patient-portal-utils/Service";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import DEFAULT_PET from "patient-portal-images/ic_pet_placeholder.png";
 import { FILE_SELECT,FILE_UNSELECT } from "patient-portal-message";
+import PetProfilePic from "patient-portal-components/Modal/PetProfilePic";
 
 
 // https://stackoverflow.com/questions/57594045/validation-using-formik-with-yup-and-react-select
@@ -29,6 +30,9 @@ const EditPet = (props) => {
   const {id} = useParams();
   const history = useHistory();
   const calendarRef = useRef();
+  const [modal, setModal] = useState(false);
+  const [modalData, setModalData] = useState("");
+  const [payloadData, setPayloadData] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState("");
   const [showBreedName, setShowBreedName] = useState(false);
@@ -84,7 +88,15 @@ const EditPet = (props) => {
     formData.append("allergic_medicine", "");
     formData.append("antibiotic_reaction", "");
 
-    await updatePet(formData);
+    setPayloadData(formData);
+    if (!file) {
+      setModal(true);
+      setModalData(formData);
+    }
+    else{
+      await updatePet(formData);
+    }
+    
   }
   useEffect(async () => {
     await getSpecies();
@@ -188,9 +200,22 @@ const EditPet = (props) => {
     }
   }, [isPetUpdated]);
 
+  const toggle = async (data) => {
+    setModal(!modal);
+  }
+  const onAction = async(action) => {
+    setModal(false);
+    if (action === 'no') {
+      await updatePet(payloadData);
+    }
+    if (action === 'yes') {
+      document.getElementById("file").click();
+    }
+  }
   return (
     
     <React.Fragment>
+       <PetProfilePic onAction={onAction} onNo={toggle} data={modalData} modal={modal} toggle={toggle} />
       <div className="content_outer">
         <Sidebar activeMenu="pets" />
         <div className="right_content_col">
@@ -237,7 +262,7 @@ const EditPet = (props) => {
                       {!file && values?.pet_image &&  <img src={values.pet_image} />}
                         <a className="editPicOverlay">
                           <img src={EDIT_PROFILE_IMAGE} />
-                          <input type="file" onChange={onFileChange} />
+                          <input type="file" id="file" onChange={onFileChange} />
                         </a>
                         <p>Please upload pet photo</p>
                       </div>
