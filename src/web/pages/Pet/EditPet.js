@@ -66,35 +66,35 @@ const EditPet = (props) => {
     pageData.breed = pageData.breed.value;
     pageData.species = pageData.species.value;
 
-    let formData = new FormData();
+    let form = new FormData();
     
-    formData.append("pet_id", pageData.id);
-    formData.append("name", pageData.name);
-    formData.append("species", pageData.species);
-    formData.append("breed", (pageData.breed == "other") ? "Other" :  pageData.breed);
-    formData.append("breed_name",pageData.breed == "other" ? pageData.breed_name : "");
-    formData.append("gender", pageData.gender);
-    formData.append("dob", pageData.dob);
-    formData.append("neutered", (pageData.neutered) ? pageData.neutered : "");
+    form.append("pet_id", pageData.id);
+    form.append("name", pageData.name);
+    form.append("species", pageData.species);
+    form.append("breed", (pageData.breed == "other") ? "Other" :  pageData.breed);
+    form.append("breed_name",pageData.breed == "other" ? pageData.breed_name : "");
+    form.append("gender", pageData.gender);
+    form.append("dob", pageData.dob);
+    form.append("neutered", (pageData.neutered) ? pageData.neutered : "");
     if(file){
-      formData.append("profile_image", (file) ? file : '');
+      form.append("profile_image", (file) ? file : '');
     }
-    formData.append("client_id", getLoggedinUserId());
-    formData.append("weight", (pageData.weight !== null && pageData.weight !== undefined) ? pageData.weight : "");
-    formData.append("tags", (pageData.tags) ? pageData.tags : "");
-    formData.append("microchip_no", (pageData.microchip_no) ? pageData.microchip_no : '');
-    formData.append("mcd_no", (pageData.mcd_no && pageData.mcd_no != undefined) ? pageData.mcd_no : '');
-    formData.append("is_aggressive", "");
-    formData.append("allergic_medicine", "");
-    formData.append("antibiotic_reaction", "");
+    form.append("client_id", getLoggedinUserId());
+    form.append("weight", (pageData.weight !== null && pageData.weight !== undefined) ? pageData.weight : "");
+    form.append("tags", (pageData.tags) ? pageData.tags : "");
+    form.append("microchip_no", (pageData.microchip_no) ? pageData.microchip_no : '');
+    form.append("mcd_no", (pageData.mcd_no && pageData.mcd_no != undefined) ? pageData.mcd_no : '');
+    form.append("is_aggressive", "");
+    form.append("allergic_medicine", "");
+    form.append("antibiotic_reaction", "");
 
-    setPayloadData(formData);
-    if (!file) {
+    setPayloadData(form);
+    if (!file && !formData.pet_image) {
       setModal(true);
-      setModalData(formData);
+      setModalData(form);
     }
     else{
-      await updatePet(formData);
+      await updatePet(form);
     }
     
   }
