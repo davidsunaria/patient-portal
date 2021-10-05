@@ -41,7 +41,7 @@ const Reports = (props) => {
       page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
     }
     await getReports({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
-    window.addEventListener('scroll', (e) => handleScroll(e));
+    window.addEventListener('scroll', (e) => handleScroll(e), true);
     return () => {
       window.removeEventListener('scroll', (e) => handleScroll(e))
     };

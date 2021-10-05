@@ -21,8 +21,10 @@ const VaccinationRecord = (props) => {
 
     const lastScrollTop = useRef(0)
     const handleScroll = useCallback((e) => {
+        console.log("Heik", e);
         const scrollTop = parseInt(Math.max(e?.srcElement?.scrollTop));
         let st = scrollTop;
+        
         if (st > lastScrollTop.current) {
             if (scrollTop + window.innerHeight + 50 >= e?.srcElement?.scrollHeight) {
                 setIsBottom(true);
@@ -34,7 +36,7 @@ const VaccinationRecord = (props) => {
             lastScrollTop.current = st <= 0 ? 0 : st;
         }, 0)
     }, []);
-
+   
     useEffect(async () => {
         if (props.petId) {
             console.log("vaccination records");
@@ -42,7 +44,7 @@ const VaccinationRecord = (props) => {
                 page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
             }
             await getVaccinationRecord({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
-            window.addEventListener('scroll', (e) => handleScroll(e));
+            window.addEventListener('scroll', (e) => handleScroll(e),true);
             return () => {
                 window.removeEventListener('scroll', (e) => handleScroll(e))
             };
@@ -137,7 +139,7 @@ const VaccinationRecord = (props) => {
     }, [props.petId, props.visitId]);
     return (
         <React.Fragment>
-            <div >
+            <div>
                 {records && records.length > 0 ? (
                     records.map((val, index) => (
                         <div key={index} className="box recordCard">
@@ -155,9 +157,8 @@ const VaccinationRecord = (props) => {
                     <NoRecord />
                    
                 )}
-
+    
             </div>
-
 
         </React.Fragment>
     );

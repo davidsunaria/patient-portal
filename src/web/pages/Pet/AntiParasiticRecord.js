@@ -39,7 +39,7 @@ const AntiParasiticRecord = (props) => {
         page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
       }
       await getAntiParasiticRecord({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
-      window.addEventListener('scroll', (e) => handleScroll(e));
+      window.addEventListener('scroll', (e) => handleScroll(e), true);
       return () => {
         window.removeEventListener('scroll', (e) => handleScroll(e))
       };
@@ -138,13 +138,13 @@ const AntiParasiticRecord = (props) => {
       {records && records.length > 0 ? (
         records.map((val, index) => (
           <div key={index} className="box recordCard">
-
+{/* 
             {<div className={`  ${val.status == "completed" ? "dueDate green" : (val.due_date && "dueDate "+getDuedate(val))}`}>
               {val.status == "pending" && <span> {(val.due_date) ? "Due:"+showFormattedDate(val?.due_date, false) : ''} </span>}
               {val.status == "completed" && <span>Completed</span>}
-            </div>}
+            </div>} */}
 
-
+{val.due_date && <div className={`dueDate ${getDuedate(val)}`}> {(val.due_date) ? "Due:"+showFormattedDate(val?.due_date, false) : ''}</div>}
 
             <div className="recordDate">
               <span>{(val.d_date) ? formatDate(val?.d_date, 1, false) : ''}</span>
