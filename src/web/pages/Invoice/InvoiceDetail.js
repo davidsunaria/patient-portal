@@ -202,7 +202,7 @@ const InvoiceDetail = (props) => {
                                         </div>
                                     </div>
                                     <div className="d-flex mt-3">
-                                        <button className="button primary" onClick={() => download(invoiceData?.id)}>
+                                        <button className="button primary mr-2" onClick={() => download(invoiceData?.id)}>
                                             Download
                                         </button>
                                     { (invoiceData?.status == "ready" || invoiceData?.status == "partial") &&   <button className="button primary" onClick={() => payNow(invoiceData?.id)}>
