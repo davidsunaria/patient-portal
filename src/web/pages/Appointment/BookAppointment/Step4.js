@@ -52,7 +52,7 @@ const Step4 = (props) => {
                     </div>
                     <div className="box">
                         <textarea
-                            value={props.formData.appointment_notes}
+                            value={props.formData?.appointment_notes}
                             name="appointment_notes"
                             className="appointmentNote"
                             onChange={(e) => props.onSubmit(e)}

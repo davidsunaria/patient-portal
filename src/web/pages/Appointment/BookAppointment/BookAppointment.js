@@ -128,8 +128,8 @@ const BookAppointment = (props) => {
 
   const handleStepFour = (e, name, val) => {
     let formPayload = { ...formData };
-
-    if (e?.target !== undefined && e?.target?.name && e?.target?.value) {
+    //console.log(e?.target?.name, e?.target?.value)
+    if (e?.target?.name) {
       formPayload[e.target.name] = e?.target?.value;
     }
     setFormData(formPayload);
@@ -168,6 +168,7 @@ const BookAppointment = (props) => {
             });
           });
           setAllProviders(resultSet);
+          setFormData({ ...formData, provider_id: {value: "any", label: "Any"} });
         }
         // Set Providers Schedule
         if (data?.enabledDates) {
@@ -440,12 +441,9 @@ const BookAppointment = (props) => {
 
   useEffect(() => {
     if (doctorData?.firstname) {
-      console.log("Doctor name setting", doctorData);
+      //console.log("Doctor name setting", doctorData);
       let user_name = `${doctorData?.title} ${doctorData?.firstname} ${doctorData?.lastname}`;
       setOtherData({...otherData, provider_name: user_name, doctor_profile: doctorData?.doctor_profile});
-      
-      //updateOther(user_name, 3, "provider_name");
-      //updateOther(doctorData?.doctor_profile, 3, "doctor_profile");
     }
    
   }, [doctorData]);
