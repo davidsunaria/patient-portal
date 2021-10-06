@@ -131,7 +131,7 @@ const BookAppointment = (props) => {
     let formPayload = { ...formData };
     
     if (name && name == "pet_id" && val != "") {
-      console.log("->>>>",e, name, val)
+      //console.log("->>>>",e, name, val)
       formPayload[name] = val.id;
     }
     if (e?.target?.name) {
