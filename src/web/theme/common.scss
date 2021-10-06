@@ -1608,6 +1608,9 @@ input:checked + .slider:after {
 .infoIcon{
     float:right;
     margin-top:3px;
+    padding: 0px 5px;
+    margin-right: 0px;
+    cursor: pointer;
 }
 .invoiceDetail{
     display:block;
