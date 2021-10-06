@@ -84,8 +84,9 @@ const BookAppointment = (props) => {
     
     let formPayload = { ...formData };
     if (name && name !== undefined && name == "service_id") {
+      //console.log('val', val);
       formPayload["service_id"] = e?.target?.value;
-      formPayload["duration"] = val?.duration ? val?.duration : val?.custom_duration ;
+      formPayload["duration"] = (val?.duration) ? val?.duration : val?.custom_duration ;
       formPayload["service_for"] = val?.service_for;
 
       if (val?.service_for == "clinic") {
@@ -403,7 +404,7 @@ const BookAppointment = (props) => {
     if (step == 3) {
 
       if (name && name == "service_id") {
-        finalPayload = { ...otherData, service_name: payload?.name, service_duration: payload?.duration, service_description: payload?.description };
+        finalPayload = { ...otherData, service_name: payload?.name, service_duration: (payload?.duration) ? payload?.duration : payload?.custom_duration, service_description: payload?.description };
       }
       if (name && name == "provider_id") {
         finalPayload = { ...otherData, provider_name: payload?.label };
@@ -485,9 +486,9 @@ const BookAppointment = (props) => {
       if (!formData.pet_id) {
         toast.error(<ToastUI message={SELECT_PET} type={"Error"} />);
       }
-      else if (!formData.appointment_notes) {
-        toast.error(<ToastUI message={SELECT_APPOINTMENT_NOTES} type={"Error"} />);
-      }
+      // else if (!formData.appointment_notes) {
+      //   toast.error(<ToastUI message={SELECT_APPOINTMENT_NOTES} type={"Error"} />);
+      // }
       else {
         response = true;
       }

@@ -21,7 +21,7 @@ const Service = (props) => {
     
              { props?.data?.service_type == "virtual" && props?.data?.collect_payment_before_booking == 1 && <div className="serviceDetailRow">
                 <label>Price</label>
-                <div>{numberFormat(props?.data?.price, 'currency', 2, 2)}</div>
+                <div>{numberFormat(props?.data?.price_including_tax, 'currency', 2, 2)}</div>
               </div>}
             </div>
           </div>
