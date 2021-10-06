@@ -55,7 +55,7 @@ const BookAppointment = (props) => {
     let formPayload = { ...formData };
     formPayload.type = payload;
     formPayload.client_id = getLoggedinUserId();
-    formPayload.clinic_id = clinicData.id;
+    formPayload.clinic_id = clinicData?.id;
     setFormData(formPayload);
     //Reset Page For Virtual
     if (payload == "virtual") {
