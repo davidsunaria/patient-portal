@@ -307,13 +307,14 @@ export function getAge(dob) {
     age.add(diff, interval);
     out.push(diff);
   });
+  //console.log(out);
   if (out[0]) {
     string.push(`${out[0]}Y`);
   }
   if (out[1]) {
     string.push(`${out[1]}M`);
   }
-  if (!out[0] && !out[1] && out[2]) {
+  if (!out[0] && !out[1]) {
     string.push(`${out[2]}D`);
   }
   return string.join(',');

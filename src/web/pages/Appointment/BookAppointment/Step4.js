@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
+import { getLoggedinUserId, showFormattedDate, formatDate, setLastPetId } from "patient-portal-utils/Service";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import Other from "patient-portal-pages/Appointment/BookAppointment/Other.js"
 
@@ -18,6 +18,19 @@ const Step4 = (props) => {
             if (statuscode && statuscode === 200) {
                 if (data?.pets) {
                     setAllPets(data?.pets);
+                   // console.log(data?.pets.length, data?.lastPetId, props.formData.pet_id);
+                    if(data?.lastPetId){
+                        let petId = data?.lastPetId;
+                        setLastPetId(petId);
+                        const updatePetInfo = data?.pets.filter((row) => row.id === petId);
+                        if(updatePetInfo.length > 0){
+                            props.onSubmit('','pet_id',updatePetInfo[0]);
+                        }
+                        
+                    }
+                    else if(data?.pets.length > 0 && !data?.lastPetId && !props.formData.pet_id){
+                        props.onSubmit('','pet_id',data?.pets[0]);
+                    }
                 }
             }
         }

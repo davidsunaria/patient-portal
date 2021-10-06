@@ -31,7 +31,7 @@ const PetInfoCard = (props) => {
     if(age.m){
       string.push(`${age.m}M`);
     }
-    if(!age.y && !age.m && age.d){
+    if(!age.y && !age.m){
       string.push(`${age.d}D`);
     }
     return string.join(',');

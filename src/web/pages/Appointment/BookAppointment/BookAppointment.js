@@ -129,7 +129,11 @@ const BookAppointment = (props) => {
 
   const handleStepFour = (e, name, val) => {
     let formPayload = { ...formData };
-    //console.log(e?.target?.name, e?.target?.value)
+    
+    if (name && name == "pet_id" && val != "") {
+      console.log("->>>>",e, name, val)
+      formPayload[name] = val.id;
+    }
     if (e?.target?.name) {
       formPayload[e.target.name] = e?.target?.value;
     }
@@ -432,6 +436,9 @@ const BookAppointment = (props) => {
       }
     }
     if (step == 4) {
+      if (name && name == "pet_id") {
+        finalPayload = { ...otherData, pet_name: payload?.name, species: payload?.speciesmap?.species };
+      }
       if (name && name == "pet") {
         finalPayload = { ...otherData, pet_name: payload?.name, species: payload?.speciesmap?.species };
       }
