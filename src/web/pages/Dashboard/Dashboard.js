@@ -3,10 +3,9 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import Sidebar from "patient-portal-components/Sidebar/Sidebar.js";
 import Article from "patient-portal-components/Dashboard/Article.js";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import { } from "patient-portal-message";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getLoggedinUserId, getUser } from "patient-portal-utils/Service";
+import { getLoggedinUserId, getUser, setLastPetId } from "patient-portal-utils/Service";
 import Notifications from "patient-portal-components/Dashboard/Notifications"
 import APPOINTMENT_BOOK_IMG from "patient-portal-images/appointmentBtn.svg";
 import Header from "patient-portal-components/Header/Header.js";
@@ -42,6 +41,9 @@ const Dashboard = (props) => {
         }
         if (data?.completed_data) {
           setCompleted(data.completed_data);
+        }
+        if(data?.lastPetId){
+          setLastPetId(data?.lastPetId);
         }
       }
     }

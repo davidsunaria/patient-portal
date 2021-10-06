@@ -9,7 +9,7 @@ import Step4 from "./Step4";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import _ from "lodash";
 import moment from "moment";
-import { getLoggedinUserId, getUser, getLoggedinPreferredClinic } from "patient-portal-utils/Service";
+import { getLoggedinUserId, getUser, getLoggedinPreferredClinic, getLastPetId } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { SELECT_CLINIC, SELECT_SERVICE, SELECT_PROVIDER, SELECT_PET, SELECT_APPOINTMENT_NOTES, SELECT_DATE, SELECT_TIME } from "patient-portal-message";
@@ -18,7 +18,7 @@ const BookAppointment = (props) => {
   const { id } = useParams();
   let { firstname, lastname, email, phone_code } = getUser();
   const history = useHistory();
-  const [formData, setFormData] = useState({ type: "", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: "", appointment_notes: "", duration: "", service_for: "",telehealth_clinic_id: "" });
+  const [formData, setFormData] = useState({ type: "", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: getLastPetId(), appointment_notes: "", duration: "", service_for: "",telehealth_clinic_id: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [allClinics, setAllClinics] = useState([]);
   const [allServices, setAllServices] = useState([]);

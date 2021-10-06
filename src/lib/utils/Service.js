@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { format  } from "date-fns";
+import { format } from "date-fns";
 export const apiDateFormat = (date) => {
   //return moment(date).format("YYYY-MM-DD");
 };
@@ -300,7 +300,7 @@ export function getAge(dob) {
   let age = moment(dob);
   let currentDate = moment();
   //'weeks',
-  let intervals = ['years', 'months',  'days'];
+  let intervals = ['years', 'months', 'days'];
   let out = [];
   intervals.forEach(function (interval) {
     let diff = currentDate.diff(age, interval);
@@ -320,28 +320,36 @@ export function getAge(dob) {
 }
 
 
-export function appointmentDateFormat(date, toFormat){
-    //console.log(date, toFormat);
-    if(date && toFormat){
-      toFormat = toFormat.replace("YYYY", 'yyyy')
-      toFormat = toFormat.replace("YYY", 'yyy')
-      toFormat = toFormat.replace("YY", 'yy')
-      toFormat = toFormat.replace("YY", 'yy')
-      toFormat = toFormat.replace("DDD", 'ddd')
-      toFormat = toFormat.replace("DD", 'dd')
-      toFormat = toFormat.replace("D", 'd')
-      toFormat = toFormat.replace("A", 'a')
-      toFormat = toFormat.replace("dddd", 'EEEE')
-      return format(date, toFormat)
-    }
-      
-    
+export function appointmentDateFormat(date, toFormat) {
+  //console.log(date, toFormat);
+  if (date && toFormat) {
+    toFormat = toFormat.replace("YYYY", 'yyyy')
+    toFormat = toFormat.replace("YYY", 'yyy')
+    toFormat = toFormat.replace("YY", 'yy')
+    toFormat = toFormat.replace("YY", 'yy')
+    toFormat = toFormat.replace("DDD", 'ddd')
+    toFormat = toFormat.replace("DD", 'dd')
+    toFormat = toFormat.replace("D", 'd')
+    toFormat = toFormat.replace("A", 'a')
+    toFormat = toFormat.replace("dddd", 'EEEE')
+    return format(date, toFormat)
+  }
+
+
 }
 
 export function truncate(str, length, total) {
-      return str.length > length ? str.substring(0, total) + "..." : str;
-  }
+  return str.length > length ? str.substring(0, total) + "..." : str;
+}
 
-  export function getLoggedinPreferredClinic() {
-    return getUser()?.clinic;
-  }
+export function getLoggedinPreferredClinic() {
+  return getUser()?.clinic;
+}
+
+export function setLastPetId(id) {
+  return localStorage.setItem("lastPetId", id);
+}
+
+export function getLastPetId() {
+  return localStorage.getItem("lastPetId");
+}

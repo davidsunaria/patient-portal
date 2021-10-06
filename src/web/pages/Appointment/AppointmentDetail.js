@@ -82,7 +82,7 @@ const AppointmentDetail = () => {
                             <a href={`tel:${appointmentData?.phone_code}`}><img src={CONTACT_IMAGE} /></a></React.Fragment>
                           }
 
-                          {appointmentData?.appointment_type == "virtual" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`${accountInfo?.business_link}`}>
+                          {appointmentData?.appointment_type == "virtual" && appointmentData?.status != "canceled" && <React.Fragment><a target="_blank" href={`${appointmentData?.clinic?.business_link}`}>
                             <img src={LOCATION_IMAGE} /></a>
                           </React.Fragment>
                           }
