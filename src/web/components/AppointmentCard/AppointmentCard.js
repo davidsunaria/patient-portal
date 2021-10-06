@@ -16,6 +16,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { useHistory } from "react-router-dom";
 import NoRecord from "patient-portal-components/NoRecord";
 import { getLoggedinUserId } from "patient-portal-utils/Service";
+import I_IMAGE from "patient-portal-images/i.svg";
+
 const AppointmentCard = (props) => {
     const lastScrollTop = useRef(0);
     const [cancellationPolicyStatus, setCancellationPolicyStatus] = useState("");
@@ -48,6 +50,7 @@ const AppointmentCard = (props) => {
     const isCancelled = useStoreState((state) => state.appointment.isCancelled);
     const response = useStoreState((state) => state.appointment.response);
     const cancelAppointment = useStoreActions((actions) => actions.appointment.cancelAppointment);
+    const getPetByVisit = useStoreActions((actions) => actions.dashboard.getPetByVisit);
 
     const toggle = (val) => {
         setModal(!modal);
@@ -224,6 +227,11 @@ const AppointmentCard = (props) => {
         setPolicyModal(false);
         setCancellationPolicyStatus("");
     }
+
+    const getDetail = async(val) => {
+        console.log(val);
+        await getPetByVisit({ id: val.id, event: "visit", history });
+    }
     return (
         <React.Fragment>
             <RescheduleAppointment data={modalData} modal={modal} toggle={toggle} />
@@ -271,6 +279,15 @@ const AppointmentCard = (props) => {
                                         <a target="_blank" href={`${val?.clinic?.business_link}`}>
                                             <img src={DIRECTION_IMAGE} />
                                             Get Direction
+                                        </a>
+                                    </li>}
+
+                                    {(props.type == "past" && val.pet_visit) && <li>
+
+                                        <a onClick={() => getDetail(val.pet_visit)}>
+                                        <img src={I_IMAGE} className="appDetail"/>
+                                        
+                                            Details
                                         </a>
                                     </li>}
                                 </ul>
