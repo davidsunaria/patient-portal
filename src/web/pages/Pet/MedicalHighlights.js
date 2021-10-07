@@ -3,6 +3,8 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
 import { Link, useHistory, useParams } from "react-router-dom";
 import moment from "moment";
+import NoRecord from "patient-portal-components/NoRecord";
+
 const MedicalHighlights = (props) => {
   const [isBottom, setIsBottom] = useState(false);
   const [records, setRecords] = useState([]);
@@ -109,9 +111,7 @@ const MedicalHighlights = (props) => {
             ))
 
           ) : (
-            <div className="text-center">
-              <p>No record found</p>
-            </div>
+            <NoRecord />
           )}
         </div>
       </div>

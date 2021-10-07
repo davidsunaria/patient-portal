@@ -30,7 +30,7 @@ const Invoice = (props) => {
     const [nextPageUrl, setNextPageUrl] = useState(null);
 
     const [isOpen, setIsOpen] = useState(false);
-    const [dateRange, setDateRange] = useState([subDays(new Date(), 15), new Date()]);
+    const [dateRange, setDateRange] = useState([]);//[subDays(new Date(), 15), new Date()]
     const [startDate, endDate] = dateRange;
     const [petId, setPetId] = useState({ value: "", label: "All Pets" });
     const [clinicId, setClinicId] = useState({ value: "", label: "All Clinics" });
@@ -151,10 +151,10 @@ const Invoice = (props) => {
         if (clinicId.value) {
             formData = { ...formData, clinic_id: clinicId.value };
         }
-        if (formData !== undefined) {
+        //if (formData !== undefined) {
             formData = { ...formData, page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE };
             await getInvoices({ clientId: getLoggedinUserId(), query: formData });
-        }
+        //}
         window.addEventListener('scroll', (e) => handleScroll(e), true);
         return () => {
             window.removeEventListener('scroll', (e) => handleScroll(e))
@@ -238,7 +238,11 @@ const Invoice = (props) => {
                                                 setDateRange(update);
                                             }}
                                             isClearable={false}
-                                        />
+                                            
+                                            peekNextMonth
+      showMonthDropdown
+      showYearDropdown
+      dropdownMode="select"                                        />
                                         <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
                                     </div>
                                 </div>

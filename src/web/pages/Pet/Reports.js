@@ -5,6 +5,7 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import moment from "moment";
 import REPORT_DOWNLOAD from "patient-portal-images/report-download.svg";
 import REPORT_SHARE from "patient-portal-images/report-share.svg";
+import NoRecord from "patient-portal-components/NoRecord";
 
 
 const Reports = (props) => {
@@ -16,7 +17,7 @@ const Reports = (props) => {
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const getReports = useStoreActions((actions) => actions.pet.getReports);
   const getReportDetail = useStoreActions((actions) => actions.pet.getReportDetail);
-  
+
   const response = useStoreState((state) => state.pet.response);
   const isLoading = useStoreState((state) => state.common.isLoading);
   const lastScrollTop = useRef(0);
@@ -50,14 +51,14 @@ const Reports = (props) => {
   useEffect(() => {
     if (response) {
       let { status, statuscode, data } = response;
-      
+
       if (statuscode && statuscode === 200) {
         if (data && data.file !== undefined) {
-          let serverRespone= [];
+          let serverRespone = [];
           serverRespone.push(data?.file);
           setRecords(serverRespone);
         }
-  
+
         if (data && data.files !== undefined) {
           const { current_page, next_page_url, per_page } = data.files;
 
@@ -115,15 +116,15 @@ const Reports = (props) => {
     window.open(val.file_full_url, "_blank");
   }
 
-  useEffect(async() => {
-    if(props.petId && props.visitId){
+  useEffect(async () => {
+    if (props.petId && props.visitId) {
       await getReportDetail(props.visitId);
     }
-}, [props.petId,props.visitId]);
+  }, [props.petId, props.visitId]);
 
   return (
     <React.Fragment>
-      
+
       {records && records.length > 0 ? (
         records.map((val, index) => (
           <div key={index} className="box recordCard">
@@ -138,9 +139,7 @@ const Reports = (props) => {
           </div>
         ))
       ) : (
-        <div className="box mb-2 text-center">
-          <p>No record found</p>
-        </div>
+        <NoRecord />
       )}
 
 
