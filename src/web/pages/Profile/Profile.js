@@ -279,14 +279,14 @@ const Profile = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="row">
+                  {/* <div className="row">
                     <div className="col-sm-6">
                       <div className="dataOuter">
                         <label>Source</label>
                         <span>{userData?.source}</span>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
 
