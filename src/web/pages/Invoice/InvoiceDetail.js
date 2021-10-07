@@ -181,7 +181,7 @@ const InvoiceDetail = (props) => {
                                         </div>
                                         <div className="totalCol text-right">
                                             <b>
-                                                {numberFormat(invoiceData?.paid_amount, 'currency', 2, 2)}
+                                                {numberFormat(invoiceData?.grand_total, 'currency', 2, 2)}
                                             </b>
                                         </div>
                                     </div>
