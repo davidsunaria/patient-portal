@@ -430,6 +430,10 @@ const AddPet = (props) => {
                                   let event = { target: { name: 'dob', value: moment(selectedOption).format("YYYY-MM-DD") } }
                                   handleChange(event);
                                 }}
+                                peekNextMonth
+                                showMonthDropdown
+                                showYearDropdown
+                                dropdownMode="select" 
                               />
                               <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
 

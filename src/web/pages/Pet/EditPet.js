@@ -419,6 +419,10 @@ const EditPet = (props) => {
                                 onBlur={() => {
                                   handleBlur({ target: { name: 'dob' } });
                                 }}
+                                peekNextMonth
+                                showMonthDropdown
+                                showYearDropdown
+                                dropdownMode="select"
                               />
                               <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
                            
