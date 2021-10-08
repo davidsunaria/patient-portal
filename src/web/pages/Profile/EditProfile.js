@@ -580,7 +580,7 @@ const EditProfile = (props) => {
                             </div>
                           </div>
                         </div>
-                        <div className="col-sm-6">
+                        {/* <div className="col-sm-6">
                           <div className="fieldOuter">
                             <label className="fieldLabel">Source</label>
                             <div className="fieldBox">
@@ -595,7 +595,8 @@ const EditProfile = (props) => {
                               />
                             </div>
                           </div>
-                        </div>
+                          
+                        </div> */}
                       </div>
 
                       <div className="mt-2 mb-3">
