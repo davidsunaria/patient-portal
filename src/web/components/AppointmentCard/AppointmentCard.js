@@ -51,12 +51,21 @@ const AppointmentCard = (props) => {
     const response = useStoreState((state) => state.appointment.response);
     const cancelAppointment = useStoreActions((actions) => actions.appointment.cancelAppointment);
     const getPetByVisit = useStoreActions((actions) => actions.dashboard.getPetByVisit);
-
+    const [currentOpenStack, setCurrentOpenStack] = useState(null);
     const toggle = (val) => {
+       
+       
         setModal(!modal);
         if (val) {
             setModalData(val);
         }
+       
+        setTimeout(
+            () => {
+                setCurrentOpenStack(null);
+            },
+            100 
+          );
     };
 
     useEffect(() => {
@@ -69,6 +78,7 @@ const AppointmentCard = (props) => {
             await getClinicInfo(e);
         }
         setContactModal(!contactModal);
+        setCurrentOpenStack(null);
     }
 
     useEffect(() => {
@@ -114,6 +124,7 @@ const AppointmentCard = (props) => {
         }
         setAppointmentId(e);
         //setPolicyModal(!policyModal);
+        setCurrentOpenStack(null);
     };
     useEffect(() => {
         if (isCancelled) {
@@ -229,9 +240,37 @@ const AppointmentCard = (props) => {
     }
 
     const getDetail = async(val) => {
-        console.log(val);
         await getPetByVisit({ id: val.id, event: "visit", history });
     }
+    const showToggle = (index) => {
+        setCurrentOpenStack(index);
+    }
+
+    const useOuterClick = (callback) => {
+        const callbackRef = useRef(); // initialize mutable ref, which stores callback
+        const innerRef = useRef(); // returned to client, who marks "border" element
+
+        // update cb on each render, so second useEffect has access to current value 
+        useEffect(() => { callbackRef.current = callback; });
+
+        useEffect(() => {
+            document.addEventListener("click", handleClick);
+            return () => document.removeEventListener("click", handleClick);
+            function handleClick(e) {
+                if (innerRef.current && callbackRef.current &&
+                    !innerRef.current.contains(e.target)
+                ) callbackRef.current(e);
+            }
+        }, []); // no dependencies -> stable click listener
+
+        return innerRef; // convenience for client (doesn't need to init ref himself) 
+    }
+    const innerRef = useOuterClick(ev => {
+        console.log("ev", ev.target.className)
+        if(ev.target.className !== "dropdownArrow"){
+            setCurrentOpenStack(null);
+        }
+    });
     return (
         <React.Fragment>
             <RescheduleAppointment data={modalData} modal={modal} toggle={toggle} />
@@ -250,9 +289,10 @@ const AppointmentCard = (props) => {
                                 </a>
                             }
 
-
-                            <div className="dropdownArrow">
-                                <ul className="dropdownOption">
+                            
+                            <div className="dropdownArrow"  ref={innerRef} onClick={() => showToggle(index)}>
+                           
+                               {index == currentOpenStack && <ul className={ (index == currentOpenStack) ? "dropdownOption d-block" : ""}>
 
                                     {(props.type == "upcoming" && val.status != "canceled") && <li>
                                         <a className="onHover" onClick={() => toggle(val)}>
@@ -278,7 +318,7 @@ const AppointmentCard = (props) => {
 
                                         <a target="_blank" href={`${val?.clinic?.business_link}`}>
                                             <img src={DIRECTION_IMAGE} />
-                                            Get Direction
+                                            Directions
                                         </a>
                                     </li>}
 
@@ -290,7 +330,7 @@ const AppointmentCard = (props) => {
                                             Details
                                         </a>
                                     </li>}
-                                </ul>
+                                </ul>}
                             </div>
                             {/* onClick={() => (val.status != "canceled") ? history.push(`/appointment-detail/${val?.id}`)  : ""} */}
                             <div onClick={() => history.push(`/appointment-detail/${val?.id}`)}>
@@ -324,11 +364,11 @@ const AppointmentCard = (props) => {
                                         <label>Type</label>
                                         <p>{val?.appointment_type == "virtual" ? "Telehealth" : 'Clinic'}</p>
                                     </div>
-                                    <div className="col-lg-3 col-sm-6 py-2">
+                                     { val?.appointment_notes && <div className="col-lg-3 col-sm-6 py-2">
                                         <label>Note</label>
                                         <p dangerouslySetInnerHTML={{ __html: (val?.appointment_notes && val?.appointment_notes.includes("Follow-up from a")) ? "Follow-up from a previous visit" : val?.appointment_notes }} />
 
-                                    </div>
+                                    </div>}
                                     {val?.status == "canceled" && <div className="col-lg-3 col-sm-6 py-2">
                                         <label>Status</label>
                                         <p className="colorRed">Canceled</p>

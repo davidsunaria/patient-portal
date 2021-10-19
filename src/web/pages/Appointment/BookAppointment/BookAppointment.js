@@ -7,7 +7,7 @@ import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import _ from "lodash";
+import _, { conformsTo } from "lodash";
 import moment from "moment";
 import { getLoggedinUserId, getUser, getLoggedinPreferredClinic, getLastPetId } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
@@ -18,7 +18,7 @@ const BookAppointment = (props) => {
   const { id } = useParams();
   let { firstname, lastname, email, phone_code } = getUser();
   const history = useHistory();
-  const [formData, setFormData] = useState({ type: "", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: getLastPetId(), appointment_notes: "", duration: "", service_for: "",telehealth_clinic_id: "" });
+  const [formData, setFormData] = useState({ type: "", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: getLastPetId(), appointment_notes: "", duration: "", service_for: "", telehealth_clinic_id: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [allClinics, setAllClinics] = useState([]);
   const [allServices, setAllServices] = useState([]);
@@ -64,13 +64,13 @@ const BookAppointment = (props) => {
     else {
       setCurrentPage(2);
     }
-    if(clinicData && clinicData.id){
-      setOtherData({...otherData, type: payload, clinic_name: clinicData?.clinic_name, clinic_address: clinicData?.address });
+    if (clinicData && clinicData.id) {
+      setOtherData({ ...otherData, type: payload, clinic_name: clinicData?.clinic_name, clinic_address: clinicData?.address });
     }
-    else{
-      setOtherData({...otherData, type: payload});
+    else {
+      setOtherData({ ...otherData, type: payload });
     }
-    
+
   }
   //Set Second Step Data
   const handleStepTwo = (e, otherInfo) => {
@@ -81,12 +81,12 @@ const BookAppointment = (props) => {
   }
   //Set Third Step Data
   const handleStepThree = (e, name, val) => {
-    
+
     let formPayload = { ...formData };
     if (name && name !== undefined && name == "service_id") {
       //console.log('val', val);
       formPayload["service_id"] = e?.target?.value;
-      formPayload["duration"] = (val?.duration) ? val?.duration : val?.custom_duration ;
+      formPayload["duration"] = (val?.duration) ? val?.duration : val?.custom_duration;
       formPayload["service_for"] = val?.service_for;
 
       if (val?.service_for == "clinic") {
@@ -113,7 +113,7 @@ const BookAppointment = (props) => {
     }
     else if (name && name !== undefined && name == "slot") {
       formPayload[name] = val;
-      if(formPayload.type == "virtual" && timeSlotClinic){
+      if (formPayload.type == "virtual" && timeSlotClinic) {
         formPayload["telehealth_clinic_id"] = timeSlotClinic[val];
       }
     }
@@ -129,7 +129,7 @@ const BookAppointment = (props) => {
 
   const handleStepFour = (e, name, val) => {
     let formPayload = { ...formData };
-    
+
     if (name && name == "pet_id" && val != "") {
       //console.log("->>>>",e, name, val)
       formPayload[name] = val.id;
@@ -140,7 +140,7 @@ const BookAppointment = (props) => {
     setFormData(formPayload);
     updateOther(val, 4, name);
   }
- 
+
   useEffect(async () => {
     await getAllClinics();
   }, []);
@@ -149,7 +149,7 @@ const BookAppointment = (props) => {
     if (response) {
       let { statuscode, data } = response;
       if (statuscode && statuscode === 200) {
-        if(data?.timeSlotsClinic){
+        if (data?.timeSlotsClinic) {
           setTimeSlotClinic(data.timeSlotsClinic);
         }
 
@@ -173,7 +173,17 @@ const BookAppointment = (props) => {
             });
           });
           setAllProviders(resultSet);
-          setFormData({ ...formData, provider_id: {value: "any", label: "Any"} });
+          setFormData({ ...formData, provider_id: { value: "any", label: "Any" } });
+
+
+          //Scroll
+          // const element = document.getElementById("doctor");
+          // setTimeout(() => {
+          //   if (element) {
+          //     element.scrollIntoView({ behavior: 'smooth' });
+          //   }
+          // }, 700);
+
         }
         // Set Providers Schedule
         if (data?.enabledDates) {
@@ -191,8 +201,11 @@ const BookAppointment = (props) => {
               () => {
                 setFormData({ ...formData, date: new Date(data.enabledDates[0]) })
                 updateOther(data.enabledDates[0], 3, "date");
+               
+                //Scroll
+                
               },
-              100 
+              100
             );
           }
           else {
@@ -202,7 +215,7 @@ const BookAppointment = (props) => {
                 setFormData({ ...formData, date: "" });
                 updateOther("", 3, "date");
               },
-              100 
+              100
             );
 
           }
@@ -216,7 +229,7 @@ const BookAppointment = (props) => {
             if (data.timeSlots) {
               let teleClinicId;
               let val = Object.values(data.timeSlots);
-              if(timeSlotClinic && val.length > 0){
+              if (timeSlotClinic && val.length > 0) {
                 teleClinicId = timeSlotClinic[val[0]];
               }
               setFormData({ ...formData, slot: val[0], telehealth_clinic_id: teleClinicId ?? "" });
@@ -228,7 +241,7 @@ const BookAppointment = (props) => {
             }
           }
         }
-        
+
         //Appointment Created
         if (data?.appointmentId) {
           history.push(`/appointment-detail/${data?.appointmentId}`);
@@ -244,6 +257,7 @@ const BookAppointment = (props) => {
         if (data?.pet) {
           setOtherData({ ...otherData, pet_name: data?.pet.name, species: data?.pet.speciesmap?.species });
         }
+
       }
     }
   }, [response]);
@@ -308,27 +322,27 @@ const BookAppointment = (props) => {
       setOtherData(requestOther);
     }
     //Reset Page For Virtual
-    if(formData.type == "virtual" && page == 2){
+    if (formData.type == "virtual" && page == 2) {
       setCurrentPage(1);
     }
-    else{
+    else {
       setCurrentPage(page);
     }
-    
+
   }
   // Get Services For The Selected Clinic for in person, for virtual skip clinic and get all virtual services
   useEffect(async () => {
-   
+
     if (formData.type == "in_person" && formData.clinic_id) {
       await getClinicServices(formData);
     }
-    if (formData.type == "virtual"){ 
+    if (formData.type == "virtual") {
       let req = {
         type: formData.type,
       }
       await getClinicServices(req);
     }
-    
+
   }, [formData.type, formData.clinic_id]);
 
   // Get Provider Based On Service Selected
@@ -338,7 +352,7 @@ const BookAppointment = (props) => {
       setAllProviders([]);
       setCalenderData([]);
       setTimeSlot([]);
-      setFormData({ ...formData, date: "", slot: "", provider_name: "",telehealth_clinic_id: ""  });
+      setFormData({ ...formData, date: "", slot: "", provider_name: "", telehealth_clinic_id: "" });
       setOtherData({ ...otherData, date: "", slot: "" });
       await getProviders({ formData: formData, type: formData.service_id });
     }
@@ -347,7 +361,7 @@ const BookAppointment = (props) => {
   // Get Provider Schedules
   useEffect(async () => {
     if (formData.provider_id) {
-      updateOther(formData?.provider_id?.doctor_profile,3, "doctor_profile");
+      updateOther(formData?.provider_id?.doctor_profile, 3, "doctor_profile");
       let request = {
         clinicId: formData.clinic_id,
         serviceId: formData.service_id,
@@ -357,14 +371,14 @@ const BookAppointment = (props) => {
       console.log("Doctor Selected", request, formData.provider_id);
       await getProviderSchedule(request);
 
-      
+
     }
   }, [formData.provider_id]);
 
   // Get Provider Slots By Date
   useEffect(async () => {
     if (formData.date) {
-      console.log("on date selection", );
+      console.log("on date selection",);
       let payload = {
         clinicId: formData.clinic_id,
         serviceId: formData.service_id,
@@ -397,7 +411,7 @@ const BookAppointment = (props) => {
         await getProviderName(payload);
       }
     }
-    
+
   }, [formData.date, formData.provider_id]);
 
   const updateOther = (payload, step, name) => {
@@ -420,19 +434,19 @@ const BookAppointment = (props) => {
         console.log("Setting doc");
         finalPayload = { ...otherData, doctor_profile: payload };
       }
-      
+
       if (name && name == "date") {
-        if(payload){
+        if (payload) {
           finalPayload = { ...otherData, date: moment(payload).format('dddd, MMMM Do YYYY') };
         }
-        else{
+        else {
           finalPayload = { ...otherData, date: "" };
         }
-        
+
       }
       if (name && name == "slot") {
         finalPayload = { ...otherData, slot: payload };
-        
+
       }
     }
     if (step == 4) {
@@ -451,9 +465,9 @@ const BookAppointment = (props) => {
     if (doctorData?.firstname) {
       //console.log("Doctor name setting", doctorData);
       let user_name = `${doctorData?.title} ${doctorData?.firstname} ${doctorData?.lastname}`;
-      setOtherData({...otherData, provider_name: user_name, doctor_profile: doctorData?.doctor_profile});
+      setOtherData({ ...otherData, provider_name: user_name, doctor_profile: doctorData?.doctor_profile });
     }
-   
+
   }, [doctorData]);
 
 
@@ -504,13 +518,13 @@ const BookAppointment = (props) => {
   }
 
   useEffect(() => {
-      if(timeSlotClinic){
-        let val = Object.values(timeSlotClinic);
-        if(val.length > 0){
-          setFormData({ ...formData, telehealth_clinic_id: val[0] });
-        }
-        
+    if (timeSlotClinic) {
+      let val = Object.values(timeSlotClinic);
+      if (val.length > 0) {
+        setFormData({ ...formData, telehealth_clinic_id: val[0] });
       }
+
+    }
   }, [timeSlotClinic]);
   return (
     <React.Fragment>

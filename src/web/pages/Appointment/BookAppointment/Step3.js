@@ -55,17 +55,6 @@ const Step3 = (props) => {
                     {props.formData.date && appointmentDateFormat(props.formData.date, "MMMM Do YYYY")}
                 </label>
 
-                {/* <div className="highlightDate">
-                    {props.formData.date && moment(value).format('MMM')}
-                    <br />
-                    {props.formData.date && moment(value).format('DD')}
-                </div>
-                <label >
-                    {props.formData.date && moment(value).format('dddd')}
-                    <br />
-
-                    {props.formData.date && moment(value).format('MMMM Do YYYY')}
-                </label> */}
             </span>
         </React.Fragment>)
     });
@@ -164,7 +153,7 @@ const Step3 = (props) => {
 
                 {props.data && props.data.length == 0 && <div className="box text-center">No service available</div>}
                 
-                {props?.providers && props?.providers.length > 0 && <React.Fragment> <div className="subtitle mt-4 mb-3">Select Doctor</div>
+                {props?.providers && props?.providers.length > 0 && <React.Fragment> <div id="doctor" className="subtitle mt-4 mb-3">Select Doctor</div>
                     <p className="p-text">
                         We recommend selecting “Any” doctor to give you the most
                         available options for dates &amp; timeslots. Please select a
@@ -206,7 +195,7 @@ const Step3 = (props) => {
                  
                  
                 {(props?.enabledDates.length > 0 || props?.providers.length > 0 && props.formData.provider_id) && <div className="dateTimeOuter">
-                    <div className="AppointmentDate">
+                    <div id="datePicker" className="AppointmentDate">
                          <DatePicker
                             wrapperClassName={props?.formData?.date ? "" : "appointmentDatePicker"}
                             placeholderText="Select Date"
@@ -235,7 +224,7 @@ const Step3 = (props) => {
                     No slots available. Kindly select another doctor or "Any" or another service.
                 </p>}
                 <div className="appointmentBtns">
-                    <button className="button default mr-2" onClick={() => props.onBack(2)}>Back</button>
+                    <button className="button secondary mr-2" onClick={() => props.onBack(2)}>Back</button>
                     <button className="button primary ml-auto" disabled={props.data && props.data.length == 0} onClick={() => props.onNext(4)}>Continue</button>
                 </div>
 

@@ -110,6 +110,11 @@ const AppointmentDetail = () => {
                         <div className="appointmentConfirmText">Name: {doctorData?.firstname} {doctorData?.lastname}</div>
                         <div className="appointmentConfirmText">Email: {doctorData?.email}</div>
                       </div>
+                      {appointmentData?.appointment_notes && <div className="appointmentConfirmSection">
+                        <div className="appointmentConfirmTitle">Notes</div>
+                        <div className="appointmentConfirmText">{appointmentData?.appointment_notes}</div>
+                      </div>
+                      }
                       <div className="appointmentConfirmSection border-0">
                         <div className="appointmentConfirmTitle">Date & Time</div>
                         <div className="appointmentConfirmText">{otherData?.date} <br />{otherData?.time}</div>

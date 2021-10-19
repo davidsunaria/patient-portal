@@ -46,7 +46,7 @@ const Reports = (props) => {
     return () => {
       window.removeEventListener('scroll', (e) => handleScroll(e))
     };
-  }, []);
+  }, [props.petId, props.forceRender]);
 
   useEffect(() => {
     if (response) {

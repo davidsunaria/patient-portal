@@ -151,7 +151,7 @@ const Profile = () => {
                   <section>
                     <div className="settingLinkTitle">Settings</div>
                     <Link to="/edit-profile">Edit Profile</Link>
-                    <a onClick={toggle}>Notification Settings</a>
+                    {/* <a onClick={toggle}>Notification Settings</a> */}
                     <Link to="/contact-us">Contact</Link>
                   </section>
                   <section>

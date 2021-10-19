@@ -19,6 +19,8 @@ const VaccinationRecord = (props) => {
     const response = useStoreState((state) => state.pet.response);
     const isLoading = useStoreState((state) => state.common.isLoading);
 
+   
+
     const lastScrollTop = useRef(0)
     const handleScroll = useCallback((e) => {
         console.log("Heik", e);
@@ -49,7 +51,7 @@ const VaccinationRecord = (props) => {
                 window.removeEventListener('scroll', (e) => handleScroll(e))
             };
         }
-    }, [props.petId]);
+    }, [props.petId, props.forceRender]);
 
     useEffect(() => {
         if (response) {

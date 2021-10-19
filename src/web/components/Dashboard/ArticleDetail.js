@@ -45,7 +45,7 @@ const ArticleDetail = (props) => {
               backEnabled={true}
               backTitle={"Back to dashboard"}
               backAction={"dashboard"}
-              heading={"Article Detail"}
+              heading={""}
               subHeading={""}
               hasBtn={true}
               btnName={"calendar"}

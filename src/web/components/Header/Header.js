@@ -90,8 +90,8 @@ const Header = (props) => {
           <img src={GO_BACK_IMAGE} /> {props.backTitle}
         </a>
       )}
-      <div className="titleBtn">
-        <h1 className="title">{props.heading}</h1>
+      <div className="titleBtn titleDescription">
+        { props.heading && <h1 className="title">{props.heading}</h1>}
         <div className="titleDiscription">{props.subHeading}</div>
         {props.hasBtn && (
           <Button

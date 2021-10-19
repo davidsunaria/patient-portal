@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getLoggedinUserId, showFormattedDate, formatDate, setLastPetId } from "patient-portal-utils/Service";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import Other from "patient-portal-pages/Appointment/BookAppointment/Other.js"
+import EDIT_PROFILE_IMG from "patient-portal-images/edit-profile.svg";
 
 const Step4 = (props) => {
     const getPets = useStoreActions((actions) => actions.pet.getPets);
@@ -35,7 +36,29 @@ const Step4 = (props) => {
             }
         }
     }, [responsePet]);
-
+    const renderImage = (props) => {
+        let baseUrl;
+        if(props.pet_image && props.pet_image !== undefined){
+          baseUrl = `${process.env.REACT_APP_MEDIA_URL}${props.pet_image}`;
+        }
+        else{
+          baseUrl = props.pet_default_img;
+        }
+        return baseUrl;
+      }
+      const renderAge = (age) => {
+        let string = [];
+        if(age.y){
+          string.push(`${age.y}Y`);
+        }
+        if(age.m){
+          string.push(`${age.m}M`);
+        }
+        if(!age.y && !age.m){
+          string.push(`${age.d}D`);
+        }
+        return string.join(', ');
+      }
     return (
         <div>
             <div className="subtitle mt-4 mb-3">Select Pet</div>
@@ -45,13 +68,23 @@ const Step4 = (props) => {
                         <div className="checkboxOuter petSetMaxLimit">
                             {
                                 allPets && allPets.length > 0 && allPets.map((val, index) => (
-                                    <label key={index} className="customCheckbox d-flex justify-content-between">
+                                    <label key={index} className="customCheckbox d-flex">
+                                        <div class="appointemntPetPic"><img src={renderImage(val)}/></div>
                                         <input type="radio" name="pet_id"  checked={val?.id == props.formData.pet_id ? true : false} value={val?.id} onChange={(e) => props.onSubmit(e, "pet", val)} />
                                         <span className="serviceName">
                                             {val?.name}
                                             <label className="appointmentSpecies">
                                                 {val?.speciesmap?.species}
                                             </label>
+
+                                            <label className="appointmentSpecies">
+                                                {val?.gender}
+                                            </label>
+
+                                            <label className="appointmentSpecies">
+                                            {renderAge(val?.age)}
+                                            </label>
+
                                         </span>
                                     </label>
                                 ))
@@ -74,7 +107,7 @@ const Step4 = (props) => {
 
 
                     <div className="appointmentBtns">
-                        <button className="button default mr-2" onClick={() => props.onBack(3)}>Back</button>
+                        <button className="button secondary mr-2" onClick={() => props.onBack(3)}>Back</button>
                         <button className="button primary ml-auto" onClick={() => props.onNext(5)}>
                             Continue
                         </button>

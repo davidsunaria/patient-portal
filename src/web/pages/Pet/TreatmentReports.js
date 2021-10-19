@@ -25,6 +25,8 @@ const TreatmentReports = () => {
   const lastScrollTop = useRef(0);
   const [petData, setPetData] = useState({});
 
+  
+
   const handleScroll = useCallback((e) => {
     const scrollTop = parseInt(Math.max(e?.srcElement?.scrollTop));
     let st = scrollTop;

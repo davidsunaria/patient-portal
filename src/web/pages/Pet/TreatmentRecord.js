@@ -15,12 +15,15 @@ const TreatmentRecord = (props) => {
   const [downloadUrl, setDownloadUrl] = useState(null);
 
   const response = useStoreState((state) => state.pet.response);
+
+  
+
   useEffect(async () => {
     if(props.petId){
       console.log("Treatment records");
       await getTreatmentRecord({ clientId: getLoggedinUserId(), petId: props.petId });
     }
-  }, [props.petId]);
+  }, [props.petId, props.forceRender]);
 
   useEffect(() => {
     if (response) {

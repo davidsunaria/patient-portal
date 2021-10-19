@@ -34,7 +34,7 @@ const PetInfoCard = (props) => {
     if(!age.y && !age.m){
       string.push(`${age.d}D`);
     }
-    return string.join(',');
+    return string.join(', ');
   }
   const delPet = (id) => {
     setPetId(id);

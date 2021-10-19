@@ -18,6 +18,7 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 
 const ProfileView = (props) => {
   const history = useHistory();
+  const[forceRender,setForceRender] = useState(false);
   const [currentTab, setCurrentTab] = useState();
   const [petData, setPetData] = useState({});
   const getPet = useStoreActions((actions) => actions.pet.getPet);
@@ -41,6 +42,7 @@ const ProfileView = (props) => {
   const selectedTab = (type) => {
     if(visitId && type){
       history.push(`/pet-profile/${id}`);
+      setForceRender(true);
     }
     setCurrentTab(type)
   }
@@ -80,12 +82,12 @@ const ProfileView = (props) => {
               <li><a className={` ${currentTab && currentTab === "reports_record" ? "active" : ""}`} onClick={() => selectedTab('reports_record')}>Reports</a></li>
               <li><a className={` ${currentTab && currentTab == "medical_highlights_record" ? "active" : ""}`} onClick={() => selectedTab('medical_highlights_record')}>Medical Highlights</a></li>
             </ul>
-
-            {(!currentTab || currentTab === "treatment_record") && <TreatmentRecord petId={id} visitId={visitId} />}
-            {currentTab && currentTab === "vaccination_record" && <VaccinationRecord petId={id} visitId={visitId} />}
-            {currentTab && currentTab === "antiparasitic_record" && <AntiParasiticRecord petId={id} visitId={visitId} />}
-            {currentTab && currentTab === "reports_record" && <Reports petId={id} visitId={visitId} />}
-            {currentTab && currentTab === "medical_highlights_record" && <MedicalHighlights petId={id} />}
+           
+            {(!currentTab || currentTab === "treatment_record") && <TreatmentRecord forceRender={forceRender} petId={id} visitId={visitId} />}
+            {currentTab && currentTab === "vaccination_record" && <VaccinationRecord forceRender={forceRender} petId={id} visitId={visitId} />}
+            {currentTab && currentTab === "antiparasitic_record" && <AntiParasiticRecord forceRender={forceRender} petId={id} visitId={visitId} />}
+            {currentTab && currentTab === "reports_record" && <Reports forceRender={forceRender} petId={id} visitId={visitId} />}
+            {currentTab && currentTab === "medical_highlights_record" && <MedicalHighlights forceRender={forceRender} petId={id} />}
           </main>
         </div>
       </div>

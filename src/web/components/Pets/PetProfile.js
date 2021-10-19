@@ -32,7 +32,7 @@ const PetProfile = (props) => {
             <span>{props.data?.gender}</span>
           </div>
           <div className="profileDetailCol">
-            <label>Species</label>
+            <label>Type</label>
             <span>{props.data?.speciesmap?.species}</span>
           </div>
           <div className="profileDetailCol">
@@ -40,7 +40,7 @@ const PetProfile = (props) => {
             <span>{props.data?.breedmap?.name}</span>
           </div>
           <div className="profileDetailCol">
-            <label>DOB</label>
+            <label>Age</label>
             <span>{getAge(props.data?.dob)}</span>
           </div>
           <div className="profileDetailCol address">

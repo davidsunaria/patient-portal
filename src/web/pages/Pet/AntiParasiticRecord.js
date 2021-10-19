@@ -45,7 +45,7 @@ const AntiParasiticRecord = (props) => {
       };
     }
 
-  }, [props.petId]);
+  }, [props.petId, props.forceRender]);
 
   useEffect(() => {
     if (response) {

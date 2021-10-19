@@ -317,7 +317,7 @@ export function getAge(dob) {
   if (!out[0] && !out[1]) {
     string.push(`${out[2]}D`);
   }
-  return string.join(',');
+  return string.join(', ');
 }
 
 
