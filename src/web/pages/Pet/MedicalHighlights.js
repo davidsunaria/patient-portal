@@ -94,8 +94,9 @@ const MedicalHighlights = (props) => {
 
   return (
     <React.Fragment>
-      <div className="box mb-2">
+      
       <div className={records && records.length > 0 ? "timeline" : ""}>
+        <div className="box mb-2">
           {records && records.length > 0 ? (
             records.map((val, index) => (
 
@@ -111,7 +112,7 @@ const MedicalHighlights = (props) => {
             ))
 
           ) : (
-            <NoRecord />
+            <NoRecord extraClass="text-center" />
           )}
         </div>
       </div>

@@ -40,10 +40,10 @@ const Step3 = (props) => {
     }
 
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => {
-       return( <React.Fragment>
+        return (<React.Fragment>
             <span onClick={onClick} ref={ref}>
-           
-                 <div className="highlightDate">
+
+                <div className="highlightDate">
                     {props.formData.date && appointmentDateFormat(props.formData.date, "MMM")}
                     <br />
                     {props.formData.date && appointmentDateFormat(props.formData.date, "DD")}
@@ -68,18 +68,18 @@ const Step3 = (props) => {
         setIsOpenAccordian(index);
     }
     useEffect(() => {
-        console.log("Date Changed For Child ", !props.formData.date, props.formData.date == "" ? "empty": 'not');
+        console.log("Date Changed For Child ", !props.formData.date, props.formData.date == "" ? "empty" : 'not');
         if (props.formData.date == "") {
             setSelectedTimeSlot("");
         }
-       
+
     }, [props.formData.date]);
 
     useEffect(() => {
         if (props.slot) {
             let val = Object.values(props.slot);
             if (val.length > 0 && selectedTimeSlot) {
-                setSelectedTimeSlot(val[0]);  
+                setSelectedTimeSlot(val[0]);
             }
 
         }
@@ -107,18 +107,18 @@ const Step3 = (props) => {
         setOpenTimePopup(false);
     });
 
-    const getSelectedClass = (val,selectedVal) => {
+    const getSelectedClass = (val, selectedVal) => {
         let currentValue = moment(val, 'HH:mm:ss: a').diff(moment().startOf('day'), 'seconds');
         let selectedValue = moment(selectedVal, 'HH:mm:ss: a').diff(moment().startOf('day'), 'seconds');
-        if(currentValue === selectedValue){
-           return "active"; 
+        if (currentValue === selectedValue) {
+            return "active";
         }
-        else{
+        else {
             return "";
         }
     }
     return (
-        <div className="row">
+        <div className="row mt-3">
             <Service data={serviceDetail} modal={serviceModal} toggle={showServiceDetail} />
             <div className="col-md-8">
                 {
@@ -152,77 +152,9 @@ const Step3 = (props) => {
                 }
 
                 {props.data && props.data.length == 0 && <div className="box text-center">No service available</div>}
-                
-                {props?.providers && props?.providers.length > 0 && <React.Fragment> <div id="doctor" className="subtitle mt-4 mb-3">Select Doctor</div>
-                    <p className="p-text">
-                        We recommend selecting “Any” doctor to give you the most
-                        available options for dates &amp; timeslots. Please select a
-                        specific doctor only if you specifically need to meet them.
-                        If you are unable to find a suitable timeslot for your
-                        selected doctor, please try “Any” or another doctor.
-                    </p>
 
-                    <div className="row my-3">
-                        <div className="col-xl-4 col-md-6">
-                            <div className="fieldOuter mb-0">
-                                <div className="fieldBox providerSelectBox">
 
-                                    <Select
-                                        placeholder={"Select provider"}
-                                        className={"customSelectBox"}
-                                        isSearchable={true}
-                                        id="provider_id"
-                                        name="provider_id"
-                                        options={props?.providers}
-                                        value={props?.formData?.provider_id}
-                                        onChange={(e) => {
-                                            props.onSubmit(e, "provider_id")
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div></React.Fragment>
-                }
-               
-                {/* Date-  
-                Slot-{JSON.stringify(props.formData.slot)}<br /><br />
-                Selected-{JSON.stringify(selectedTimeSlot)}<br /><br /> */}
-                {/*State-{JSON.stringify(openTimePopup)}<br />
-                enabledDates-{JSON.stringify(props?.enabledDates[0])}<br />
-                providers-{JSON.stringify(props?.providers.length)}<br /> */}
-                 {/* {JSON.stringify(props.formData.date)} */}
-                 
-                 
-                {(props?.enabledDates.length > 0 || props?.providers.length > 0 && props.formData.provider_id) && <div className="dateTimeOuter">
-                    <div id="datePicker" className="AppointmentDate">
-                         <DatePicker
-                            wrapperClassName={props?.formData?.date ? "" : "appointmentDatePicker"}
-                            placeholderText="Select Date"
-                            includeDates={props.enabledDates}
-                            selected={props?.formData?.date}
-                            onChange={(e) => props.onSubmit(e, 'date', props.formData?.date)}
-                            customInput={<ExampleCustomInput />}
-                        />   
-                    </div>
-                   
-                    <div className="AppointmentDate timeSlot" >
 
-                        <label ref={innerRef} onClick={(e) => showTime(e)}>{(selectedTimeSlot) ? selectedTimeSlot : ( props.formData.date) ? props.formData.slot : ""}</label>
-                        {props.formData && (props.formData.date != undefined || props?.enabledDates[0]) && <div className={(openTimePopup == false) ? "timeslotPopup d-none" : "timeslotPopup"}>
-
-                            {props.slot && Object.values(props.slot).map((val, index) => (
-                                <span className={ getSelectedClass(val, (selectedTimeSlot) ? selectedTimeSlot : props.formData.slot)} key={index} onClick={(e) => handleTimeSelect(e, "slot", val)}>{val}</span>
-                            ))}
-                        </div>
-                        }
-                    </div>
-                </div>
-                }
-
-                {props?.service_for && props.enabledDates.length == 0 && <p className="p-text">
-                    No slots available. Kindly select another doctor or "Any" or another service.
-                </p>}
                 <div className="appointmentBtns">
                     <button className="button secondary mr-2" onClick={() => props.onBack(2)}>Back</button>
                     <button className="button primary ml-auto" disabled={props.data && props.data.length == 0} onClick={() => props.onNext(4)}>Continue</button>

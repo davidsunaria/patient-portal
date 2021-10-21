@@ -27,7 +27,7 @@ const Step2 = (props) => {
     }, [response]);
 
     return (
-        <div className="row">
+        <div className="row mt-3">
             <Contact data={clinicData} modal={contactModal} toggle={showContact} />
             <div className="col-md-8">
                 {/* {JSON.stringify(props)} */}

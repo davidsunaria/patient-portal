@@ -6,6 +6,8 @@ import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
+import Step5 from "./Step5";
+import Step6 from "./Step6";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import _, { conformsTo } from "lodash";
 import moment from "moment";
@@ -264,8 +266,8 @@ const BookAppointment = (props) => {
 
   //Handle next button actions    
   const handleNext = async (page) => {
-    console.log("Next", page);
-    if (page == 5) {
+    console.log("Next Clicked", page);
+    if (page == 7) {
       let status = validateBookAppointment(page);
       if (status) {
         let request = { ...formData };
@@ -348,7 +350,7 @@ const BookAppointment = (props) => {
   // Get Provider Based On Service Selected
   useEffect(async () => {
     if (formData.service_id) {
-      //console.log("Service selected and ", formData);
+      console.log("Service selected and ", formData);
       setAllProviders([]);
       setCalenderData([]);
       setTimeSlot([]);
@@ -370,8 +372,6 @@ const BookAppointment = (props) => {
       }
       console.log("Doctor Selected", request, formData.provider_id);
       await getProviderSchedule(request);
-
-
     }
   }, [formData.provider_id]);
 
@@ -424,6 +424,8 @@ const BookAppointment = (props) => {
       if (name && name == "service_id") {
         finalPayload = { ...otherData, service_name: payload?.name, service_duration: (payload?.duration) ? payload?.duration : payload?.custom_duration, service_description: payload?.description };
       }
+    
+    
       if (name && name == "provider_id") {
         finalPayload = { ...otherData, provider_name: payload?.label };
       }
@@ -472,6 +474,7 @@ const BookAppointment = (props) => {
 
 
   const validateBookAppointment = (page) => {
+    
     //Validate clinics
     let response = false;
     if (page == 3) {
@@ -489,10 +492,14 @@ const BookAppointment = (props) => {
       if (!formData.service_id) {
         toast.error(<ToastUI message={SELECT_SERVICE} type={"Error"} />);
       }
-      else if (formData.service_for == "provider" && !formData.provider_id?.value) {
+      else {
+        response = true;
+      }
+    }
+    if (page == 5) {
+      if (formData.service_for == "provider" && !formData.provider_id?.value) {
         toast.error(<ToastUI message={SELECT_PROVIDER} type={"Error"} />);
       }
-
       else if (!formData.date) {
         toast.error(<ToastUI message={SELECT_DATE} type={"Error"} />);
       }
@@ -503,16 +510,16 @@ const BookAppointment = (props) => {
         response = true;
       }
     }
-    if (page == 5) {
+    if (page == 6) {
       if (!formData.pet_id) {
         toast.error(<ToastUI message={SELECT_PET} type={"Error"} />);
       }
-      // else if (!formData.appointment_notes) {
-      //   toast.error(<ToastUI message={SELECT_APPOINTMENT_NOTES} type={"Error"} />);
-      // }
       else {
         response = true;
       }
+    }
+    if (page == 7) {
+      response = true;
     }
     return response;
   }
@@ -537,11 +544,13 @@ const BookAppointment = (props) => {
               subHeading={"Start your process to book your appointment"}
               hasBtn={false}
             />
-            {/* {JSON.stringify(otherData)} */}
+            {/* {JSON.stringify(formData)} */}
             {currentPage == 1 && <Step1 page={currentPage} onSubmit={handleStepOne} />}
             {currentPage == 2 && <Step2 other={otherData} formData={formData} data={allClinics} page={currentPage} onSubmit={handleStepTwo} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 3 && <Step3 timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
-            {currentPage == 4 && <Step4 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
+            {currentPage == 4 && <Step4 timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack}  />}
+            {currentPage == 5 && <Step5 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
+            {currentPage == 6 && <Step6 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
           </main>
         </div>
       </div>
