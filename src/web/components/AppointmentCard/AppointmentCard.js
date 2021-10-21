@@ -366,7 +366,7 @@ const AppointmentCard = (props) => {
                                     </div>
                                      { val?.appointment_notes && <div className="col-lg-3 col-sm-6 py-2">
                                         <label>Note</label>
-                                        <p dangerouslySetInnerHTML={{ __html: (val?.appointment_notes && val?.appointment_notes.includes("Follow-up from a")) ? "Follow-up from a previous visit" : val?.appointment_notes }} />
+                                        <pre  dangerouslySetInnerHTML={{ __html: (val?.appointment_notes && val?.appointment_notes.includes("Follow-up from a")) ? "Follow-up from a previous visit" : val?.appointment_notes }} />
 
                                     </div>}
                                     {val?.status == "canceled" && <div className="col-lg-3 col-sm-6 py-2">

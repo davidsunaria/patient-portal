@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SHARE_IMG from "patient-portal-images/share1.svg";
 import { truncate } from "patient-portal-utils/Service";
+import DCCLOGO from "patient-portal-images/dcc-logo.svg";
 
 const Article = (props) => {
   const history = useHistory();
@@ -18,13 +19,13 @@ const Article = (props) => {
       {props.data && props.data.length > 0 ? (
         props.data.map((result, index) => (
           <div key={index} className="box p-0 articleBlock onHover" onClick={() => go(result.id)}>
-            <div className="articleImg">
-            {!result.image && <img  src={`https://via.placeholder.com/150`} />}
+            <div className={!result.image ? "articleImg aricleWithLogo" : "articleImg"} >
+            {!result.image && <img src={DCCLOGO} />}
 
             {result.image && <img src={`${process.env.REACT_APP_MEDIA_URL}articles/${result.image}`} />}
              
             </div>
-            <p>{truncate(result?.title, 10, 25)}</p>
+            <p>{truncate(result?.title, 50, 45)}</p>
           </div>
         ))
       ) : (

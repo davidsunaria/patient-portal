@@ -1529,7 +1529,7 @@ input:checked + .slider:after {
         font-size:13px;
         color:$p-color;
     }
-    p{
+    p, pre{
         font-size:13px;
         color:$text-color
     }
@@ -2345,4 +2345,13 @@ color: red!important;
 }
 .petSetMaxLimit .customCheckbox{
     margin-bottom:30px;
+}
+.articleOuter .articleBlock .aricleWithLogo.aricleWithLogo{
+    justify-content: center;
+    img{
+        width: 100px;
+        height: inherit;
+        object-fit: initial;
+        object-position: initial;
+    }
 }
