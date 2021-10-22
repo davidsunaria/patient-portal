@@ -19,14 +19,11 @@ const VaccinationRecord = (props) => {
     const response = useStoreState((state) => state.pet.response);
     const isLoading = useStoreState((state) => state.common.isLoading);
 
-   
-
     const lastScrollTop = useRef(0)
     const handleScroll = useCallback((e) => {
-        console.log("Heik", e);
         const scrollTop = parseInt(Math.max(e?.srcElement?.scrollTop));
         let st = scrollTop;
-        
+
         if (st > lastScrollTop.current) {
             if (scrollTop + window.innerHeight + 50 >= e?.srcElement?.scrollHeight) {
                 setIsBottom(true);
@@ -38,15 +35,15 @@ const VaccinationRecord = (props) => {
             lastScrollTop.current = st <= 0 ? 0 : st;
         }, 0)
     }, []);
-   
+
     useEffect(async () => {
         if (props.petId) {
-            console.log("vaccination records");
+            console.log("vaccination records", props);
             let formData = {
                 page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
             }
             await getVaccinationRecord({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
-            window.addEventListener('scroll', (e) => handleScroll(e),true);
+            window.addEventListener('scroll', (e) => handleScroll(e), true);
             return () => {
                 window.removeEventListener('scroll', (e) => handleScroll(e))
             };
@@ -57,10 +54,9 @@ const VaccinationRecord = (props) => {
         if (response) {
             let { status, statuscode, data } = response;
             if (statuscode && statuscode === 200) {
+                console.log(data?.vaccination_details);
                 if (data && data.vaccination_details !== undefined) {
-                    let serverRespone = [];
-                    serverRespone.push(data?.vaccination_details);
-                    setRecords(serverRespone);
+                    setRecords(data?.vaccination_details);
                 }
 
                 if (data && data.vaccination !== undefined) {
@@ -142,10 +138,11 @@ const VaccinationRecord = (props) => {
     return (
         <React.Fragment>
             <div>
+               
                 {records && records.length > 0 ? (
                     records.map((val, index) => (
                         <div key={index} className="box recordCard">
-                            {val.due_date && <div className={`dueDate ${getDuedate(val)}`}> {(val.due_date) ? "Due:"+showFormattedDate(val?.due_date, false) : ''}</div>}
+                            {val.due_date && <div className={`dueDate ${getDuedate(val)}`}> {(val.due_date) ? "Due:" + showFormattedDate(val?.due_date, false) : ''}</div>}
                             <div className="recordDate">
                                 <span>{(val.d_date) ? formatDate(val?.d_date, 1, false) : ''}</span>
                                 <p>{(val.d_date) ? formatDate(val?.d_date, 2, false) : ''}</p>
@@ -157,9 +154,9 @@ const VaccinationRecord = (props) => {
 
                 ) : (
                     <NoRecord />
-                   
+
                 )}
-    
+
             </div>
 
         </React.Fragment>

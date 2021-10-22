@@ -17,8 +17,12 @@ export const getPet = async (formData) => {
   }
 };
 export const getTreatmentRecord = async (payload) => {
+  let query;
+  if (payload.query) {
+    query = objectToQuery(payload.query);
+  }
   try {
-    let response = await axiosApi.get(`${apiUrl}/pet/treatmentRecord/${payload.clientId}/${payload.petId}`);
+    let response = await axiosApi.get(`${apiUrl}/pet/treatmentRecord/${payload.clientId}/${payload.petId}?${query}`);
     return response?.data;
   } catch (error) {
     return error?.response?.data;

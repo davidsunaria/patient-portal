@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -9,19 +9,30 @@ import NoRecord from "patient-portal-components/NoRecord";
 
 const TreatmentRecord = (props) => {
   const history = useHistory();
+  const [isBottom, setIsBottom] = useState(false);
   const [records, setRecords] = useState([]);
+  const [page, setPage] = useState(0);
+  const [perPage, setPerPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [nextPageUrl, setNextPageUrl] = useState(null);
   const getTreatmentRecord = useStoreActions((actions) => actions.pet.getTreatmentRecord);
   const downloadReport = useStoreActions((actions) => actions.pet.downloadReport);
   const [downloadUrl, setDownloadUrl] = useState(null);
-
+  const lastScrollTop = useRef(0);
   const response = useStoreState((state) => state.pet.response);
 
-  
-
   useEffect(async () => {
-    if(props.petId){
+    if (props.petId) {
       console.log("Treatment records");
-      await getTreatmentRecord({ clientId: getLoggedinUserId(), petId: props.petId });
+      let formData = {
+        page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
+      }
+      await getTreatmentRecord({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
+
+      window.addEventListener('scroll', (e) => handleScroll(e), true);
+      return () => {
+        window.removeEventListener('scroll', (e) => handleScroll(e))
+      };
     }
   }, [props.petId, props.forceRender]);
 
@@ -29,18 +40,34 @@ const TreatmentRecord = (props) => {
     if (response) {
       let { status, statuscode, data } = response;
       if (statuscode && statuscode === 200) {
-        if (data?.pet?.visits) {
-          setRecords(data?.pet?.visits);
-        }
-        if (data?.file_url) {
-          setDownloadUrl(data?.file_url);
+        if (data?.visits !== undefined) {
+          const { current_page, next_page_url, per_page } = data.visits;
+
+          setCurrentPage(current_page);
+          setNextPageUrl(next_page_url);
+          setPerPage(per_page);
+
+          let serverRespone = data.visits.data;
+          console.log("serverRespone", serverRespone);
+          if (current_page == 1) {
+            setRecords(serverRespone);
+          }
+          else {
+            serverRespone = [...records, ...serverRespone];
+            setRecords(serverRespone);
+          }
+          setIsBottom(false);
         }
       }
+      if (data?.file_url) {
+        setDownloadUrl(data?.file_url);
+      }
+
     }
   }, [response]);
 
   const getDate = (result, type) => {
-      return formatDate(result?.visit_date, type, false);
+    return formatDate(result?.visit_date, type, false);
   }
   const downloadData = async (result, type) => {
     if (type == "prescription") {
@@ -69,11 +96,47 @@ const TreatmentRecord = (props) => {
     return { cls: "highlightDiv timelineDetail" }
   }
 
+
+  const handleScroll = useCallback((e) => {
+    const scrollTop = parseInt(Math.max(e?.srcElement?.scrollTop));
+    let st = scrollTop;
+    if (st > lastScrollTop.current) {
+      if (scrollTop + window.innerHeight + 50 >= e?.srcElement?.scrollHeight) {
+        setIsBottom(true);
+      }
+    } else {
+      setIsBottom(false);
+    }
+    setTimeout(() => {
+      lastScrollTop.current = st <= 0 ? 0 : st;
+    }, 0)
+  }, []);
+
+  useEffect(() => {
+    if (isBottom) {
+      if (nextPageUrl) {
+        setPage(parseInt(currentPage + 1));
+      }
+    }
+  }, [isBottom, nextPageUrl]);
+  //Get data on when scrolled
+  useEffect(async () => {
+    if (page && page > 1 && props.petId) {
+      console.log('Get next page ', page)
+      let formData = {
+        page: page,
+        pagesize: perPage,
+      }
+      console.log('Get next page payload ', formData)
+      await getTreatmentRecord({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
+    }
+  }, [page, props.petId]);
+
   return (
     <React.Fragment>
       <div className="box mb-2">
         <div className={records && records.length > 0 ? "timeline" : ""}>
-     
+
           {records && records.length > 0 ? (
             records.map((result, index) => (
               <div key={index} className={"timelineSection"} >
@@ -84,7 +147,7 @@ const TreatmentRecord = (props) => {
                   {(result.prescription.length > 0 || result.invoice) && <div className="dropdownArrow">
                     <ul className="dropdownOption">
                       {result.prescription[0]?.id && <li className="onHover" onClick={() => downloadData(result, "prescription")}><img src={PRESCRIPTION_IMAGE} />Prescription</li>}
-                      
+
                       {result.invoice?.id && <li className="onHover" onClick={() => downloadData(result, "invoice")}><img src={INVOICE_IMAGE} />Invoice</li>}
                       {result.file && <li className="onHover" onClick={() => downloadData(result, "file")}><img src={REPORT_IMAGE} />Reports</li>}
                     </ul>
@@ -107,7 +170,7 @@ const TreatmentRecord = (props) => {
               </div>
             ))
           ) : (
-            <NoRecord extraClass={"text-center"}/>
+            <NoRecord extraClass={"text-center"} />
           )}
         </div>
       </div>

@@ -53,9 +53,7 @@ const AntiParasiticRecord = (props) => {
       if (statuscode && statuscode === 200) {
         if (data && data.deworming_details !== undefined) {
           console.log("data.deworming_details", data.deworming_details)
-          let serverRespone = [];
-          serverRespone.push(data?.deworming_details);
-          setRecords(serverRespone);
+          setRecords(data?.deworming_details);
         }
         if (data && data.deworming !== undefined) {
           const { current_page, next_page_url, per_page } = data.deworming;

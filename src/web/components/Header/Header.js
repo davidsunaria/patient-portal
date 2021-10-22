@@ -18,7 +18,7 @@ const Header = (props) => {
   };
 
   useEffect(() => {
-    console.log(location.pathname);
+   // console.log(location.pathname);
     if (isProfileAndPetCompleted) {
       let isCompleted = getProfileCompleted();
       if (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0) {
@@ -33,7 +33,7 @@ const Header = (props) => {
 
   }, [isProfileAndPetCompleted]);
   const handleNav = (type) => {
-    console.log("Type", type);
+    //console.log("Type", type);
     if (type == "book-appointment") {
       let isCompleted = getProfileCompleted();
       if (isCompleted && (isCompleted?.isPetCompleted == 0 || isCompleted?.isProfileCompleted == 0)) {
