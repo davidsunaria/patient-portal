@@ -176,16 +176,7 @@ const BookAppointment = (props) => {
           });
           setAllProviders(resultSet);
           setFormData({ ...formData, provider_id: { value: "any", label: "Any" } });
-
-
-          //Scroll
-          // const element = document.getElementById("doctor");
-          // setTimeout(() => {
-          //   if (element) {
-          //     element.scrollIntoView({ behavior: 'smooth' });
-          //   }
-          // }, 700);
-
+          setCurrentPage(4);
         }
         // Set Providers Schedule
         if (data?.enabledDates) {
@@ -198,20 +189,15 @@ const BookAppointment = (props) => {
 
           setCalenderData(enabledDatesArray);
           if (data.enabledDates.length > 0) {
-            //toast.success(<ToastUI message={data.enabledDates.length} type={"Error"} />);
             setTimeout(
               () => {
                 setFormData({ ...formData, date: new Date(data.enabledDates[0]) })
                 updateOther(data.enabledDates[0], 3, "date");
-               
-                //Scroll
-                
               },
               100
             );
           }
           else {
-            //toast.error(<ToastUI message={data.enabledDates.length} type={"Error"} />);
             setTimeout(
               () => {
                 setFormData({ ...formData, date: "" });
@@ -266,7 +252,7 @@ const BookAppointment = (props) => {
 
   //Handle next button actions    
   const handleNext = async (page) => {
-    console.log("Next Clicked", page);
+    //console.log("Next Clicked", page);
     if (page == 7) {
       let status = validateBookAppointment(page);
       if (status) {
@@ -275,7 +261,7 @@ const BookAppointment = (props) => {
         request.provider_id = request.provider_id.value;
 
         if (request && request !== undefined) {
-          console.log("Form Submission", request);
+          //console.log("Form Submission", request);
           await createAppointment(request);
         }
       }
@@ -284,7 +270,18 @@ const BookAppointment = (props) => {
       //Validate data Step Wise
       let status = validateBookAppointment(page);
       if (status) {
-        setCurrentPage(page);
+        if(page == 4){
+          setAllProviders([]);
+          setCalenderData([]);
+          setTimeSlot([]);
+          setFormData({ ...formData, date: "", slot: "", provider_name: "", telehealth_clinic_id: "" });
+          setOtherData({ ...otherData, date: "", slot: "" });
+          await getProviders({ formData: formData, type: formData.service_id });
+        }
+        else{
+          setCurrentPage(page);
+        }
+        
       }
 
     }
@@ -350,13 +347,13 @@ const BookAppointment = (props) => {
   // Get Provider Based On Service Selected
   useEffect(async () => {
     if (formData.service_id) {
-      console.log("Service selected and ", formData);
+      /*console.log("Service selected and ", formData);
       setAllProviders([]);
       setCalenderData([]);
       setTimeSlot([]);
       setFormData({ ...formData, date: "", slot: "", provider_name: "", telehealth_clinic_id: "" });
       setOtherData({ ...otherData, date: "", slot: "" });
-      await getProviders({ formData: formData, type: formData.service_id });
+      await getProviders({ formData: formData, type: formData.service_id });*/
     }
   }, [formData.service_id]);
 
