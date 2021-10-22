@@ -9,7 +9,7 @@ $text-color:#4B4B5A;
 	.profileInfo .profileDetail{display:block;}
 	.profileInfo .profileDetail .profileDetailCol{margin-bottom:10px;}
 	.address{margin:0px!important;}
-	.timeslotPopup{width:405px;}
+	.timeslotPopup{width:auto;}
 	.timeslotPopup span{width: 22.2%;}
 	.AppointmentDate.timeSlot{width:140px;}
 	.totalInvoice .button{min-width:100px;}
@@ -37,7 +37,7 @@ $text-color:#4B4B5A;
 	.profileForm{padding-left:0px;}
 	.dateTimeOuter{flex-direction:column;}
 	.AppointmentDate, .AppointmentDate.timeSlot{width:100%;margin-bottom:10px;}
-	.timeslotPopup {width: 100%;}
+	.timeslotPopup {width:auto;top:97%;}
 	.timeslotPopup span {width: 46%!important;}
 	.titleBtn{padding-right: 0px;}
 	.titleBtn button{position: static;}

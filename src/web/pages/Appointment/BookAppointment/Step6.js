@@ -5,19 +5,20 @@ import Other from "patient-portal-pages/Appointment/BookAppointment/Other.js"
 import EDIT_PROFILE_IMG from "patient-portal-images/edit-profile.svg";
 
 const Step6 = (props) => {
-   
+
     return (
         <div>
-           
+
             <div className="row">
                 <div className="col-md-8">
-                    
+
                     <div className="subtitle mt-4 mb-3">
                         Add Appointment Note
                     </div>
+                    <p className="p-text mb-3">Please help us understand your case in more, detail prior to the appointment, This field can be left blank if not needed</p>
                     <div className="box">
                         <textarea
-                        placeholder="Optional"
+                            placeholder="Type your answer here"
                             value={props.formData?.appointment_notes}
                             name="appointment_notes"
                             className="appointmentNote"

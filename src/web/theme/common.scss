@@ -1111,7 +1111,7 @@ select.fieldInput{
 }
 .timeSlot{
     padding-left:0px;
-    position:relative;
+    position:static;
 
     label{
         font-size:16px;
@@ -1126,15 +1126,16 @@ select.fieldInput{
     padding-top:30px;
     margin-top: 30px;
     border-top:1px solid #dddddd;
+    position: relative;
 }
 .timeslotPopup{
     background:#ffffff;
     @include border-radius(5px);
     padding:15px;
     position:absolute;
-    top:100%;
+    top:102%;
     margin-bottom:5px;
-    width:520px;
+    width:auto;
     padding:17px 15px;
     right:0px;
     display:flex;
