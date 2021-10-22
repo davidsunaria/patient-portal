@@ -111,6 +111,7 @@ export const getClinicServices = async (formData) => {
 
 
 export const getProviders = async (formData) => {
+  //console.log("APi", formData);
   let clinicId;
   if(formData?.formData?.clinic_id != "" && formData?.formData?.clinic_id !== undefined){
     clinicId = `/${formData?.formData?.clinic_id}`;

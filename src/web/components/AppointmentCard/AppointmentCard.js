@@ -53,19 +53,19 @@ const AppointmentCard = (props) => {
     const getPetByVisit = useStoreActions((actions) => actions.dashboard.getPetByVisit);
     const [currentOpenStack, setCurrentOpenStack] = useState(null);
     const toggle = (val) => {
-       
-       
+
+
         setModal(!modal);
         if (val) {
             setModalData(val);
         }
-       
+
         setTimeout(
             () => {
                 setCurrentOpenStack(null);
             },
-            100 
-          );
+            100
+        );
     };
 
     useEffect(() => {
@@ -226,11 +226,11 @@ const AppointmentCard = (props) => {
 
     useEffect(() => {
         console.log("Cancel cancellationPolicyStatus", cancellationPolicyStatus);
-        if(cancellationPolicyStatus === 1){
+        if (cancellationPolicyStatus === 1) {
             setPolicyModal(true);
         }
-        if(cancellationPolicyStatus === 0){
-           onCancelAppointment(appointmentId);
+        if (cancellationPolicyStatus === 0) {
+            onCancelAppointment(appointmentId);
         }
     }, [cancellationPolicyStatus]);
 
@@ -239,7 +239,7 @@ const AppointmentCard = (props) => {
         setCancellationPolicyStatus("");
     }
 
-    const getDetail = async(val) => {
+    const getDetail = async (val) => {
         await getPetByVisit({ id: val.id, event: "visit", history });
     }
     const showToggle = (index) => {
@@ -267,7 +267,7 @@ const AppointmentCard = (props) => {
     }
     const innerRef = useOuterClick(ev => {
         console.log("ev", ev.target.className)
-        if(ev.target.className !== "dropdownArrow"){
+        if (ev.target.className !== "dropdownArrow") {
             setCurrentOpenStack(null);
         }
     });
@@ -289,10 +289,10 @@ const AppointmentCard = (props) => {
                                 </a>
                             }
 
-                            
-                            <div className="dropdownArrow"  ref={innerRef} onClick={() => showToggle(index)}>
-                           
-                               {index == currentOpenStack && <ul className={ (index == currentOpenStack) ? "dropdownOption d-block" : ""}>
+
+                            <div className="dropdownArrow" ref={innerRef} onClick={() => showToggle(index)}>
+
+                                {index == currentOpenStack && <ul className={(index == currentOpenStack) ? "dropdownOption d-block" : ""}>
 
                                     {(props.type == "upcoming" && val.status != "canceled") && <li>
                                         <a className="onHover" onClick={() => toggle(val)}>
@@ -325,8 +325,8 @@ const AppointmentCard = (props) => {
                                     {(props.type == "past" && val.pet_visit) && <li>
 
                                         <a onClick={() => getDetail(val.pet_visit)}>
-                                        <img src={I_IMAGE} className="appDetail"/>
-                                        
+                                            <img src={I_IMAGE} className="appDetail" />
+
                                             Details
                                         </a>
                                     </li>}
@@ -364,9 +364,9 @@ const AppointmentCard = (props) => {
                                         <label>Type</label>
                                         <p>{val?.appointment_type == "virtual" ? "Telehealth" : 'Clinic'}</p>
                                     </div>
-                                     { val?.appointment_notes && <div className="col-lg-3 col-sm-6 py-2">
+                                    {val?.appointment_notes && <div className="col-lg-3 col-sm-6 py-2">
                                         <label>Note</label>
-                                        <pre  dangerouslySetInnerHTML={{ __html: (val?.appointment_notes && val?.appointment_notes.includes("Follow-up from a")) ? "Follow-up from a previous visit" : val?.appointment_notes }} />
+                                        <pre dangerouslySetInnerHTML={{ __html: (val?.appointment_notes && val?.appointment_notes.includes("Follow-up from a")) ? "Follow-up from a previous visit" : val?.appointment_notes }} />
 
                                     </div>}
                                     {val?.status == "canceled" && <div className="col-lg-3 col-sm-6 py-2">
