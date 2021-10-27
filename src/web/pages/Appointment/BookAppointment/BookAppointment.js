@@ -131,7 +131,7 @@ const BookAppointment = (props) => {
 
   const handleStepFour = (e, name, val) => {
     let formPayload = { ...formData };
-
+    //console.log("->>>>",formData)
     if (name && name == "pet_id" && val != "") {
       //console.log("->>>>",e, name, val)
       formPayload[name] = val.id;
@@ -275,9 +275,9 @@ const BookAppointment = (props) => {
       
       //Validate data Step Wise
       let status = validateBookAppointment(page);
-      console.log("Page", formData);
+      //console.log("Page", formData);
       if (status) {
-        console.log("Page", page);
+       // console.log("Page", page);
         if(page == 4){
           
           setAllProviders([]);
@@ -297,7 +297,7 @@ const BookAppointment = (props) => {
 
   }
   const handleBack = (page) => {
-    console.log(page);
+    //console.log(page);
     if (page === 1) {
       setFormData({});
       setOtherData({});
@@ -328,6 +328,10 @@ const BookAppointment = (props) => {
       setTimeSlot([]);
       setFormData(request);
       setOtherData(requestOther);
+    }
+    // Override pet id if back button from pet screen is clicked
+    if (page == 5) {
+      setFormData({...formData, pet_id_override: formData.pet_id});
     }
     //Reset Page For Virtual
     if (formData.type == "virtual" && page == 2) {
