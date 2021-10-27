@@ -29,6 +29,7 @@ const appointmentModel = {
   }),
   getPastAppointments: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
+    await actions.setIsRescheduled(false);
     let response = await getPastAppointments(payload);
     if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
@@ -44,6 +45,7 @@ const appointmentModel = {
   }),
   getUpcomingAppointments: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
+    await actions.setIsRescheduled(false);
     let response = await getUpcomingAppointments(payload);
     if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);

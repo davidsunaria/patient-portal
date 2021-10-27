@@ -53,13 +53,10 @@ const AppointmentCard = (props) => {
     const getPetByVisit = useStoreActions((actions) => actions.dashboard.getPetByVisit);
     const [currentOpenStack, setCurrentOpenStack] = useState(null);
     const toggle = (val) => {
-
-
         setModal(!modal);
         if (val) {
             setModalData(val);
         }
-
         setTimeout(
             () => {
                 setCurrentOpenStack(null);
