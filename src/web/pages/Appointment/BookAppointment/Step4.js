@@ -187,8 +187,8 @@ const Step4 = (props) => {
                     </div>
                 </div>
                 }
-
-                {props?.service_for && props.enabledDates.length == 0 && <p className="p-text">
+    
+                {props.enabledDates.length == 0 && <p className="p-text">
                     No slots available. Kindly select another doctor or "Any" or another service.
                 </p>}
                 <div className="appointmentBtns">
