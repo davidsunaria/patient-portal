@@ -72,7 +72,7 @@ const Contact = (props) => {
               </div>
               <div className="addressInfo">
                 <label>Email</label>
-                <p>info@dccpets.in</p>
+                <p> {(props?.data.contact_email) ? props?.data.contact_email : 'info@dccpets.in' }</p>
               </div>
             </div>
 
