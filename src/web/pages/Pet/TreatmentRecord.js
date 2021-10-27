@@ -22,6 +22,7 @@ const TreatmentRecord = (props) => {
   const response = useStoreState((state) => state.pet.response);
   const getTreatmentDetail = useStoreActions((actions) => actions.pet.getTreatmentDetail);
   const { id, type, visitId } = useParams();
+  const [currentOpenStack, setCurrentOpenStack] = useState(null);
   useEffect(async () => {
     if (props.petId) {
       console.log("Treatment records", id, type, visitId);
@@ -145,6 +146,35 @@ const TreatmentRecord = (props) => {
     }
   }, [props.petId, props.visitId]);
 
+  const useOuterClick = (callback) => {
+    const callbackRef = useRef(); // initialize mutable ref, which stores callback
+    const innerRef = useRef(); // returned to client, who marks "border" element
+
+    // update cb on each render, so second useEffect has access to current value 
+    useEffect(() => { callbackRef.current = callback; });
+
+    useEffect(() => {
+        document.addEventListener("click", handleClick);
+        return () => document.removeEventListener("click", handleClick);
+        function handleClick(e) {
+            if (innerRef.current && callbackRef.current &&
+                !innerRef.current.contains(e.target)
+            ) callbackRef.current(e);
+        }
+    }, []); // no dependencies -> stable click listener
+
+    return innerRef; // convenience for client (doesn't need to init ref himself) 
+}
+const innerRef = useOuterClick(ev => {
+    let selectedClass = ev.target.className.split(" ");
+    if (selectedClass && selectedClass[0] !== "dropdownArrow") {
+        setCurrentOpenStack(null);
+    }
+});
+const showToggle = (index) => {
+  setCurrentOpenStack(index);
+}
+
   return (
     <React.Fragment>
       <div className="box mb-2">
@@ -158,13 +188,15 @@ const TreatmentRecord = (props) => {
                 {/* className={(result.id == props.visitId) ? (executeScroll(result.id).cls) : "timelineDetail"} */}
                 <div id={result.id} className={"timelineDetail"}>
 
-                  {(result.prescription.length > 0 || result.invoice) && <div className="dropdownArrow">
-                    <ul className="dropdownOption">
+                  {(result.prescription.length > 0 || result.invoice) && <div className="dropdownArrow onHover" ref={innerRef} onClick={() => showToggle(index)}>
+                    
+                    {index == currentOpenStack && 
+                    <ul className={(index == currentOpenStack) ? "dropdownOption d-block" : ""}>
                       {result.prescription[0]?.id && <li className="onHover" onClick={() => downloadData(result, "prescription")}><img src={PRESCRIPTION_IMAGE} />Prescription</li>}
 
                       {result.invoice?.id && <li className="onHover" onClick={() => downloadData(result, "invoice")}><img src={INVOICE_IMAGE} />Invoice</li>}
                       {result.file && <li className="onHover" onClick={() => downloadData(result, "file")}><img src={REPORT_IMAGE} />Reports</li>}
-                    </ul>
+                    </ul>}
                   </div>
                   }
                   <div className="mb-2">
