@@ -15,7 +15,7 @@ const Step6 = (props) => {
                     <div className="subtitle mt-4 mb-3">
                         Add Appointment Note
                     </div>
-                    <p className="p-text mb-3">Please help us understand your case in more, detail prior to the appointment, This field can be left blank if not needed</p>
+                    <p className="p-text mb-3">Please help us understand your case in more detail prior to the appointment. This field can be left blank if not needed</p>
                     <div className="box">
                         <textarea
                             placeholder="Type your answer here"

@@ -1,7 +1,7 @@
 import { action, thunk } from "easy-peasy";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import { getPets, getPet, getTreatmentRecord, getVaccinationRecord, getAntiParasiticRecord, getReports, downloadReport, getMedicalRecords, createPet, updatePet, getSpecies, getBreeds, deletePet, getReportsByVisit, getDewormingDetail, getVaccinationDetail, getReportDetail, contactUs } from "patient-portal-api/PetApi.js";
+import { getPets, getPet, getTreatmentRecord, getVaccinationRecord, getAntiParasiticRecord, getReports, downloadReport, getMedicalRecords, createPet, updatePet, getSpecies, getBreeds, deletePet, getReportsByVisit, getDewormingDetail, getVaccinationDetail, getReportDetail, contactUs, getTreatmentDetail } from "patient-portal-api/PetApi.js";
 const petModel = {
   response: [],
   isPetDeleted: false,
@@ -291,6 +291,22 @@ const petModel = {
   }),
   resetContactUs: thunk(async (actions, payload, { getStoreActions }) => {
     await actions.setResponse([]);
+  }),
+  
+  getTreatmentDetail: thunk(async (actions, payload, { getStoreActions }) => {
+    getStoreActions().common.setLoading(true);
+    let response = await getTreatmentDetail(payload);
+    if (response && response.statuscode != 200) {
+      toast.error(<ToastUI message={response.message} type={"Error"} />);
+      getStoreActions().common.setLoading(false);
+    } else if (response && response.statuscode == 200) {
+      await actions.setResponse(response);
+      getStoreActions().common.setLoading(false);
+      await actions.setResponse(response);
+    } else {
+      getStoreActions().common.setLoading(false);
+      return true;
+    }
   })
 };
 

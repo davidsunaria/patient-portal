@@ -284,6 +284,7 @@ const Invoice = (props) => {
                             {records && records.length > 0 ? (
                                 records.map((val, index) => (
                                     <div key={index} className="box recordCard onHover" onClick={() => goTo(val.id)}>
+                                        
                                         <div className={`dueDate ${getStatus(val.status, 1)}`}>{getStatus(val.status, 2)}</div>
                                         <div className="recordDate">
                                             <span>{(val.created) ? formatDate(val?.created, 1, false) : ''}</span>

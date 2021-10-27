@@ -54,7 +54,7 @@ const VaccinationRecord = (props) => {
         if (response) {
             let { status, statuscode, data } = response;
             if (statuscode && statuscode === 200) {
-                console.log(data?.vaccination_details);
+                //console.log(data?.vaccination_details);
                 if (data && data.vaccination_details !== undefined) {
                     setRecords(data?.vaccination_details);
                 }

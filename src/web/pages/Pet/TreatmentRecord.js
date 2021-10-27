@@ -20,15 +20,17 @@ const TreatmentRecord = (props) => {
   const [downloadUrl, setDownloadUrl] = useState(null);
   const lastScrollTop = useRef(0);
   const response = useStoreState((state) => state.pet.response);
-
+  const getTreatmentDetail = useStoreActions((actions) => actions.pet.getTreatmentDetail);
+  const { id, type, visitId } = useParams();
   useEffect(async () => {
     if (props.petId) {
-      console.log("Treatment records");
-      let formData = {
-        page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
+      console.log("Treatment records", id, type, visitId);
+      if (!type && !visitId) {
+        let formData = {
+          page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
+        }
+        await getTreatmentRecord({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
       }
-      await getTreatmentRecord({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
-
       window.addEventListener('scroll', (e) => handleScroll(e), true);
       return () => {
         window.removeEventListener('scroll', (e) => handleScroll(e))
@@ -63,6 +65,11 @@ const TreatmentRecord = (props) => {
         setDownloadUrl(data?.file_url);
       }
 
+      if (data && data.appointment !== undefined) {
+        let serverRespone = [];
+        serverRespone.push(data)
+        setRecords(serverRespone);
+      }
     }
   }, [response]);
 
@@ -132,6 +139,12 @@ const TreatmentRecord = (props) => {
     }
   }, [page, props.petId]);
 
+  useEffect(async () => {
+    if (props.petId && props.visitId && type && visitId) {
+      await getTreatmentDetail(props.visitId);
+    }
+  }, [props.petId, props.visitId]);
+
   return (
     <React.Fragment>
       <div className="box mb-2">
@@ -142,7 +155,8 @@ const TreatmentRecord = (props) => {
               <div key={index} className={"timelineSection"} >
 
                 <div className="timelineTime">{getDate(result, 3)} | {getDate(result, 4)}</div>
-                <div id={result.id} className={(result.id == props.visitId) ? (executeScroll(result.id).cls) : "timelineDetail"}>
+                {/* className={(result.id == props.visitId) ? (executeScroll(result.id).cls) : "timelineDetail"} */}
+                <div id={result.id} className={"timelineDetail"}>
 
                   {(result.prescription.length > 0 || result.invoice) && <div className="dropdownArrow">
                     <ul className="dropdownOption">

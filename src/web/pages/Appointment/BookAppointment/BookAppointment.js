@@ -163,6 +163,8 @@ const BookAppointment = (props) => {
         if (data?.categoryServices) {
           setAllServices(data?.categoryServices);
         }
+
+
         //Set Providers Data
         let resultSet = [];
         if (data?.providers) {
@@ -246,13 +248,16 @@ const BookAppointment = (props) => {
           setOtherData({ ...otherData, pet_name: data?.pet.name, species: data?.pet.speciesmap?.species });
         }
 
+        if(data?.type == "clinic"){
+          setCurrentPage(4);
+        }
       }
     }
   }, [response]);
 
   //Handle next button actions    
   const handleNext = async (page) => {
-    //console.log("Next Clicked", page);
+    //  console.log("Next Clicked", page);
     if (page == 7) {
       let status = validateBookAppointment(page);
       if (status) {
@@ -267,10 +272,14 @@ const BookAppointment = (props) => {
       }
     }
     else {
+      
       //Validate data Step Wise
       let status = validateBookAppointment(page);
+      console.log("Page", formData);
       if (status) {
+        console.log("Page", page);
         if(page == 4){
+          
           setAllProviders([]);
           setCalenderData([]);
           setTimeSlot([]);

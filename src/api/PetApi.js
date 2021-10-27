@@ -182,3 +182,11 @@ export const contactUs = async (formData) => {
     return error?.response?.data;
   }
 };
+export const getTreatmentDetail = async (formData) => {
+  try {
+    let response = await axiosApi.get(`${apiUrl}/pet/treatment/${formData}`);
+    return response?.data;
+  } catch (error) {
+    return error?.response?.data;
+  }
+};
