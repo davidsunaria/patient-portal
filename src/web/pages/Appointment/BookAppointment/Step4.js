@@ -163,7 +163,7 @@ const Step4 = (props) => {
 
 
                 {(props?.enabledDates.length > 0 || props?.providers.length > 0 && props.formData.provider_id) && <div className="dateTimeOuter">
-                    <div id="datePicker" className="AppointmentDate">
+                   { props?.enabledDates.length > 0 && <React.Fragment><div id="datePicker" className="AppointmentDate">
                         <DatePicker
                             wrapperClassName={props?.formData?.date ? "" : "appointmentDatePicker"}
                             placeholderText="Select Date"
@@ -184,11 +184,11 @@ const Step4 = (props) => {
                             ))}
                         </div>
                         }
-                    </div>
+                    </div></React.Fragment>}
                 </div>
                 }
     
-                {props.enabledDates.length == 0 && <p className="p-text">
+                {props.enabledDates.length == 0 && <p className="p-text mt-3">
                     No slots available. Kindly select another doctor or "Any" or another service.
                 </p>}
                 <div className="appointmentBtns">
