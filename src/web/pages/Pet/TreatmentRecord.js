@@ -50,7 +50,7 @@ const TreatmentRecord = (props) => {
           setPerPage(per_page);
 
           let serverRespone = data.visits.data;
-          console.log("serverRespone", serverRespone);
+          //console.log("serverRespone", serverRespone);
           if (current_page == 1) {
             setRecords(serverRespone);
           }

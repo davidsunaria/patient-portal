@@ -135,13 +135,23 @@ const VaccinationRecord = (props) => {
             await getVaccinationDetail(props.visitId);
         }
     }, [props.petId, props.visitId]);
+
+    const executeScroll = (id) => {
+        const element = document.getElementById(id);
+        setTimeout(() => {
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 500);
+        return { cls: "highlightDiv box recordCard" }
+      }
     return (
         <React.Fragment>
             <div>
                
                 {records && records.length > 0 ? (
                     records.map((val, index) => (
-                        <div key={index} className="box recordCard">
+                        <div key={index} id={val.id} className={(val.id == props.visitId) ? (executeScroll(val.id).cls) : "box recordCard"}>
                             {val.due_date && <div className={`dueDate ${getDuedate(val)}`}> {(val.due_date) ? "Due:" + showFormattedDate(val?.due_date, false) : ''}</div>}
                             <div className="recordDate">
                                 <span>{(val.d_date) ? formatDate(val?.d_date, 1, false) : ''}</span>

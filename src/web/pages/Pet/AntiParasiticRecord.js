@@ -130,12 +130,22 @@ const AntiParasiticRecord = (props) => {
       await getDewormingDetail(props.visitId);
     }
   }, [props.petId, props.visitId]);
+
+  const executeScroll = (id) => {
+    const element = document.getElementById(id);
+    setTimeout(() => {
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 500);
+    return { cls: "highlightDiv box recordCard" }
+  }
   return (
     <React.Fragment>
 
       {records && records.length > 0 ? (
         records.map((val, index) => (
-          <div key={index} className="box recordCard">
+          <div key={index} id={val.id} className={(val.id == props.visitId) ? (executeScroll(val.id).cls) : "box recordCard"} >
 {/* 
             {<div className={`  ${val.status == "completed" ? "dueDate green" : (val.due_date && "dueDate "+getDuedate(val))}`}>
               {val.status == "pending" && <span> {(val.due_date) ? "Due:"+showFormattedDate(val?.due_date, false) : ''} </span>}
