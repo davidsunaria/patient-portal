@@ -141,10 +141,10 @@ const TreatmentRecord = (props) => {
   }, [page, props.petId]);
 
   useEffect(async () => {
-    if (props.petId && props.visitId && type && visitId) {
+    if (props.petId && props.visitId && type && visitId && props.currentTab == "treatment_record") {
       await getTreatmentDetail(props.visitId);
     }
-  }, [props.petId, props.visitId]);
+  }, [props.petId, props.visitId, props.currentTab]);
 
   const useOuterClick = (callback) => {
     const callbackRef = useRef(); // initialize mutable ref, which stores callback

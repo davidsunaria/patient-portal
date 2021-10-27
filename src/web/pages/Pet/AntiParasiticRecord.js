@@ -6,6 +6,7 @@ import moment from "moment";
 import NoRecord from "patient-portal-components/NoRecord";
 
 const AntiParasiticRecord = (props) => {
+  const { type, visitId } = useParams();
   const [isBottom, setIsBottom] = useState(false);
   const [records, setRecords] = useState([]);
   const [page, setPage] = useState(0);
@@ -34,7 +35,7 @@ const AntiParasiticRecord = (props) => {
   }, []);
 
   useEffect(async () => {
-    if (props.petId) {
+    if (props.petId && !type && !visitId) {
       let formData = {
         page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
       }
@@ -125,7 +126,7 @@ const AntiParasiticRecord = (props) => {
 
 
   useEffect(async () => {
-    if (props.petId && props.visitId) {
+    if (props.petId && props.visitId && type && visitId) {
       console.log("heloo");
       await getDewormingDetail(props.visitId);
     }

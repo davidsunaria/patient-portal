@@ -6,6 +6,7 @@ import moment from "moment";
 import NoRecord from "patient-portal-components/NoRecord";
 
 const VaccinationRecord = (props) => {
+    const { type, visitId } = useParams();
     const [isBottom, setIsBottom] = useState(false);
     const [records, setRecords] = useState([]);
     const [page, setPage] = useState(0);
@@ -37,7 +38,7 @@ const VaccinationRecord = (props) => {
     }, []);
 
     useEffect(async () => {
-        if (props.petId) {
+        if (props.petId && !type && !visitId) {
             console.log("vaccination records", props);
             let formData = {
                 page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
@@ -130,7 +131,7 @@ const VaccinationRecord = (props) => {
     }
 
     useEffect(async () => {
-        if (props.petId && props.visitId) {
+        if (props.petId && props.visitId && type && visitId) {
             console.log("get detail");
             await getVaccinationDetail(props.visitId);
         }

@@ -21,7 +21,7 @@ const Reports = (props) => {
   const response = useStoreState((state) => state.pet.response);
   const isLoading = useStoreState((state) => state.common.isLoading);
   const lastScrollTop = useRef(0);
-
+  const { id, type, visitId } = useParams();
   const handleScroll = useCallback((e) => {
     const scrollTop = parseInt(Math.max(e?.srcElement?.scrollTop));
     let st = scrollTop;
@@ -38,14 +38,17 @@ const Reports = (props) => {
   }, []);
 
   useEffect(async () => {
-    let formData = {
-      page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
+    if ((props.petId && props.visitId && !type && !visitId) || (props.forceRender)) {
+      let formData = {
+        page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
+      }
+      await getReports({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
+      window.addEventListener('scroll', (e) => handleScroll(e), true);
+      return () => {
+        window.removeEventListener('scroll', (e) => handleScroll(e))
+      };
     }
-    await getReports({ clientId: getLoggedinUserId(), petId: props.petId, query: formData });
-    window.addEventListener('scroll', (e) => handleScroll(e), true);
-    return () => {
-      window.removeEventListener('scroll', (e) => handleScroll(e))
-    };
+    
   }, [props.petId, props.forceRender]);
 
   useEffect(() => {
@@ -117,7 +120,7 @@ const Reports = (props) => {
   }
 
   useEffect(async () => {
-    if (props.petId && props.visitId) {
+      if (props.petId && props.visitId && type && visitId) {
       await getReportDetail(props.visitId);
     }
   }, [props.petId, props.visitId]);

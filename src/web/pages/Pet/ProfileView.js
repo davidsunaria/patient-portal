@@ -83,7 +83,7 @@ const ProfileView = (props) => {
               <li><a className={` ${currentTab && currentTab == "medical_highlights_record" ? "active" : ""}`} onClick={() => selectedTab('medical_highlights_record')}>Medical Highlights</a></li>
             </ul>
            
-            {(!currentTab || currentTab === "treatment_record") && <TreatmentRecord forceRender={forceRender} petId={id} visitId={visitId} />}
+            {(!currentTab || currentTab === "treatment_record") && <TreatmentRecord currentTab={currentTab} forceRender={forceRender} petId={id} visitId={visitId} />}
             {currentTab && currentTab === "vaccination_record" && <VaccinationRecord forceRender={forceRender} petId={id} visitId={visitId} />}
             {currentTab && currentTab === "antiparasitic_record" && <AntiParasiticRecord forceRender={forceRender} petId={id} visitId={visitId} />}
             {currentTab && currentTab === "reports_record" && <Reports forceRender={forceRender} petId={id} visitId={visitId} />}
