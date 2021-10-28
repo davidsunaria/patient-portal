@@ -76,6 +76,7 @@ const RescheduleAppointment = (props) => {
     }
   }, [props.data]);
 
+  // On Provider Change
   useEffect(async () => {
     //console.log("Fire APi", formData.provider_id)
     if (formData?.provider_id?.value && isProviderChanged == true) {
@@ -125,8 +126,8 @@ const RescheduleAppointment = (props) => {
         if (data?.timeSlots) {
           setTimeslots(data?.timeSlots);
           //console.log(data.timeSlots[0]);
-          if (data?.timeSlots.length > 0) {
-
+          if (data?.timeSlots.length == 0) {
+            setTime(null);
           }
         }
       }
@@ -134,10 +135,21 @@ const RescheduleAppointment = (props) => {
   }, [response]);
 
   useEffect(async () => {
+    console.log("Clinic get slots", props?.data?.service?.service_for);
     if (date && id && props?.data?.service?.service_for == "clinic") {
-      console.log("Clinic get slots", date);
-      let newDate = moment(date).format("YYYY-MM-DD");
-      await getTimeSlot({ id: id, date: newDate });
+      
+      //let newDate = moment(date).format("YYYY-MM-DD");
+      //await getTimeSlot({ id: id, date: newDate });
+
+      let payload = {
+        clinicId: props?.data?.clinic_id,
+        serviceId: props?.data?.service_id,
+        providerId: props?.data?.doctor_id ?? "",
+        date: moment(date).format("YYYY-MM-DD"),
+        appType: props?.data?.appointment_type
+      }
+      //console.log("Date changed from provider", payload);
+      await getProviderSlots(payload);
     }
     if (date && props?.data?.service?.service_for == "provider") {
 
@@ -151,7 +163,7 @@ const RescheduleAppointment = (props) => {
       //console.log("Date changed from provider", payload);
       await getProviderSlots(payload);
     }
-  }, [date, props?.data]);
+  }, [date, props?.data, formData]);
   const selectTime = (val) => {
     setTime(val);
   }
@@ -223,12 +235,12 @@ const RescheduleAppointment = (props) => {
                 <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
               </div>
             </div>
-
+                 
             <div className="fieldOuter">
               <label className="fieldLabel">Select Timeslot</label>
               <div className="fieldBox">
                 <div className="timeslotPopup">
-                  {date && timeslots ? (
+                  {date && timeslots.length > 0 ? (
                     Object.values(timeslots).map((val, index) => (
                       <span className={(val == time) ? "active" : ''} key={index} onClick={() => selectTime(val)}>{val}</span>
                     ))
