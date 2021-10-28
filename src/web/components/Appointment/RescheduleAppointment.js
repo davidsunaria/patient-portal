@@ -23,6 +23,7 @@ const RescheduleAppointment = (props) => {
   const [time, setTime] = useState(null);
   const [enabledDates, setEnabledDates] = useState([]);
   const [timeslots, setTimeslots] = useState([]);
+  const [timeSlotClinic, setTimeSlotClinic] = useState(null);
   const getDates = useStoreActions((actions) => actions.appointment.getDates);
   const getTimeSlot = useStoreActions((actions) => actions.appointment.getTimeSlot);
   const updateAppointment = useStoreActions((actions) => actions.appointment.updateAppointment);
@@ -78,14 +79,15 @@ const RescheduleAppointment = (props) => {
 
   // On Provider Change
   useEffect(async () => {
-    //console.log("Fire APi", formData.provider_id)
+    console.log("Fire APi", formData.provider_id)
     if (formData?.provider_id?.value && isProviderChanged == true) {
 
       let request = {
         clinicId: formData.clinic_id,
         serviceId: formData.service_id,
         providerId: formData.provider_id.value,
-        appType: formData.type
+        appType: formData.type,
+        appointmentId: props?.data?.id
       }
       //console.log("Doctor Selected", request, formData.provider_id);
       await getProviderSchedule(request);
@@ -108,10 +110,14 @@ const RescheduleAppointment = (props) => {
               value: value.user_id, label: `${value.title} ${value.firstname} ${value.lastname}`, doctor_profile: value?.doctor_profile
             });
           });
+          const newCompleted = data.providers.filter((row) => row.user_id === props?.data?.doctor_id);
+          if(newCompleted.length == 0){
+            resultSet.push({ value: props?.data?.doctor_id, label: `${props?.data?.doctor?.title} ${props?.data?.doctor?.firstname} ${props?.data?.doctor?.lastname}` });
+          }
+
           setAllProviders(resultSet);
-
         }
-
+        
         // Set Dates Data
         if (data?.enabledDates !== undefined) {
           let enabledDatesArray = [];
@@ -119,25 +125,39 @@ const RescheduleAppointment = (props) => {
             enabledDatesArray.push(new Date(value));
           });
           setEnabledDates(enabledDatesArray);
-
-
         }
         // Set Time Slots Data
         if (data?.timeSlots) {
-          setTimeslots(data?.timeSlots);
+
+          setTimeout(
+            () => {
+              setTimeslots(data?.timeSlots);
+            },
+            100
+          );
+
+         
           //console.log(data.timeSlots[0]);
           if (data?.timeSlots.length == 0) {
             setTime(null);
           }
         }
+
+        if (data?.timeSlotsClinic) {
+          let timeSlotClinic = data?.timeSlotsClinic
+           if (timeSlotClinic) {
+              setTimeSlotClinic(timeSlotClinic[time]);
+           }
+        }
+        
       }
     }
   }, [response]);
 
   useEffect(async () => {
-    console.log("Clinic get slots", props?.data?.service?.service_for);
-    if (date && id && props?.data?.service?.service_for == "clinic") {
-      
+    //console.log("Clinic get slots", props?.data);
+    if (date && id && props?.data?.service?.service_for == "clinic") {  
+
       //let newDate = moment(date).format("YYYY-MM-DD");
       //await getTimeSlot({ id: id, date: newDate });
 
@@ -146,7 +166,8 @@ const RescheduleAppointment = (props) => {
         serviceId: props?.data?.service_id,
         providerId: props?.data?.doctor_id ?? "",
         date: moment(date).format("YYYY-MM-DD"),
-        appType: props?.data?.appointment_type
+        appType: props?.data?.appointment_type,
+        appointmentId: props?.data?.id
       }
       //console.log("Date changed from provider", payload);
       await getProviderSlots(payload);
@@ -158,7 +179,8 @@ const RescheduleAppointment = (props) => {
         serviceId: props?.data?.service_id,
         providerId: (formData.provider_id?.value) ? formData.provider_id?.value : "",
         date: moment(date).format("YYYY-MM-DD"),
-        appType: props?.data?.appointment_type
+        appType: props?.data?.appointment_type,
+        appointmentId: props?.data?.id
       }
       //console.log("Date changed from provider", payload);
       await getProviderSlots(payload);
@@ -172,7 +194,8 @@ const RescheduleAppointment = (props) => {
       id: id,
       date: moment(date).format("YYYY-MM-DD"),
       slot: time,
-      doctor_id: (formData?.provider_id?.value) ?? ""
+      doctor_id: (formData?.provider_id?.value) ?? "",
+      telehealth_clinic_id: timeSlotClinic ?? ""
     };
     if (props?.data?.service_id && !formData?.provider_id?.value && props?.data?.service?.service_for == "provider") {
       toast.error(<ToastUI message={SELECT_PROVIDER} type={"Error"} />);
@@ -235,7 +258,7 @@ const RescheduleAppointment = (props) => {
                 <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
               </div>
             </div>
-                 
+
             <div className="fieldOuter">
               <label className="fieldLabel">Select Timeslot</label>
               <div className="fieldBox">
