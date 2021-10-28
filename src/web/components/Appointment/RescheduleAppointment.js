@@ -14,6 +14,7 @@ import Select from 'react-select';
 
 const RescheduleAppointment = (props) => {
   const calendarRef = useRef();
+  const doctorRef = useRef();
   const [isProviderChanged, setIsProviderChanged] = useState(false);
   const [formData, setFormData] = useState({});
   const [allProviders, setAllProviders] = useState([]);
@@ -41,8 +42,9 @@ const RescheduleAppointment = (props) => {
 
   useEffect(async () => {
     if (props.data) {
-      let appointment
+      //console.log("props?.data?.time_format", props?.data?.time_format);
       setId(props.data.id);
+      //Set Appointment Data For Modal
       let appointmentDatetime = props?.data?.appointment_datetime?.split(" ");
       if (appointmentDatetime) {
         setDate(new Date(appointmentDatetime[0]));
@@ -71,6 +73,7 @@ const RescheduleAppointment = (props) => {
           service_id: props?.data?.service_id,
           clinic_id: props?.data?.clinic_id,
         });
+        doctorRef.current = props?.data?.doctor_id;
       }
 
 
@@ -79,9 +82,9 @@ const RescheduleAppointment = (props) => {
 
   // On Provider Change
   useEffect(async () => {
-    console.log("Fire APi", formData.provider_id)
-    if (formData?.provider_id?.value && isProviderChanged == true) {
 
+    if (formData?.provider_id?.value && isProviderChanged == true) {
+      console.log("Fire APi", formData.provider_id)
       let request = {
         clinicId: formData.clinic_id,
         serviceId: formData.service_id,
@@ -93,7 +96,7 @@ const RescheduleAppointment = (props) => {
       await getProviderSchedule(request);
       setIsProviderChanged(false);
     }
-  }, [formData.provider_id]);
+  }, [formData.provider_id, isProviderChanged]);
   useEffect(() => {
     if (response) {
       let { message, statuscode, data } = response;
@@ -111,13 +114,14 @@ const RescheduleAppointment = (props) => {
             });
           });
           const newCompleted = data.providers.filter((row) => row.user_id === props?.data?.doctor_id);
-          if(newCompleted.length == 0){
+          if (newCompleted.length == 0) {
             resultSet.push({ value: props?.data?.doctor_id, label: `${props?.data?.doctor?.title} ${props?.data?.doctor?.firstname} ${props?.data?.doctor?.lastname}` });
+            doctorRef.current = props?.data?.doctor_id;
           }
 
           setAllProviders(resultSet);
         }
-        
+
         // Set Dates Data
         if (data?.enabledDates !== undefined) {
           let enabledDatesArray = [];
@@ -136,7 +140,7 @@ const RescheduleAppointment = (props) => {
             100
           );
 
-         
+
           //console.log(data.timeSlots[0]);
           if (data?.timeSlots.length == 0) {
             setTime(null);
@@ -145,47 +149,39 @@ const RescheduleAppointment = (props) => {
 
         if (data?.timeSlotsClinic) {
           let timeSlotClinic = data?.timeSlotsClinic
-           if (timeSlotClinic) {
-              setTimeSlotClinic(timeSlotClinic[time]);
-           }
+          if (timeSlotClinic) {
+            setTimeSlotClinic(timeSlotClinic[time]);
+          }
         }
-        
+
       }
     }
   }, [response]);
 
   useEffect(async () => {
-    //console.log("Clinic get slots", props?.data);
-    if (date && id && props?.data?.service?.service_for == "clinic") {  
-
-      //let newDate = moment(date).format("YYYY-MM-DD");
-      //await getTimeSlot({ id: id, date: newDate });
-
-      let payload = {
+    if (date) {
+      //console.log("Clinic get slots", props?.data);
+      let payload;
+      payload = {
         clinicId: props?.data?.clinic_id,
         serviceId: props?.data?.service_id,
-        providerId: props?.data?.doctor_id ?? "",
         date: moment(date).format("YYYY-MM-DD"),
         appType: props?.data?.appointment_type,
         appointmentId: props?.data?.id
       }
-      //console.log("Date changed from provider", payload);
-      await getProviderSlots(payload);
-    }
-    if (date && props?.data?.service?.service_for == "provider") {
-
-      let payload = {
-        clinicId: props?.data?.clinic_id,
-        serviceId: props?.data?.service_id,
-        providerId: (formData.provider_id?.value) ? formData.provider_id?.value : "",
-        date: moment(date).format("YYYY-MM-DD"),
-        appType: props?.data?.appointment_type,
-        appointmentId: props?.data?.id
+      if (date && props?.data?.service?.service_for == "clinic") {
+        payload.providerId = props?.data?.doctor_id ?? "";
+        await getProviderSlots(payload);
       }
-      //console.log("Date changed from provider", payload);
-      await getProviderSlots(payload);
+      if (date && doctorRef.current && props?.data?.service?.service_for == "provider") {
+        console.log("Hello", doctorRef);
+        payload.providerId = doctorRef.current || "";
+        await getProviderSlots(payload);
+      }
+      
     }
-  }, [date, props?.data, formData]);
+
+  }, [date]);
   const selectTime = (val) => {
     setTime(val);
   }
@@ -221,7 +217,7 @@ const RescheduleAppointment = (props) => {
                 <img src={CROSS_IMAGE} />
               </a>
             </div>
-            {/* {JSON.stringify(formData)} */}
+            {/* {JSON.stringify(doctorRef.current)} */}
             {props?.data?.service?.service_for === "provider" && allProviders && allProviders.length > 0 && <div className="fieldOuter">
               <label className="fieldLabel">Select Provider</label>
               <div className="fieldBox providerSelectBox">
@@ -236,6 +232,7 @@ const RescheduleAppointment = (props) => {
                   value={formData?.provider_id}
                   onChange={(e) => {
                     setIsProviderChanged(true);
+                    doctorRef.current = e.value;
                     setFormData({ ...formData, provider_id: { value: e.value, label: e.label } });
                   }}
                 />
