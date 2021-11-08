@@ -17,9 +17,10 @@ import { useHistory } from "react-router-dom";
 import NoRecord from "patient-portal-components/NoRecord";
 import { getLoggedinUserId } from "patient-portal-utils/Service";
 import I_IMAGE from "patient-portal-images/i.svg";
-
+import moment from 'moment';
 const AppointmentCard = (props) => {
     const lastScrollTop = useRef(0);
+    const [showJoinBtn, setShowJoinBtn] = useState(false);
     const [cancellationPolicyStatus, setCancellationPolicyStatus] = useState("");
     const [serviceId, setServiceId] = useState("");
     const [accountInfo, setAccountInfo] = useState();
@@ -268,6 +269,19 @@ const AppointmentCard = (props) => {
             setCurrentOpenStack(null);
         }
     });
+
+    const canJoinBtn = (val) => {
+        let datetime = val?.appointment_datetime.split(" ");
+        console.log(moment(datetime[0]).isSame( moment().format("YYYY-MM-DD")));
+
+        
+        if(datetime && datetime[0] && moment(datetime[0]).isSame( moment().format("YYYY-MM-DD"))){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     return (
         <React.Fragment>
             <RescheduleAppointment data={modalData} modal={modal} toggle={toggle} />
@@ -280,7 +294,7 @@ const AppointmentCard = (props) => {
                     // 
                     <div key={index} className="box mb-2 onHover" >
                         <div className="appointmentList">
-                            {(props.type == "upcoming" && val.status != "canceled" && val.appointment_type == "virtual") &&
+                            {(  canJoinBtn(val) == true && props.type == "upcoming" && val.status != "canceled" && val.appointment_type == "virtual") &&
                                 <a className="joinBtn" onClick={() => joinMeeting(val?.meetingId)}>
                                     <img src={JOIN_IMAGE} /> Join
                                 </a>
