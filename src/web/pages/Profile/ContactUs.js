@@ -28,7 +28,8 @@ const ContactUs = (props) => {
   const [formData, setFormData] = useState({
     client_id: getLoggedinUserId(),
     title: {value: "", label: ""},
-    body: ""
+    body: "",
+    applicationtype: 'Patient Portal'
   });
 
   const contactUs = useStoreActions((actions) => actions.pet.contactUs);
