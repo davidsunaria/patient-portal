@@ -20,7 +20,7 @@ const BookAppointment = (props) => {
   const { id } = useParams();
   let { firstname, lastname, email, phone_code } = getUser();
   const history = useHistory();
-  const [formData, setFormData] = useState({ type: "", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: getLastPetId(), appointment_notes: "", duration: "", service_for: "", telehealth_clinic_id: "" });
+  const [formData, setFormData] = useState({ type: "",booked_by: "patient_portal", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: getLastPetId(), appointment_notes: "", duration: "", service_for: "", telehealth_clinic_id: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [allClinics, setAllClinics] = useState([]);
   const [allServices, setAllServices] = useState([]);
