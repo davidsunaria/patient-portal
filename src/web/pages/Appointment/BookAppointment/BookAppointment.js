@@ -14,13 +14,13 @@ import moment from "moment";
 import { getLoggedinUserId, getUser, getLoggedinPreferredClinic, getLastPetId } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import { SELECT_CLINIC, SELECT_SERVICE, SELECT_PROVIDER, SELECT_PET, SELECT_APPOINTMENT_NOTES, SELECT_DATE, SELECT_TIME } from "patient-portal-message";
-
+import { SELECT_CLINIC, SELECT_SERVICE, SELECT_PROVIDER, SELECT_PET, SELECT_APPOINTMENT_NOTES, SELECT_DATE, SELECT_TIME, RAZORPAY_ERROR } from "patient-portal-message";
+import DCCLOGO from "patient-portal-images/dcc-logo.svg";
 const BookAppointment = (props) => {
   const { id } = useParams();
   let { firstname, lastname, email, phone_code } = getUser();
   const history = useHistory();
-  const [formData, setFormData] = useState({ type: "",booked_by: "patient_portal", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: getLastPetId(), appointment_notes: "", duration: "", service_for: "", telehealth_clinic_id: "" });
+  const [formData, setFormData] = useState({ type: "", booked_by: "patient_portal", client_id: getLoggedinUserId(), provider_id: "", service_id: "", clinic_id: "", date: "", slot: "", pet_id: getLastPetId(), appointment_notes: "", duration: "", service_for: "", telehealth_clinic_id: "", collect_payment_before_booking: 0, payment_amount: 0, });
   const [currentPage, setCurrentPage] = useState(1);
   const [allClinics, setAllClinics] = useState([]);
   const [allServices, setAllServices] = useState([]);
@@ -90,6 +90,8 @@ const BookAppointment = (props) => {
       formPayload["service_id"] = e?.target?.value;
       formPayload["duration"] = (val?.duration) ? val?.duration : val?.custom_duration;
       formPayload["service_for"] = val?.service_for;
+      formPayload["collect_payment_before_booking"] = val?.collect_payment_before_booking;
+      formPayload["payment_amount"] = val?.price_including_tax;
 
       if (val?.service_for == "clinic") {
         //reset provider list
@@ -248,7 +250,7 @@ const BookAppointment = (props) => {
           setOtherData({ ...otherData, pet_name: data?.pet.name, species: data?.pet.speciesmap?.species });
         }
 
-        if(data?.type == "clinic"){
+        if (data?.type == "clinic") {
           setCurrentPage(4);
         }
       }
@@ -266,20 +268,27 @@ const BookAppointment = (props) => {
         request.provider_id = request.provider_id.value;
 
         if (request && request !== undefined) {
-          //console.log("Form Submission", request);
-          await createAppointment(request);
+          //Validate Payment
+          //console.log("heyt", request);
+          if (request.collect_payment_before_booking == 1 && request.payment_amount > 0) {
+            await displayRazorpay(request);
+           // console.log("Form Submission", request);
+          }
+          else {
+            await createAppointment(request);
+          }
         }
       }
     }
     else {
-      
+
       //Validate data Step Wise
       let status = validateBookAppointment(page);
       //console.log("Page", formData);
       if (status) {
-       // console.log("Page", page);
-        if(page == 4){
-          
+        // console.log("Page", page);
+        if (page == 4) {
+
           setAllProviders([]);
           setCalenderData([]);
           setTimeSlot([]);
@@ -287,10 +296,10 @@ const BookAppointment = (props) => {
           setOtherData({ ...otherData, date: "", slot: "" });
           await getProviders({ formData: formData, type: formData.service_id });
         }
-        else{
+        else {
           setCurrentPage(page);
         }
-        
+
       }
 
     }
@@ -331,7 +340,7 @@ const BookAppointment = (props) => {
     }
     // Override pet id if back button from pet screen is clicked
     if (page == 5) {
-      setFormData({...formData, pet_id_override: formData.pet_id});
+      setFormData({ ...formData, pet_id_override: formData.pet_id });
     }
     //Reset Page For Virtual
     if (formData.type == "virtual" && page == 2) {
@@ -434,8 +443,8 @@ const BookAppointment = (props) => {
       if (name && name == "service_id") {
         finalPayload = { ...otherData, service_name: payload?.name, service_duration: (payload?.duration) ? payload?.duration : payload?.custom_duration, service_description: payload?.description };
       }
-    
-    
+
+
       if (name && name == "provider_id") {
         finalPayload = { ...otherData, provider_name: payload?.label };
       }
@@ -484,7 +493,7 @@ const BookAppointment = (props) => {
 
 
   const validateBookAppointment = (page) => {
-    
+
     //Validate clinics
     let response = false;
     if (page == 3) {
@@ -543,6 +552,62 @@ const BookAppointment = (props) => {
 
     }
   }, [timeSlotClinic]);
+
+  const loadScript = async (src) => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  }
+  const displayRazorpay = async (payload) => {
+    let userData = getUser();
+    const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+
+    if (!res) {
+      toast.error(<ToastUI message={RAZORPAY_ERROR} type={"Error"} />);
+      return;
+    }
+    let currency = 'INR';
+    let amount = (payload.payment_amount) * 100;
+    
+    const options = {
+      key: process.env.REACT_APP_RAZORPAY_KEY, // Enter the Key ID generated from the Dashboard
+      amount: amount,
+      currency: currency,
+      name: `${userData?.firstname} ${userData?.lastname}`,
+      description: 'Telehealth Appointment Payment for '+userData?.email,
+      image: DCCLOGO,
+      handler: async function (response) {
+        try {
+          payload.razorpay_payment_id = response.razorpay_payment_id
+          await createAppointment(payload);
+        } catch (err) {
+          console.log(err);
+        }
+      },
+      prefill: {
+        name: `${userData?.firstname} ${userData?.lastname}`,
+        email: `${userData?.email}`,
+        contact: `${userData?.phone_code}`,
+      },
+      notes: {
+        address: '',
+      },
+      theme: {
+        color: '#61dafb',
+      },
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  }
   return (
     <React.Fragment>
       <div className="content_outer">
@@ -554,11 +619,12 @@ const BookAppointment = (props) => {
               subHeading={"Start your process to book your appointment"}
               hasBtn={false}
             />
+
             {/* {JSON.stringify(formData)} */}
             {currentPage == 1 && <Step1 page={currentPage} onSubmit={handleStepOne} />}
             {currentPage == 2 && <Step2 other={otherData} formData={formData} data={allClinics} page={currentPage} onSubmit={handleStepTwo} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 3 && <Step3 timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
-            {currentPage == 4 && <Step4 timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack}  />}
+            {currentPage == 4 && <Step4 timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 5 && <Step5 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 6 && <Step6 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
           </main>

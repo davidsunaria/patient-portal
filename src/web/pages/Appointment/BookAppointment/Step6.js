@@ -25,7 +25,16 @@ const Step6 = (props) => {
                             onChange={(e) => props.onSubmit(e)}
                         />
                     </div>
-
+                    {props.formData?.collect_payment_before_booking == 1 && props.formData?.payment_amount > 0 &&
+                        <>
+                            <div className="subtitle mt-4 mb-3">
+                                Payment
+                            </div>
+                            <div className="box">
+                                <p className="p-text mb-3">You will be charged INR {props.formData?.payment_amount} as a prepayment towards booking this appointment.</p>
+                            </div>
+                        </>
+                    }
 
                     <div className="appointmentBtns">
                         <button className="button secondary mr-2" onClick={() => props.onBack(5)}>Back</button>

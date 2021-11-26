@@ -46,3 +46,5 @@ export const OTP_SENT = "OTP sent successfully";
 
 export const FIRSTNAME_REQUIRED = "Please enter first name";
 export const LASTNAME_REQUIRED = "Please enter last name";
+
+export const RAZORPAY_ERROR = "Razorpay SDK failed to load. Are you online?";

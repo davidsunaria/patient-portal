@@ -105,11 +105,14 @@ const AppointmentDetail = () => {
                         <div className="appointmentConfirmText">Breed: {petData?.breedmap?.name}</div>
                         <div className="appointmentConfirmText">Age: {getAge(petData?.dob)}</div>
                       </div>
+                      {appointmentData?.service?.service_for == "provider" &&
+
                       <div className="appointmentConfirmSection">
                         <div className="appointmentConfirmTitle">Doctor Info</div>
                         <div className="appointmentConfirmText">Name: {doctorData?.firstname} {doctorData?.lastname}</div>
                         <div className="appointmentConfirmText">Email: {doctorData?.email}</div>
                       </div>
+}
                       {appointmentData?.appointment_notes && <div className="appointmentConfirmSection">
                         <div className="appointmentConfirmTitle">Notes</div>
                         <div className="appointmentConfirmText">{appointmentData?.appointment_notes}</div>
