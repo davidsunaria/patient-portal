@@ -1155,6 +1155,7 @@ select.fieldInput{
         align-items:center;
         justify-content:center;
         margin:1% 5px;
+        min-width:80px;
 
         &:hover, &.active{
             background:$primary;
