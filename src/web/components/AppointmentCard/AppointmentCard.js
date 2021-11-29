@@ -264,7 +264,7 @@ const AppointmentCard = (props) => {
         return innerRef; // convenience for client (doesn't need to init ref himself) 
     }
     const innerRef = useOuterClick(ev => {
-        console.log("ev", ev.target.className)
+        //console.log("ev", ev.target.className)
         if (ev.target.className !== "dropdownArrow") {
             setCurrentOpenStack(null);
         }
@@ -363,10 +363,19 @@ const AppointmentCard = (props) => {
                                         <label>Services</label>
                                         <p>{val?.service?.name}</p>
                                     </div>
+
+                                    {val?.service?.service_for == "provider" && 
                                     <div className="col-lg-3 col-sm-6 py-2">
                                         <label>Doctor</label>
                                         <p>{val?.doctor?.firstname} {val?.doctor?.lastname}</p>
                                     </div>
+                                    }
+                                     {val?.service?.service_for == "clinic" &&
+                                      <div className="col-lg-3 col-sm-6 py-2">
+                                      <label></label>
+                                      <p>-</p>
+                                  </div>
+}
                                     <div className="col-lg-3 col-sm-6 py-2">
                                         <label>Pet</label>
                                         <p>{val?.pet?.name}</p>
