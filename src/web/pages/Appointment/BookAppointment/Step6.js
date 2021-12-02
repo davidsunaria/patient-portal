@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getLoggedinUserId, showFormattedDate, formatDate, setLastPetId } from "patient-portal-utils/Service";
+import { getLoggedinUserId, showFormattedDate, formatDate, setLastPetId, numberFormat } from "patient-portal-utils/Service";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import Other from "patient-portal-pages/Appointment/BookAppointment/Other.js"
 import EDIT_PROFILE_IMG from "patient-portal-images/edit-profile.svg";
@@ -31,7 +31,7 @@ const Step6 = (props) => {
                                 Payment
                             </div>
                             <div className="box">
-                                <p className="p-text mb-3">You will be charged INR {props.formData?.payment_amount} as a prepayment towards booking this appointment.</p>
+                                <p className="p-text mb-3">You will be charged INR {numberFormat(props.formData?.payment_amount, 'currency', 2, 2)} as a prepayment towards booking this appointment.</p>
                             </div>
                         </>
                     }

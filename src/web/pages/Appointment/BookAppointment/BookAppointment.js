@@ -582,7 +582,7 @@ const BookAppointment = (props) => {
       amount: amount,
       currency: currency,
       name: `${userData?.firstname} ${userData?.lastname}`,
-      description: 'Telehealth Appointment Payment for '+userData?.email,
+      description: `Appointment From Web Patient Portal with Following Information (Email:${userData?.email},Phone:${userData?.phone_code}, DateTime:${payload?.date} ${payload?.time}, ClientId${payload?.client_id}, PetId${payload?.pet_id})`,
       image: DCCLOGO,
       handler: async function (response) {
         try {
