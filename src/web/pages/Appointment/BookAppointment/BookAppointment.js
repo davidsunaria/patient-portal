@@ -601,7 +601,7 @@ const BookAppointment = (props) => {
         address: '',
       },
       theme: {
-        color: '##2EAD5A',
+        color: '#2EAD5A',
       },
     };
 
