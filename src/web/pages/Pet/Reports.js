@@ -38,7 +38,9 @@ const Reports = (props) => {
   }, []);
 
   useEffect(async () => {
-    if ((props.petId && props.visitId && !type && !visitId) || (props.forceRender)) {
+    //conosole.lo
+    if (props.petId && !type && !visitId) {
+   // if ((props.petId && props.visitId && !type && !visitId) || (props.forceRender)) {
       let formData = {
         page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE
       }
