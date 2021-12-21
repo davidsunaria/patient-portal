@@ -47,7 +47,13 @@ const RescheduleAppointment = (props) => {
       //Set Appointment Data For Modal
       let appointmentDatetime = props?.data?.appointment_datetime?.split(" ");
       if (appointmentDatetime) {
-        setDate(new Date(appointmentDatetime[0]));
+        setTimeout(
+          () => {
+            setDate(new Date(appointmentDatetime[0]));
+          },
+          1000
+        );
+        
         setTime(props?.data?.time_format);
       }
 
@@ -74,6 +80,7 @@ const RescheduleAppointment = (props) => {
           clinic_id: props?.data?.clinic_id,
         });
         doctorRef.current = props?.data?.doctor_id;
+        //console.log("He=[]",doctorRef, props?.data?.doctor_id)
       }
 
 
@@ -142,7 +149,7 @@ const RescheduleAppointment = (props) => {
 
 
           //console.log(data.timeSlots[0]);
-          if (data?.timeSlots.length == 0) {
+          if (data?.timeSlots.length === 0) {
             setTime(null);
           }
         }
@@ -160,7 +167,7 @@ const RescheduleAppointment = (props) => {
 
   useEffect(async () => {
     if (date) {
-      //console.log("Clinic get slots", props?.data);
+     // console.log("Clinic get slots", props?.data, doctorRef);
       let payload;
       payload = {
         clinicId: props?.data?.clinic_id,
@@ -174,7 +181,7 @@ const RescheduleAppointment = (props) => {
         await getProviderSlots(payload);
       }
       if (date && doctorRef.current && props?.data?.service?.service_for == "provider") {
-        console.log("Hello", doctorRef);
+        //console.log("Hello", doctorRef);
         payload.providerId = doctorRef.current || "";
         await getProviderSlots(payload);
       }
