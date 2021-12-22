@@ -236,7 +236,7 @@ const EditProfile = (props) => {
                         {!file && <img src={`${userData?.user_image ? process.env.REACT_APP_MEDIA_URL + userData.user_image : DEFAULT_USER_IMG}`} />}
                         <a className="editPicOverlay">
                           <img src={EDIT_PROFILE_IMG} />
-                          <input type="file" onChange={onFileChange} />
+                          <input type="file" id="file"  onChange={onFileChange} />
                         </a>
                       </div>
 
