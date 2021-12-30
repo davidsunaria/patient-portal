@@ -1533,7 +1533,8 @@ input:checked + .slider:after {
     }
     p, pre{
         font-size:13px;
-        color:$text-color
+        color:$text-colorl;
+        white-space: pre-wrap;
     }
 }
 .joinBtn{
