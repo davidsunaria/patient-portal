@@ -65,11 +65,13 @@ const Questionnaire = () => {
         returnVal = parseInt(value.question_option);
       }
     });
+    //console.log("return val",returnVal)
     return returnVal;
   }
   useEffect(() => {
     if (response) {
       let { status, statuscode, data } = response;
+      console.log("data",data)
       if (statuscode && statuscode === 200) {
 
         if (data?.details?.id) {
@@ -84,12 +86,19 @@ const Questionnaire = () => {
               json[index]['qoptions'] = formatOptions(value.qoptions, value.answer);
             }
             if (value.question_type == "Opinion Scale") {
+              json.forEach((data) => {
+                data.qoptions.forEach((res) => {
+                  res["newselect"] = false
+                  if (res.id == data.answer) {
+                    res["newselect"] = true
+                  }
+                })
+              })
+
               setSelectedScale(formatOpinionOptions(value.qoptions, value.answer));
             }
             json[index]['error'] = (!value.answer && value.required == 1) ? true : false;
           });
-
-
           setQuestions(json);
         }
         if (data?.file_name) {
@@ -139,9 +148,16 @@ const Questionnaire = () => {
     let val = [...questions];
     val[index]['answer'] = id;
     val[index]['error'] = false;
+    val[index].qoptions.forEach((data, idx) => {
+      data["newselect"] = false
+      if (data.id == id) {
+        data["newselect"] = true
+      }
+    })
     setQuestions(val);
   }
   const onFileChange = async (event, index) => {
+    console.log("event",event.target.files[0],index)
     const imageFile = event.target.files[0];
     if (imageFile) {
 
@@ -155,6 +171,7 @@ const Questionnaire = () => {
       await uploadFile(payload);
       setSelectedIndex(index);
     } else {
+      console.log("file cancelled")
       let val = [...questions];
       val[index]['answer'] = "";
       val[index]['error'] = val[index]['required'] == 1 ? true : false;
@@ -172,7 +189,6 @@ const Questionnaire = () => {
       setQuestions(val);
     }
   }, [file, selectedIndex]);
-
   const handleSubmit = async () => {
     setSubmitted(true);
     let allQuestions = [...questions];
@@ -184,10 +200,9 @@ const Questionnaire = () => {
           question_id: value?.id,
           question_type: value?.question_type,
           answer: value?.answer ?? "",
-          comment: ""
+          comment: "",
         });
       });
-
 
       if (type == "appointment-questionnaire") {
         let formData = {
@@ -211,7 +226,7 @@ const Questionnaire = () => {
   const getMultipleChoiceAnswer = (answers) => {
     let result = [];
     _.forOwn(answers, (value, index) => {
-      if(value.answer_title){
+      if (value.answer_title) {
         result.push(value.answer_title.question_option);
       }
     });
@@ -230,7 +245,7 @@ const Questionnaire = () => {
               heading={"Please share your valuable feedback with us."}
               hasBtn={false} />
             <Divider showIcon={false} />
-
+            {/* {JSON.stringify(questions)} */}
             <div className="box">
               {
                 questions && questions.length > 0 && questions.map((result, index) => (
@@ -239,14 +254,15 @@ const Questionnaire = () => {
                       {result?.question}
                     </label>
                     {canEdit && <div className="questionFont">{result.description > 0 && result?.description_text}</div>}
+                    {console.log("result",result)}
                     {
                       canEdit && result?.question_type == "Textbox" && <div className="fieldBox">
                         <textarea className="fieldTextarea" name={`Textbox`} value={result?.answer} onChange={(e) => handleInputChange(e, index, 'text')}></textarea>
                         {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                       </div>
-                     
+
                     }
-                    {!canEdit  && result?.question_type == "Textbox" &&  <div>{result?.answer} </div>}
+                    {!canEdit && result?.question_type == "Textbox" && <div>{result?.answer} </div>}
                     {
                       canEdit && result?.question_type == "Yes/No" && <div className="fieldBox  fieldIcon mt-2">
                         {result.qoptions && result.qoptions.length > 0 && result.qoptions.map((v, innerIndex) => (
@@ -259,7 +275,7 @@ const Questionnaire = () => {
                         {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                       </div>
                     }
-                    {!canEdit  && result?.question_type == "Yes/No" &&  <div>{result?.answer} </div>}
+                    {!canEdit && result?.question_type == "Yes/No" && <div>{result?.answer} </div>}
 
                     {
                       canEdit && result?.question_type == "Single Choice" && <div className="fieldBox fieldIcon mt-2">
@@ -272,13 +288,13 @@ const Questionnaire = () => {
                         {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                       </div>
                     }
-                    {!canEdit  && result?.question_type == "Single Choice" &&  <div>{getMultipleChoiceAnswer(result?.app_question_answer  )} </div>}
+                    {!canEdit && result?.question_type == "Single Choice" && <div>{getMultipleChoiceAnswer(result?.app_question_answer)} </div>}
 
-                    
+
                     {
-                     canEdit &&  result?.question_type == "Multiple Choice" && <div className="fieldBox">
+                      canEdit && result?.question_type == "Multiple Choice" && <div className="fieldBox">
                         {result.qoptions && result.qoptions.length > 0 && result.qoptions.map((v, innerIndex) => (
-                         
+
                           <label key={innerIndex} className="customCheckbox1 d-inline-block mr-3">
                             <input type="checkbox" name={`MultipleChoice`} checked={v?.checked} value={v?.id} onChange={(e) => handleChange(e, index, 'multiple', innerIndex)} /> {v?.question_option}
                           </label>
@@ -287,26 +303,26 @@ const Questionnaire = () => {
                         {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                       </div>
                     }
-                    {!canEdit  && result?.question_type == "Multiple Choice" &&  <div>{getMultipleChoiceAnswer(result?.app_question_answer  )} </div>}
+                    {!canEdit && result?.question_type == "Multiple Choice" && <div>{getMultipleChoiceAnswer(result?.app_question_answer)} </div>}
 
                     {
-                      canEdit &&  result?.question_type == "Opinion Scale" && <div className="fieldBox appRating">
+                      canEdit && result?.question_type == "Opinion Scale" && <div className="fieldBox appRating">
                         {result.qoptions && result.qoptions.length > 0 && result.qoptions.map((item, i) => {
                           const selected = i < selectedScale;
                           return (
-                            <div onClick={() => onselectScale(i, index, item.id)} key={i} className={selected ? "active" : ""}><span>{i + 1}</span></div>
+                            <div onClick={() => onselectScale(i, index, item.id)} key={i} className={item.newselect ? "active" : ""}><span>{i + 1}</span></div>
                           )
                         })}
                         {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                       </div>
 
                     }
-                    {!canEdit  && result?.question_type == "Opinion Scale" &&  <div>{selectedScale} </div>}
+                    {!canEdit && result?.question_type == "Opinion Scale" && <div>{selectedScale} </div>}
                     {
                       result?.question_type == "File Upload" &&
                       <div className="fieldBox row">
                         <div className=" col-sm-4">
-                          {result.answer && <img height="100" src={`${process.env.REACT_APP_MEDIA_URL}questionnarie/${result.answer}`}/>}
+                          {result.answer && <img height="100" src={`${process.env.REACT_APP_MEDIA_URL}questionnarie/${result.answer}`} />}
                           {canEdit && <input type="file" name="file" onChange={(e) => onFileChange(e, index)} className="fieldInput p-2" />}
 
                           {(submitted == true && result?.required == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
@@ -316,7 +332,7 @@ const Questionnaire = () => {
                   </div>
                 ))
               }
-              { canEdit && <div className="mt-2 mb-3">
+              {canEdit && <div className="mt-2 mb-3">
                 <button className="button primary" onClick={handleSubmit} >Submit</button>
               </div>}
             </div>
