@@ -28,7 +28,7 @@ export const login = async (formData) => {
 	}
 };
 
-export const autologin = async (token) => {
+export const autologin = async (token) => {   
 	console.log("api token",token)
 	try {
 		let response = await axiosApi.post(`${apiUrl}/verify-auto-login`, token);
