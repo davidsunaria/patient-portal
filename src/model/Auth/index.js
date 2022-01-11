@@ -1,7 +1,7 @@
 import { Action, action, thunk, Thunk } from "easy-peasy";
 import { ToastContainer, toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import { sendOTP, getTranslations, login, verifyOtp, signUp, sendForgotPasswordOTP, resetPassword, logout } from "patient-portal-api/AuthApi.js";
+import { sendOTP, getTranslations, login, verifyOtp, signUp, sendForgotPasswordOTP, resetPassword, logout, autologin } from "patient-portal-api/AuthApi.js";
 import { setToken, setAccountData, setUser, setTempData, removeTempData } from "patient-portal-utils/Service.js";
 import { OTP_SENT } from "patient-portal-message";
 const authModel = {
@@ -75,6 +75,29 @@ const authModel = {
 		await actions.setResponse({});
 		getStoreActions().common.setLoading(true);
 		let response = await login(payload);
+		if (response && response.statuscode != 200) {
+			toast.error(<ToastUI message={response.message} type={"Error"} />);
+			getStoreActions().common.setLoading(false);
+		} else if (response && response.statuscode == 200) {
+			setToken(response.data.token);
+			setUser(response.data.client);
+			setAccountData(response.data.accountInfo);
+			await actions.setResponse(response.data);
+			await actions.setIsLogin(true);
+			getStoreActions().common.setLoading(false);
+		}
+		else {
+			getStoreActions().common.setLoading(false);
+			return true;
+		}
+	}),
+
+	autologin: thunk(async (actions, payload, { getStoreActions }) => {
+		console.log("payload",payload)
+		await actions.setResponse({});
+		getStoreActions().common.setLoading(true);
+		let response = await autologin(payload);
+		console.log("response",response)
 		if (response && response.statuscode != 200) {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 			getStoreActions().common.setLoading(false);

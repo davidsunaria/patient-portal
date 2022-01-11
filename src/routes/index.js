@@ -20,6 +20,7 @@ import VerifyOtp from "patient-portal-pages/Auth/VerifyOtp.js";
 
 import Signup from "patient-portal-pages/Auth/Signup.js";
 import SignupComplete from "patient-portal-pages/Auth/SignupComplete.js";
+import AutoLogin from "patient-portal-pages/Auth/AutoLogin.js";
 
 
 import Feedback from "patient-portal-pages/Feedback/Feedback.js";
@@ -83,6 +84,7 @@ const Routes = () => {
 						<PublicRoute restricted={true} path={"/login"} component={Login} exact />
 						<PublicRoute restricted={true} path={"/register"} component={Signup} exact />
 						<PublicRoute restricted={true} path={"/register-user"} component={SignupComplete} exact />
+						<PublicRoute restricted={true} path={"/auto-login"} component={AutoLogin} exact />
 
 						{/* private routes */}
 						<PrivateRoute path={"/dashboard"} component={Dashboard} exact />
