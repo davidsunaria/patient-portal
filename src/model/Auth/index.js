@@ -92,28 +92,6 @@ const authModel = {
 		}
 	}),
 
-	autologin: thunk(async (actions, payload, { getStoreActions }) => {
-		console.log("payload",payload)
-		await actions.setResponse({});
-		getStoreActions().common.setLoading(true);
-		let response = await autologin(payload);
-		console.log("response",response)
-		if (response && response.statuscode != 200) {
-			toast.error(<ToastUI message={response.message} type={"Error"} />);
-			getStoreActions().common.setLoading(false);
-		} else if (response && response.statuscode == 200) {
-			setToken(response.data.token);
-			setUser(response.data.client);
-			setAccountData(response.data.accountInfo);
-			await actions.setResponse(response.data);
-			await actions.setIsLogin(true);
-			getStoreActions().common.setLoading(false);
-		}
-		else {
-			getStoreActions().common.setLoading(false);
-			return true;
-		}
-	}),
 	verifyOtp: thunk(async (actions, payload, { getStoreActions }) => {
 		getStoreActions().common.setLoading(true);
 		let response = await verifyOtp(payload);
