@@ -84,7 +84,7 @@ const Routes = () => {
 						<PublicRoute restricted={true} path={"/login"} component={Login} exact />
 						<PublicRoute restricted={true} path={"/register"} component={Signup} exact />
 						<PublicRoute restricted={true} path={"/register-user"} component={SignupComplete} exact />
-						<PublicRoute restricted={true} path={"/auto-login"} component={AutoLogin} exact />
+						<PublicRoute restricted={true} path={"/auto-login/:token"} component={AutoLogin} exact />
 
 						{/* private routes */}
 						<PrivateRoute path={"/dashboard"} component={Dashboard} exact />

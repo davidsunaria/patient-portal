@@ -4,27 +4,38 @@ import { Link, useHistory, useParams } from "react-router-dom";
 
 
 const AutoLogin = (props) => {
-
-  let history= useHistory()
-
- let params = {
-    "auto_login_token": "adhsdhkasjdaksjdhaskjdhkjsad"
-  }
-
-  const autologin = useStoreActions((actions) => actions.autoLogin.autologin);
-  const isLogin = useStoreState((state) => state.auth.isLogin);
-  const isLoading = useStoreState((state) => state.common.isLoading);
+  const { token } = useParams();
+  const autoLogin = useStoreActions((actions) => actions.autoLogin.autoLogin);
   const response = useStoreState((state) => state.autoLogin.response);
-
-  console.log("main response",response)
+  const [title, setTitle] = useState("");
+  const history = useHistory();
+  useEffect(async () => {
+    let params = {
+      auto_login_token: token
+    }
+    await autoLogin(params)
+  }, [])
 
   useEffect(() => {
-    autologin(params)
-  }, [])
+    if (response) {
+      let { accountInfo } = response;
+
+      if (accountInfo) {
+        setTitle(accountInfo.name);
+      }
+    }
+  }, [response]);
+
+  useEffect(() => {
+    if (title) {
+      document.title = (title) ? title : "Patient Portal";
+      history.push("/dashboard");
+    }
+  }, [title]);
 
   return (
     <React.Fragment>
-      <h1>Welcome to AutoLogin Page</h1>
+      <h1>Please wait we are logging you in...</h1>
     </React.Fragment>
   );
 };
