@@ -23,10 +23,21 @@ export const login = async (formData) => {
 		let response = await axiosApi.post(`${apiUrl}/client-login`, formData);
 		return response?.data;
 	} catch (error) {
+		console.log("api error",error)
 		return error?.response?.data;
 	}
 };
 
+export const autologin = async (token) => {   
+	console.log("api token",token)
+	try {
+		let response = await axiosApi.post(`${apiUrl}/verify-auto-login`, token);
+		console.log("api response",response)
+		return response?.data;
+	} catch (error) {
+		return error?.response?.data;
+	}
+};
 
 export const verifyOtp = async (formData) => {
 	try {
