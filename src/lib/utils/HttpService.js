@@ -18,7 +18,8 @@ axiosApi.interceptors.request.use(request => {
 
 axiosApi.interceptors.response.use(function (response) {
   if (response.data.status === "error" && response.data.statuscode === 403) {
-    handleInvalidToken();
+    setTimeout(handleInvalidToken, 3000);
+    //handleInvalidToken();
   }
   let frontLabelData = response.data.data.frontLabels;
   let frontMessageData = response.data.data.frontMessages;
