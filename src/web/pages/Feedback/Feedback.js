@@ -74,17 +74,16 @@ const Feedback = (props) => {
         console.log(questions)
     }
 
-    const onselectScale = (i, index,id) => {
-        console.log("index",index,i+1,id)
-        setSelectedScale(i+1)
+    const onselectScale = (i, index, id) => {
+        setSelectedScale(i + 1)
         let val = [...questions];
-        val[index]['answer'] = i+1;
+        val[index]['answer'] = i + 1;
         val[index]['color'] = true;
         val[index]['error'] = false;
         setQuestions(val);
-      }
+    }
 
-    
+
     const saveFeedbackAnswer = async () => {
         setSubmitted(true);
         let val = [...questions];
@@ -116,7 +115,6 @@ const Feedback = (props) => {
     //     }
     //     return finaldata
     // }
-
     return (<React.Fragment>
         <div className="content_outer">
             <Sidebar activeMenu="appointment" />
@@ -158,7 +156,6 @@ const Feedback = (props) => {
                             questions && questions.length > 0 && questions.map((result, index) => (
                                 <div key={index} className="fieldOuter mb-2">
                                     <label className="fieldLabel">
-                                        {console.log("questions", questions)}
                                         {result?.question}
                                     </label>
                                     {result.question_type == "yes_no" &&
@@ -169,32 +166,24 @@ const Feedback = (props) => {
                                             <label className="customRadio d-inline-block mr-3">
                                                 <input type="radio" name={`yes_no`} value="no" onChange={(e) => handleInputChange(e, index, 'yesno')} /> No
                                             </label>
-                                            {  result?.comment != null && <label className="customRadio d-inline-block mr-3">
-                                                {result?.comment}
-                                            </label>}
                                             {(submitted == true && result?.is_mendatory == 1 && result.error == true) && <span>{FIELD_REQUIRED}</span>}
                                         </>
                                     }
                                     {result.question_type == "textbox" && <div className="fieldBox">
                                         <input type="text" value={result?.answer} name={`rating_${result.id}`} className="fieldInput" onChange={(e) => handleInputChange(e, index, 'text')} />
                                     </div>}
-                                    {  result?.comment != null && <label className="customRadio d-inline-block mr-3">
-                                        {result?.comment}
-                                    </label>}
                                     {(submitted == true && result?.is_mendatory == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                                     <div className="fieldBox appRating">
-                                     {result.question_type == "rating" && _.times(result.max_rating, (i) => {
-                                         console.log("selected",selectedScale,i)
-                                        const selected = i < selectedScale;
-                                        console.log("selected",selected)
-                                       return  <div key={i} onClick={() => onselectScale(i, index,result.id)} key={i} className={result.color && selected ? "active" : ""}><span>{i + 1}</span></div>
-                                     })} 
+                                        {result.question_type == "rating" && _.times(result.max_rating, (i) => {
+                                            const selected = i + 1 == result.answer;
+                                            return <div key={i} onClick={() => onselectScale(i, index, result.id)} key={i} className={result.color && selected ? "active" : ""}><span>{i + 1}</span></div>
+                                        })
+                                        }
                                     </div>
-                                    {/* {result.question_type == "rating" && <Rating key={index} onSelectRating={onSelectRating} index={index} data={result} />}
                                     {  result?.comment != null && <label className="customRadio d-inline-block mr-3">
                                         {result?.comment}
                                     </label>}
-                                    {(submitted == true && result?.is_mendatory == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>} */}
+
                                 </div>
                             ))
 
