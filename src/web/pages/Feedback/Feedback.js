@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { getLoggedinUserId } from "patient-portal-utils/Service";
 import { SELECT_ANSWER } from "patient-portal-message";
+import { FIELD_REQUIRED } from "patient-portal-message";
+import _ from "lodash";
 
 const Feedback = (props) => {
     const { id } = useParams();
@@ -15,6 +17,9 @@ const Feedback = (props) => {
     const [visit, setVisit] = useState({});
     const [questions, setQuestions] = useState({});
     const [invoiceId, setInvoiceId] = useState(id);
+    const [submitted, setSubmitted] = useState(false);
+    const [selectedScale, setSelectedScale] = useState(0);
+    const [selectedScaleSecond, setSelectedSecond] = useState(0);
     const getFeedbackDetail = useStoreActions((actions) => actions.appointment.getFeedbackDetail);
     const saveFeedback = useStoreActions((actions) => actions.appointment.saveFeedback);
     const response = useStoreState((state) => state.appointment.response);
@@ -55,13 +60,33 @@ const Feedback = (props) => {
         val[index]['error'] = false;
         setQuestions(val);
     }
-    const handleInputChange = (e, index) => {
+    const handleInputChange = (e, index, type) => {
         let val = [...questions];
-        val[index]['answer'] = e.target.value;
+        if (type == "text") {
+            val[index]['answer'] = e.target.value;
+            val[index]['error'] = (e.target.value) ? false : true;
+        }
+        if (type == "yesno") {
+            val[index]['answer'] = e.target.value;
+            val[index]['error'] = (e.target.value) ? false : true;
+        }
+        setQuestions(val);
+        console.log(questions)
+    }
+
+    const onselectScale = (i, index,id) => {
+        console.log("index",index,i+1,id)
+        setSelectedScale(i+1)
+        let val = [...questions];
+        val[index]['answer'] = i+1;
+        val[index]['color'] = true;
         val[index]['error'] = false;
         setQuestions(val);
-    }
+      }
+
+    
     const saveFeedbackAnswer = async () => {
+        setSubmitted(true);
         let val = [...questions];
         const isError = val.filter((row) => row.error == true);
         if (isError && isError.length > 0) {
@@ -79,6 +104,19 @@ const Feedback = (props) => {
             await saveFeedback({ clientId: getLoggedinUserId(), invoiceId: invoiceId, formData: { client_feedback: payload } });
         }
     }
+    // const rating = (length) =>{
+    //     console.log("length",length)
+    //     let finaldata = null
+    //     for (let index = 1; index < length; index++) {
+    //        // const element = array[index];
+
+    //        finaldata=  <div key={index} ><span>{index + 1}grtgrtyrt</span></div>
+    //        console.log(index)
+
+    //     }
+    //     return finaldata
+    // }
+
     return (<React.Fragment>
         <div className="content_outer">
             <Sidebar activeMenu="appointment" />
@@ -114,20 +152,52 @@ const Feedback = (props) => {
                                 </div>
                             </div>
                         </div>
-                        
+
                         {
+
                             questions && questions.length > 0 && questions.map((result, index) => (
                                 <div key={index} className="fieldOuter mb-2">
                                     <label className="fieldLabel">
+                                        {console.log("questions", questions)}
                                         {result?.question}
                                     </label>
+                                    {result.question_type == "yes_no" &&
+                                        <>
+                                            <label className="customRadio d-inline-block mr-3">
+                                                <input type="radio" name={`yes_no`} value="yes" onChange={(e) => handleInputChange(e, index, 'yesno')} /> Yes
+                                           </label>
+                                            <label className="customRadio d-inline-block mr-3">
+                                                <input type="radio" name={`yes_no`} value="no" onChange={(e) => handleInputChange(e, index, 'yesno')} /> No
+                                            </label>
+                                            {  result?.comment != null && <label className="customRadio d-inline-block mr-3">
+                                                {result?.comment}
+                                            </label>}
+                                            {(submitted == true && result?.is_mendatory == 1 && result.error == true) && <span>{FIELD_REQUIRED}</span>}
+                                        </>
+                                    }
                                     {result.question_type == "textbox" && <div className="fieldBox">
-                                        <input type="text" value={result?.answer} name={`rating_${result.id}`} className="fieldInput" onChange={(e) => handleInputChange(e, index)} />
+                                        <input type="text" value={result?.answer} name={`rating_${result.id}`} className="fieldInput" onChange={(e) => handleInputChange(e, index, 'text')} />
                                     </div>}
-
-                                    {result.question_type == "rating" && <Rating key={index} onSelectRating={onSelectRating} index={index} data={result} />}
+                                    {  result?.comment != null && <label className="customRadio d-inline-block mr-3">
+                                        {result?.comment}
+                                    </label>}
+                                    {(submitted == true && result?.is_mendatory == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
+                                    <div className="fieldBox appRating">
+                                     {result.question_type == "rating" && _.times(result.max_rating, (i) => {
+                                         console.log("selected",selectedScale,i)
+                                        const selected = i < selectedScale;
+                                        console.log("selected",selected)
+                                       return  <div key={i} onClick={() => onselectScale(i, index,result.id)} key={i} className={result.color && selected ? "active" : ""}><span>{i + 1}</span></div>
+                                     })} 
+                                    </div>
+                                    {/* {result.question_type == "rating" && <Rating key={index} onSelectRating={onSelectRating} index={index} data={result} />}
+                                    {  result?.comment != null && <label className="customRadio d-inline-block mr-3">
+                                        {result?.comment}
+                                    </label>}
+                                    {(submitted == true && result?.is_mendatory == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>} */}
                                 </div>
                             ))
+
                         }
                         <div className="mt-2 mb-3">
                             <button className="button primary" onClick={saveFeedbackAnswer}>Submit</button>
