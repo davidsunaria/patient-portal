@@ -3,6 +3,11 @@ import Table from "patient-portal-components/Table/Table.js";
 import Sidebar from "patient-portal-components/Sidebar/Sidebar.js";
 import Header from "patient-portal-components/Header/Header.js";
 import GO_BACK from "patient-portal-images/goBack.svg";
+import { getLoggedinUserId, getUser, getLoggedinPreferredClinic, getLastPetId } from "patient-portal-utils/Service";
+import DCCLOGO from "patient-portal-images/dcc-logo.svg";
+import { toast } from "react-toastify";
+import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
+import { SELECT_CLINIC, SELECT_SERVICE, SELECT_PROVIDER, SELECT_PET, SELECT_APPOINTMENT_NOTES, SELECT_DATE, SELECT_TIME, RAZORPAY_ERROR } from "patient-portal-message";
 import { useHistory, useParams } from "react-router-dom";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { getAge, numberFormat, formatDate } from "patient-portal-utils/Service";
@@ -18,6 +23,7 @@ const InvoiceDetail = (props) => {
     const getInvoice = useStoreActions((actions) => actions.invoice.getInvoice);
     const downloadInvoice = useStoreActions((actions) => actions.invoice.downloadInvoice);
     const payInvoice = useStoreActions((actions) => actions.invoice.payInvoice);
+    const createAppointment = useStoreActions((actions) => actions.appointment.createAppointment);
 
     const response = useStoreState((state) => state.invoice.response);
     useEffect(async () => {
@@ -39,7 +45,7 @@ const InvoiceDetail = (props) => {
                 }
 
                 if (data?.redirect_url) {
-                    window.open(data?.redirect_url,"_self");
+                    window.open(data?.redirect_url, "_self");
                 }
 
             }
@@ -56,13 +62,76 @@ const InvoiceDetail = (props) => {
 
     }, [downloadUrl]);
 
-    const payNow = async(invoiceId) => {
-        let payload = {
-            id: invoiceId,
-            type: 'Web'
-        }
-        await payInvoice(payload);
+    const payNow = async (invoice) => {
+        // let payload = {
+        //     id: invoiceId,
+        //     type: 'Web'
+        // }
+        // await payInvoice(payload)
+        await displayRazorpay(invoice);
     }
+
+    const loadScript = async (src) => {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = () => {
+                resolve(true);
+            };
+            script.onerror = () => {
+                resolve(false);
+            };
+            document.body.appendChild(script);
+        });
+    }
+
+    const displayRazorpay = async (payload) => {
+        let userData = getUser();
+        const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+
+        if (!res) {
+            toast.error(<ToastUI message={RAZORPAY_ERROR} type={"Error"} />);
+            return;
+        }
+        let currency = 'INR';
+        console.log("payload", payload)
+        let amount = (payload.remaining_amount) * 100;
+
+        const options = {
+            key: process.env.REACT_APP_RAZORPAY_KEY, // Enter the Key ID generated from the Dashboard
+            amount: amount,
+            currency: currency,
+            name: `${userData?.firstname} ${userData?.lastname}`,
+            description: `Appointment From Web Patient Portal with Following Information (Email:${userData?.email},Phone:${userData?.phone_code}, DateTime:${payload?.date} ${payload?.slot}, ClientId:${payload?.client_id}, PetId:${payload?.pet_id})`,
+            image: DCCLOGO,
+            handler: async function (response) {
+                try {
+                    console.log("response", response, response.razorpay_payment_id)
+                    payload.razorpay_payment_id = response.razorpay_payment_id
+                    await payInvoice(payload)
+                    //  await createAppointment(payload);
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+            prefill: {
+                name: `${userData?.firstname} ${userData?.lastname}`,
+                email: `${userData?.email}`,
+                contact: `${userData?.phone_code}`,
+            },
+            notes: {
+                address: '',
+            },
+            theme: {
+                color: '#2EAD5A',
+            },
+        };
+        console.log("option",options)
+        const paymentObject = new window.Razorpay(options);
+      
+        paymentObject.open();
+    }
+    console.log("invoice data", invoiceData)
     return (
         <React.Fragment>
             <div className="content_outer">
@@ -72,7 +141,7 @@ const InvoiceDetail = (props) => {
 
 
                         <Header
-                        key={1}
+                            key={1}
                             backEnabled={true}
                             backTitle={"Back to Invoices"}
                             backAction={"invoices"}
@@ -142,10 +211,10 @@ const InvoiceDetail = (props) => {
                                             ))
 
                                         ) : (
-                                            <tr>
-                                                <td colSpan={5} className="text-center">No Record Found</td>
-                                            </tr>
-                                        )}
+                                                <tr>
+                                                    <td colSpan={5} className="text-center">No Record Found</td>
+                                                </tr>
+                                            )}
 
 
                                     </tbody>
@@ -205,7 +274,7 @@ const InvoiceDetail = (props) => {
                                         <button className="button primary mr-2" onClick={() => download(invoiceData?.id)}>
                                             Download
                                         </button>
-                                    { (invoiceData?.status == "ready" || invoiceData?.status == "partial") &&   <button className="button primary" onClick={() => payNow(invoiceData?.id)}>
+                                        {(invoiceData?.status == "ready" || invoiceData?.status == "partial") && <button className="button primary" onClick={() => payNow(invoiceData)}>
                                             Pay Now
                                         </button>}
                                     </div>
