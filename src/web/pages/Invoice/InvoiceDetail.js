@@ -63,12 +63,14 @@ const InvoiceDetail = (props) => {
     }, [downloadUrl]);
 
     const payNow = async (invoice) => {
-        // let payload = {
-        //     id: invoiceId,
-        //     type: 'Web'
-        // }
+        console.log("invoice",invoice)
+         let payload = {
+             id:invoice.id,
+             type: 'Web',
+             remaining_amount:invoice.remaining_amount
+         }
         // await payInvoice(payload)
-        await displayRazorpay(invoice);
+        await displayRazorpay(payload);
     }
 
     const loadScript = async (src) => {
@@ -126,7 +128,6 @@ const InvoiceDetail = (props) => {
                 color: '#2EAD5A',
             },
         };
-        console.log("option",options)
         const paymentObject = new window.Razorpay(options);
       
         paymentObject.open();
