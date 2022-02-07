@@ -3,7 +3,7 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import DCCLOGO from "patient-portal-images/dcc-logo.svg";
 import { LanguageContext } from "patient-portal-context/LanguageContext.js";
-import { Formik, ErrorMessage } from "formik";
+import { Formik, ErrorMessage, Field } from "formik";
 import { useAuthValidation } from "patient-portal-utils/validations/auth/AuthSchema";
 import EMAIL_IMAGE from "patient-portal-images/email.svg";
 import PASSWORD_IMAGE from "patient-portal-images/password.svg";
@@ -20,21 +20,23 @@ const SignupComplete = (props) => {
   const { SignupSchema } = useAuthValidation();
   const { labelData } = useContext(LanguageContext);
   const [formData, setFormData] = useState({
-    firstname:'',
-    lastname:'',
+    firstname: '',
+    lastname: '',
     code: '',
     phone: '',
     email: '',
     password: '',
     password_confirmation: '',
+    privacy: false,
+    condition: false,
     device_token: new Buffer(window.navigator.userAgent).toString('base64')
   });
 
   const createUser = async (payload) => {
     let tempData = getTempData();
     let formData = {
-      firstname:payload?.firstname,
-      lastname:payload?.lastname,
+      firstname: payload?.firstname,
+      lastname: payload?.lastname,
       code: tempData.code,
       phone: tempData.phone,
       email: payload.email,
@@ -50,6 +52,7 @@ const SignupComplete = (props) => {
   //   }
   // }, [isSignupCompleted])
 
+
   useEffect(() => {
     if (response) {
       console.log(response)
@@ -57,8 +60,8 @@ const SignupComplete = (props) => {
       if (accountInfo) {
         setTitle(accountInfo.name);
       }
-      if(client){
-        setFormData({...formData, firstname:client?.firstname , lastname: client?.lastname, email: client?.email });
+      if (client) {
+        setFormData({ ...formData, firstname: client?.firstname, lastname: client?.lastname, email: client?.email });
       }
     }
   }, [response]);
@@ -81,7 +84,9 @@ const SignupComplete = (props) => {
             initialValues={formData}
             onSubmit={async values => {
               //setFormData(JSON.stringify(values, null, 2))
-              createUser(values);
+              if (values.privacy == true && values.condition == true) {
+                createUser(values);
+              }
             }}
             validationSchema={SignupSchema}
           >
@@ -99,7 +104,7 @@ const SignupComplete = (props) => {
               } = props;
               return (
                 <form onSubmit={handleSubmit}>
-                  
+
                   <div className="loginFieldGroup">
                     <label>First name</label>
                     <div className={
@@ -207,8 +212,13 @@ const SignupComplete = (props) => {
                     </div>
                     <ErrorMessage name="password_confirmation" component="span" className="errorMsg" />
                   </div>
+                  <div className="loginFieldGroup termsCondition">
+                  <input type="checkbox" name={`privacy`} checked={values.privacy} value={values.privacy} onChange={handleChange} />I agree to the <a href={`${process.env.REACT_APP_PAGES_URL}privacy-policy`} target="_blank"> Privacy Policy</a>  
+                  <ErrorMessage name="privacy" component="span" className="errorMsg" /></div>
 
-
+                  <div className="loginFieldGroup termsCondition">
+                  <input type="checkbox" name={`condition`} checked={values.condition} value={values.condition} onChange={handleChange} />I agree to the  <a href={`${process.env.REACT_APP_PAGES_URL}terms-and-conditions`} target="_blank" onChange={handleChange}>Terms & Conditions.</a>
+                  <ErrorMessage name="condition" component="span" className="errorMsg"/></div>
                   <button disabled={isLoading} className="loginBtn">{isLoading && <Spinner animation="border" size="sm" />}
                     {(isLoading) ? 'Processing' : 'Log In'}</button>
                   <div className="alreadyAccount">

@@ -36,6 +36,8 @@ const useAuthValidation = (props) => {
     password: Yup
       .string()
       .required(PASSWORD_REQUIRED),
+    condition: Yup.bool().oneOf([true], 'You must agree to terms & conditions'),
+    privacy: Yup.bool().oneOf([true], 'You must agree to privacy policy'),
     password_confirmation: Yup
       .string()
       .required(CONFIRM_PASSWORD_REQUIRED)
