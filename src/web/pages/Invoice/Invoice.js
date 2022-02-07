@@ -17,6 +17,7 @@ import _ from "lodash";
 import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
 import NoRecord from "patient-portal-components/NoRecord";
 import { subDays } from "date-fns";
+import { filter } from "lodash";
 
 
 const Invoice = (props) => {
@@ -32,8 +33,8 @@ const Invoice = (props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [dateRange, setDateRange] = useState([]);//[subDays(new Date(), 15), new Date()]
     const [startDate, endDate] = dateRange;
-    const [petId, setPetId] = useState({ value: "", label: "All Pets" });
-    const [clinicId, setClinicId] = useState({ value: "", label: "All Clinics" });
+    const [petId, setPetId] = useState([{ value: "", label: "Select Pets" }]);
+    const [clinicId, setClinicId] = useState([{ value: "", label: "Select clinics" }]);
     const [allClinics, setAllClinics] = useState([]);
     const [allPets, setAllPets] = useState([]);
 
@@ -56,6 +57,9 @@ const Invoice = (props) => {
         await getPets(getLoggedinUserId());
     }, []);
 
+
+
+    console.log("petid", petId)
     useEffect(() => {
         if (responsePet) {
             let { status, statuscode, data } = responsePet;
@@ -141,19 +145,33 @@ const Invoice = (props) => {
     }, []);
 
     useEffect(async () => {
+         let filterpet = []
+         petId.forEach((val) => {
+            filterpet.push(val.value) 
+         })
+       let  filterpetID=   filterpet.join()
+
+        let filterclinicId = ""
+        clinicId.forEach((val) => {
+            console.log("val", val)
+            filterclinicId = val.value
+        })
+
+        
         let formData;
         if (startDate && endDate) {
             formData = { ...formData, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD") };
         }
-        if (petId.value) {
-            formData = { ...formData, pet_id: petId.value };
+        if (petId) {
+            console.log("welcome")
+            formData = { ...formData, pet_id: filterpetID };
         }
-        if (clinicId.value) {
-            formData = { ...formData, clinic_id: clinicId.value };
+        if (clinicId) {
+            formData = { ...formData, clinic_id: filterclinicId };
         }
         //if (formData !== undefined) {
-            formData = { ...formData, page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE };
-            await getInvoices({ clientId: getLoggedinUserId(), query: formData });
+        formData = { ...formData, page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE };
+        await getInvoices({ clientId: getLoggedinUserId(), query: formData });
         //}
         window.addEventListener('scroll', (e) => handleScroll(e), true);
         return () => {
@@ -161,7 +179,7 @@ const Invoice = (props) => {
         };
     }, [startDate, endDate, petId, clinicId]);
 
-  
+
     useEffect(() => {
         if (isBottom) {
             if (nextPageUrl) {
@@ -197,10 +215,10 @@ const Invoice = (props) => {
             status = "Cancelled";
             cls = "red";
         }
-        
-        if(value === "ready"){
+
+        if (value === "ready") {
             status = "Awaiting Payment";
-            cls = "orange"; 
+            cls = "orange";
         }
         if (type == 1) {
             return cls;
@@ -228,7 +246,7 @@ const Invoice = (props) => {
 
                                         <DatePicker
                                             dateFormat="yyyy-MM-dd"
-                                            placeholderText="Date"
+                                            placeholderText="Start Date"
                                             ref={calendarRef}
                                             className="fieldInput calendarFilter expandCalender"
                                             selectsRange={true}
@@ -238,11 +256,35 @@ const Invoice = (props) => {
                                                 setDateRange(update);
                                             }}
                                             isClearable={false}
-                                            
+
                                             peekNextMonth
-      showMonthDropdown
-      showYearDropdown
-      dropdownMode="select"                                        />
+                                            showMonthDropdown
+                                            showYearDropdown
+                                            dropdownMode="select" />
+                                        <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
+                                    </div>
+                                </div>
+
+                                <div className="fieldOuter d-sm-inline-block mr-sm-2 mb-2 mb-lg-0">
+                                    <div className="fieldBox fieldIcon">
+
+                                        <DatePicker
+                                            dateFormat="yyyy-MM-dd"
+                                            placeholderText=" End Date"
+                                            ref={calendarRef}
+                                            className="fieldInput calendarFilter expandCalender"
+                                            selectsRange={true}
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            onChange={(update) => {
+                                                setDateRange(update);
+                                            }}
+                                            isClearable={false}
+
+                                            peekNextMonth
+                                            showMonthDropdown
+                                            showYearDropdown
+                                            dropdownMode="select" />
                                         <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
                                     </div>
                                 </div>
@@ -259,7 +301,9 @@ const Invoice = (props) => {
                                             name="petId"
                                             value={petId}
                                             options={allPets}
+                                            isMulti
                                             onChange={(e) => setPetId(e)}
+
                                         />
                                     </div>
                                 </div>
@@ -275,6 +319,7 @@ const Invoice = (props) => {
                                             name="clinicId"
                                             value={clinicId}
                                             options={allClinics}
+                                            isMulti
                                             onChange={(e) => setClinicId(e)}
                                         />
                                     </div>
@@ -284,7 +329,7 @@ const Invoice = (props) => {
                             {records && records.length > 0 ? (
                                 records.map((val, index) => (
                                     <div key={index} className="box recordCard onHover" onClick={() => goTo(val.id)}>
-                                        
+
                                         <div className={`dueDate ${getStatus(val.status, 1)}`}>{getStatus(val.status, 2)}</div>
                                         <div className="recordDate">
                                             <span>{(val.created) ? formatDate(val?.created, 1, false) : ''}</span>
@@ -296,8 +341,8 @@ const Invoice = (props) => {
                                 ))
 
                             ) : (
-                                <NoRecord />
-                            )}
+                                    <NoRecord />
+                                )}
                         </form>
                     </main>
                 </div>
