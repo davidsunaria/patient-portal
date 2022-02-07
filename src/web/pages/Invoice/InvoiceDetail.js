@@ -67,7 +67,11 @@ const InvoiceDetail = (props) => {
          let payload = {
              id:invoice.id,
              type: 'Web',
-             remaining_amount:invoice.remaining_amount
+             remaining_amount:invoice.remaining_amount,
+             client_id:invoice.client_id,
+             pet_id:invoice.pet_id,
+             slot:invoice.slot,
+             date:invoice.date
          }
         // await payInvoice(payload)
         await displayRazorpay(payload);
