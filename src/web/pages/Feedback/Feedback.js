@@ -166,9 +166,10 @@ const Feedback = (props) => {
                                             <label className="customRadio d-inline-block mr-3">
                                                 <input type="radio" name={`yes_no`} value="no" onChange={(e) => handleInputChange(e, index, 'yesno')} /> No
                                             </label>
-                                            {(submitted == true && result?.is_mendatory == 1 && result.error == true) && <span>{FIELD_REQUIRED}</span>}
+                                           
                                         </>
                                     }
+                                     {(submitted == true && result?.is_mendatory == 1 && result.error == true) && <span>{FIELD_REQUIRED}</span>}
                                     {result.question_type == "textbox" && <div className="fieldBox">
                                         <input type="text" value={result?.answer} name={`rating_${result.id}`} className="fieldInput" onChange={(e) => handleInputChange(e, index, 'text')} />
                                     </div>}
@@ -179,6 +180,7 @@ const Feedback = (props) => {
                                             return <div key={i} onClick={() => onselectScale(i, index, result.id)} key={i} className={result.color && selected ? "active" : ""}><span>{i + 1}</span></div>
                                         })
                                         }
+                                          {(submitted == true && result?.is_mendatory == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
                                     </div>
                                     {  result?.comment != null && <label className="customRadio d-inline-block mr-3">
                                         {result?.comment}
