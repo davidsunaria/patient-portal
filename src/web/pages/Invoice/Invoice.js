@@ -22,6 +22,7 @@ import { filter } from "lodash";
 
 const Invoice = (props) => {
     const calendarRef = useRef();
+    const calendarRefto = useRef();
     const history = useHistory();
     const [isBottom, setIsBottom] = useState(false);
     const [records, setRecords] = useState([]);
@@ -32,8 +33,11 @@ const Invoice = (props) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [dateRange, setDateRange] = useState([]);//[subDays(new Date(), 15), new Date()]
+    const [dateRangeto, setDateRangeto] = useState([]);
     const [startDate, endDate] = dateRange;
-    const [petId, setPetId] = useState([{ value: "", label: "Select Pets" }]);
+    console.log("startdate",startDate,"enddate",endDate)
+    const [startDateto, endDateto] = dateRangeto;
+    const [petId, setPetId] = useState([]);
     const [clinicId, setClinicId] = useState([{ value: "", label: "Select clinics" }]);
     const [allClinics, setAllClinics] = useState([]);
     const [allPets, setAllPets] = useState([]);
@@ -57,9 +61,16 @@ const Invoice = (props) => {
         await getPets(getLoggedinUserId());
     }, []);
 
-
-
-    console.log("petid", petId)
+   const selectedPet = (event) =>{
+    let filterpet = []
+    event.forEach((val) => {
+           filterpet.push(val.value) 
+        })
+      let  filterpetID=   filterpet.join()
+     setPetId( filterpetID)
+   console.log("filterpet",filterpet)
+   }
+   console.log("petid",petId)
     useEffect(() => {
         if (responsePet) {
             let { status, statuscode, data } = responsePet;
@@ -127,6 +138,11 @@ const Invoice = (props) => {
         setIsOpen(!isOpen);
         calendarRef.current.setOpen(!isOpen)
     };
+    const handleClickto = (e) => {
+        e.preventDefault();
+        setIsOpen(!isOpen);
+        calendarRefto.current.setOpen(!isOpen)
+    };
     const lastScrollTop = useRef(0);
 
     const handleScroll = useCallback((e) => {
@@ -145,17 +161,17 @@ const Invoice = (props) => {
     }, []);
 
     useEffect(async () => {
-         let filterpet = []
-         petId.forEach((val) => {
-            filterpet.push(val.value) 
-         })
-       let  filterpetID=   filterpet.join()
+    //      let filterpet = []
+    //      petId.forEach((val) => {
+    //         filterpet.push(val.value) 
+    //      })
+    //    let  filterpetID=   filterpet.join()
 
-        let filterclinicId = ""
-        clinicId.forEach((val) => {
-            console.log("val", val)
-            filterclinicId = val.value
-        })
+    //     let filterclinicId = ""
+    //     clinicId.forEach((val) => {
+    //         console.log("val", val)
+    //         filterclinicId = val.value
+    //     })
 
         
         let formData;
@@ -164,10 +180,10 @@ const Invoice = (props) => {
         }
         if (petId) {
             console.log("welcome")
-            formData = { ...formData, pet_id: filterpetID };
+            formData = { ...formData, pet_id: petId};
         }
-        if (clinicId) {
-            formData = { ...formData, clinic_id: filterclinicId };
+        if (clinicId.value) {
+            formData = { ...formData, clinic_id: clinicId.value };
         }
         //if (formData !== undefined) {
         formData = { ...formData, page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE };
@@ -256,6 +272,7 @@ const Invoice = (props) => {
                                                 setDateRange(update);
                                             }}
                                             isClearable={false}
+                                            maxDate={new Date()}
 
                                             peekNextMonth
                                             showMonthDropdown
@@ -271,21 +288,23 @@ const Invoice = (props) => {
                                         <DatePicker
                                             dateFormat="yyyy-MM-dd"
                                             placeholderText=" End Date"
-                                            ref={calendarRef}
+                                            ref={calendarRefto}
                                             className="fieldInput calendarFilter expandCalender"
                                             selectsRange={true}
-                                            startDate={startDate}
-                                            endDate={endDate}
+                                            startDate={startDateto}
+                                            endDate={endDateto}
                                             onChange={(update) => {
-                                                setDateRange(update);
+                                                setDateRangeto(update);
                                             }}
+                                            onSelect={(e)=>{console.log("end",e)}}
                                             isClearable={false}
-
+                                            maxDate={new Date()}
+                                            minDate={startDateto}
                                             peekNextMonth
                                             showMonthDropdown
                                             showYearDropdown
                                             dropdownMode="select" />
-                                        <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
+                                        <img src={CALENDER_IMAGE} onClick={(e) => handleClickto(e)} />
                                     </div>
                                 </div>
 
@@ -302,7 +321,8 @@ const Invoice = (props) => {
                                             value={petId}
                                             options={allPets}
                                             isMulti
-                                            onChange={(e) => setPetId(e)}
+                                           // onChange={(e) => setPetId(e)}
+                                           onChange={selectedPet}
 
                                         />
                                     </div>
