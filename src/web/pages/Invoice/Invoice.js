@@ -13,7 +13,7 @@ import INVOICE_HOSPITAL_PET from "patient-portal-images/invoiceHospital.svg";
 import CALENDER_IMAGE from "patient-portal-images/appointment.svg";
 import { Formik, ErrorMessage } from "formik";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import _ from "lodash";
+import _, { set } from "lodash";
 import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
 import NoRecord from "patient-portal-components/NoRecord";
 import { subDays } from "date-fns";
@@ -35,12 +35,13 @@ const Invoice = (props) => {
     const [dateRange, setDateRange] = useState([]);//[subDays(new Date(), 15), new Date()]
     const [dateRangeto, setDateRangeto] = useState([]);
     const [startDate, endDate] = dateRange;
-    console.log("startdate",startDate,"enddate",endDate)
     const [startDateto, endDateto] = dateRangeto;
     const [petId, setPetId] = useState([]);
+    const [selectedID, setselectedID] = useState([]);
     const [clinicId, setClinicId] = useState([{ value: "", label: "Select clinics" }]);
     const [allClinics, setAllClinics] = useState([]);
     const [allPets, setAllPets] = useState([]);
+    const [filterID, setfilterID] = useState([]);
 
     const getInvoices = useStoreActions((actions) => actions.invoice.getInvoices);
     const getAllClinics = useStoreActions((actions) => actions.invoice.getAllClinics);
@@ -48,7 +49,8 @@ const Invoice = (props) => {
 
     const getPets = useStoreActions((actions) => actions.pet.getPets);
     const responsePet = useStoreState((state) => state.pet.response);
-
+    // const setSelectedPet = useStoreActions((actions) => actions.pet.setSelectedPet);
+    // const getSelectedPet = useStoreState((state) => state.pet.getSelectedPet);
 
     const [formData, setFormData] = useState({
         pet_id: '',
@@ -61,16 +63,32 @@ const Invoice = (props) => {
         await getPets(getLoggedinUserId());
     }, []);
 
-   const selectedPet = (event) =>{
-    let filterpet = []
-    event.forEach((val) => {
-           filterpet.push(val.value) 
-        })
-      let  filterpetID=   filterpet.join()
-     setPetId( filterpetID)
-   console.log("filterpet",filterpet)
-   }
-   console.log("petid",petId)
+    //   const selectedPet = (event) => {
+    //       console.log("event",event)
+    //       setPetId(event)
+    //       event.forEach((val) => {
+    //           filterID.push(val.value)
+    //       })
+    //       let selectedID = [...new Set(filterID)];
+    //       console.log("selectedid",selectedID)
+    //       let filterpetID = selectedID.join()
+    //       console.log("filterpetID",filterpetID)
+
+    //       setselectedID(filterpetID)
+    //   }
+
+
+    //  const selectedPet = (event) => {
+    //      //setselectedID([...selectedID,event])
+    //     // setSelectedPet([...selectedID,event])
+    //      console.log("event",event)
+    //     //  if (petId?.includes(event) === false){
+
+    //     //  }
+    //      //let selectedID = [...new Set(filterID)];
+    //      setPetId(selectedID)
+    //  }
+    console.log("petid", petId)
     useEffect(() => {
         if (responsePet) {
             let { status, statuscode, data } = responsePet;
@@ -161,26 +179,21 @@ const Invoice = (props) => {
     }, []);
 
     useEffect(async () => {
-    //      let filterpet = []
-    //      petId.forEach((val) => {
-    //         filterpet.push(val.value) 
-    //      })
-    //    let  filterpetID=   filterpet.join()
+        let filterpet = []
+        petId.forEach((val) => {
+            filterpet.push(val.value)
+        })
+        let filterpetID = filterpet.join()
 
-    //     let filterclinicId = ""
-    //     clinicId.forEach((val) => {
-    //         console.log("val", val)
-    //         filterclinicId = val.value
-    //     })
 
-        
+
         let formData;
         if (startDate && endDate) {
             formData = { ...formData, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD") };
         }
         if (petId) {
             console.log("welcome")
-            formData = { ...formData, pet_id: petId};
+            formData = { ...formData, pet_id: filterpetID };
         }
         if (clinicId.value) {
             formData = { ...formData, clinic_id: clinicId.value };
@@ -296,7 +309,7 @@ const Invoice = (props) => {
                                             onChange={(update) => {
                                                 setDateRangeto(update);
                                             }}
-                                            onSelect={(e)=>{console.log("end",e)}}
+                                            onSelect={(e) => { console.log("end", e) }}
                                             isClearable={false}
                                             maxDate={new Date()}
                                             minDate={startDateto}
@@ -321,8 +334,8 @@ const Invoice = (props) => {
                                             value={petId}
                                             options={allPets}
                                             isMulti
-                                           // onChange={(e) => setPetId(e)}
-                                           onChange={selectedPet}
+                                            // onChange={(e) => setPetId(e)}
+                                            onChange={(e) => setPetId(e)}
 
                                         />
                                     </div>
