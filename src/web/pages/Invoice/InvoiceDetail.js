@@ -63,16 +63,12 @@ const InvoiceDetail = (props) => {
     }, [downloadUrl]);
 
     const payNow = async (invoice) => {
-        console.log("invoice",invoice)
-         let payload = {
-             id:invoice.id,
-             type: 'Web',
-             remaining_amount:invoice.remaining_amount,
-             client_id:invoice.client_id,
-             pet_id:invoice.pet_id,
-             slot:invoice.slot,
-             date:invoice.date
-         }
+        let payload = {
+            id: invoice.id,
+            type: 'Web',
+            remaining_amount: invoice.remaining_amount,
+            invoice_number: invoice.invoice_number
+        }
         // await payInvoice(payload)
         await displayRazorpay(payload);
     }
@@ -100,7 +96,6 @@ const InvoiceDetail = (props) => {
             return;
         }
         let currency = 'INR';
-        console.log("payload", payload)
         let amount = (payload.remaining_amount) * 100;
 
         const options = {
@@ -108,35 +103,35 @@ const InvoiceDetail = (props) => {
             amount: amount,
             currency: currency,
             name: `${userData?.firstname} ${userData?.lastname}`,
-            description: `Appointment From Web Patient Portal with Following Information (Email:${userData?.email},Phone:${userData?.phone_code}, DateTime:${payload?.date} ${payload?.slot}, ClientId:${payload?.client_id}, PetId:${payload?.pet_id})`,
+            description: `PAYMENT FOR:${payload?.invoice_number}`,
             image: DCCLOGO,
             handler: async function (response) {
                 try {
-                    console.log("response", response, response.razorpay_payment_id)
-                    payload.razorpay_payment_id = response.razorpay_payment_id
-                    await payInvoice(payload)
-                    //  await createAppointment(payload);
+                    if (response.razorpay_payment_id) {
+                        payload.razorpay_payment_id = response.razorpay_payment_id
+                        await payInvoice(payload)
+                    }
+                    else {
+                        alert("payment error")
+                    }
                 } catch (err) {
                     console.log(err);
                 }
             },
+
             prefill: {
                 name: `${userData?.firstname} ${userData?.lastname}`,
                 email: `${userData?.email}`,
                 contact: `${userData?.phone_code}`,
-            },
-            notes: {
-                address: '',
             },
             theme: {
                 color: '#2EAD5A',
             },
         };
         const paymentObject = new window.Razorpay(options);
-      
+
         paymentObject.open();
     }
-    console.log("invoice data", invoiceData)
     return (
         <React.Fragment>
             <div className="content_outer">
