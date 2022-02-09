@@ -42,6 +42,7 @@ const Invoice = (props) => {
     const [allClinics, setAllClinics] = useState([]);
     const [allPets, setAllPets] = useState([]);
     const [filterID, setfilterID] = useState([]);
+    const [eventTrigger, seteventTrigger] = useState(false);
 
     const getInvoices = useStoreActions((actions) => actions.invoice.getInvoices);
     const getAllClinics = useStoreActions((actions) => actions.invoice.getAllClinics);
@@ -63,31 +64,28 @@ const Invoice = (props) => {
         await getPets(getLoggedinUserId());
     }, []);
 
-    //   const selectedPet = (event) => {
-    //       console.log("event",event)
-    //       setPetId(event)
-    //       event.forEach((val) => {
-    //           filterID.push(val.value)
-    //       })
-    //       let selectedID = [...new Set(filterID)];
-    //       console.log("selectedid",selectedID)
-    //       let filterpetID = selectedID.join()
-    //       console.log("filterpetID",filterpetID)
+    const selectedPet = (event) => {
+        console.log("event", event)
+        setPetId(event)
+        event.forEach((val) => {
+            filterID.push(val.value)
+        })
+        let selectedID = [...new Set(filterID)];
+        console.log("selectedid", selectedID)
+        let filterpetID = selectedID.join()
+        localStorage.setItem("filterpetID", filterpetID)
+        localStorage.setItem("eventID", JSON.stringify(event))
+        // setselectedID(filterpetID)
+        seteventTrigger(!eventTrigger)
+    }
 
-    //       setselectedID(filterpetID)
-    //   }
-
-
-    //  const selectedPet = (event) => {
-    //      //setselectedID([...selectedID,event])
-    //     // setSelectedPet([...selectedID,event])
-    //      console.log("event",event)
-    //     //  if (petId?.includes(event) === false){
-
-    //     //  }
-    //      //let selectedID = [...new Set(filterID)];
-    //      setPetId(selectedID)
-    //  }
+    useEffect(() => {
+        let filterpetID = localStorage.getItem("filterpetID")
+       // let filterpID = localStorage.getItem("eventID")
+        console.log("eventID id",filterpetID)
+        setselectedID(filterpetID)
+    }, [eventTrigger])
+   
     console.log("petid", petId)
     useEffect(() => {
         if (responsePet) {
@@ -179,21 +177,24 @@ const Invoice = (props) => {
     }, []);
 
     useEffect(async () => {
-        let filterpet = []
-        petId.forEach((val) => {
-            filterpet.push(val.value)
-        })
-        let filterpetID = filterpet.join()
+        //  let filterpet = []
+        // //  if(selectedID.length>0){
+        // //     selectedID.forEach((val) => {
+        // //         filterpet.push(val.value)
+        // //     })
+        // //  }
+         
+        //  let filterpetID = filterpet.join()
 
-
+      console.log("selected id",selectedID)
 
         let formData;
         if (startDate && endDate) {
             formData = { ...formData, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD") };
         }
-        if (petId) {
+        if (selectedID) {
             console.log("welcome")
-            formData = { ...formData, pet_id: filterpetID };
+            formData = { ...formData, pet_id: selectedID };
         }
         if (clinicId.value) {
             formData = { ...formData, clinic_id: clinicId.value };
@@ -206,7 +207,7 @@ const Invoice = (props) => {
         return () => {
             window.removeEventListener('scroll', (e) => handleScroll(e))
         };
-    }, [startDate, endDate, petId, clinicId]);
+    }, [startDate, endDate, petId, clinicId,eventTrigger]);
 
 
     useEffect(() => {
@@ -334,8 +335,8 @@ const Invoice = (props) => {
                                             value={petId}
                                             options={allPets}
                                             isMulti
-                                            // onChange={(e) => setPetId(e)}
-                                            onChange={(e) => setPetId(e)}
+                                            onChange={(e) => selectedPet(e)}
+                                        //onChange={(e) => setPetId(e)}
 
                                         />
                                     </div>
