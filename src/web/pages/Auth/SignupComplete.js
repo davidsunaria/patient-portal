@@ -40,6 +40,8 @@ const SignupComplete = (props) => {
       code: tempData.code,
       phone: tempData.phone,
       email: payload.email,
+      privacy: payload.privacy,
+      condition: payload.condition,
       password: payload.password,
       password_confirmation: payload.password_confirmation,
     }
@@ -213,12 +215,12 @@ const SignupComplete = (props) => {
                     <ErrorMessage name="password_confirmation" component="span" className="errorMsg" />
                   </div>
                   <div className="loginFieldGroup termsCondition">
-                  <input type="checkbox" name={`privacy`} checked={values.privacy} value={values.privacy} onChange={handleChange} />I agree to the <a href={`${process.env.REACT_APP_PAGES_URL}privacy-policy`} target="_blank"> Privacy Policy</a>  
-                  <ErrorMessage name="privacy" component="span" className="errorMsg" /></div>
+                    <input type="checkbox" name={`privacy`} checked={values.privacy} value={values.privacy} onChange={handleChange} />I agree to the <a href={`${process.env.REACT_APP_PAGES_URL}privacy-policy`} target="_blank"> Privacy Policy</a>
+                    <ErrorMessage name="privacy" component="span" className="errorMsg" /></div>
 
                   <div className="loginFieldGroup termsCondition">
-                  <input type="checkbox" name={`condition`} checked={values.condition} value={values.condition} onChange={handleChange} />I agree to the  <a href={`${process.env.REACT_APP_PAGES_URL}terms-and-conditions`} target="_blank" onChange={handleChange}>Terms & Conditions.</a>
-                  <ErrorMessage name="condition" component="span" className="errorMsg"/></div>
+                    <input type="checkbox" name={`condition`} checked={values.condition} value={values.condition} onChange={handleChange} />I agree to the  <a href={`${process.env.REACT_APP_PAGES_URL}terms-and-conditions`} target="_blank" onChange={handleChange}>Terms & Conditions.</a>
+                    <ErrorMessage name="condition" component="span" className="errorMsg" /></div>
                   <button disabled={isLoading} className="loginBtn">{isLoading && <Spinner animation="border" size="sm" />}
                     {(isLoading) ? 'Processing' : 'Log In'}</button>
                   <div className="alreadyAccount">
