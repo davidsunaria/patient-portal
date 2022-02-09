@@ -43,6 +43,7 @@ const Invoice = (props) => {
     const [allPets, setAllPets] = useState([]);
     const [filterID, setfilterID] = useState([]);
     const [eventTrigger, seteventTrigger] = useState(false);
+    const [emptyArray, setemptyArray] = useState(false);
 
     const getInvoices = useStoreActions((actions) => actions.invoice.getInvoices);
     const getAllClinics = useStoreActions((actions) => actions.invoice.getAllClinics);
@@ -65,28 +66,30 @@ const Invoice = (props) => {
     }, []);
 
     const selectedPet = (event) => {
-        console.log("event", event)
-        setPetId(event)
-        event.forEach((val) => {
-            filterID.push(val.value)
-        })
-        let selectedID = [...new Set(filterID)];
-        console.log("selectedid", selectedID)
-        let filterpetID = selectedID.join()
-        localStorage.setItem("filterpetID", filterpetID)
+        // console.log("event", event)
+        // setPetId(event)
+        // event.forEach((val) => {
+        //     filterID.push(val.value)
+        // })
+        // let selectedID = [...new Set(filterID)];
+        // console.log("selectedid", selectedID)
+        // let filterpetID = selectedID.join()
+        // localStorage.setItem("filterpetID", filterpetID)
         localStorage.setItem("eventID", JSON.stringify(event))
-        // setselectedID(filterpetID)
+        //setselectedID(filterpetID)
         seteventTrigger(!eventTrigger)
     }
 
-    useEffect(() => {
-        let filterpetID = localStorage.getItem("filterpetID")
-       // let filterpID = localStorage.getItem("eventID")
-        console.log("eventID id",filterpetID)
-        setselectedID(filterpetID)
-    }, [eventTrigger])
-   
-    console.log("petid", petId)
+    // useEffect(() => {
+    //     //let filterpetID = localStorage.getItem("filterpetID")
+    //      let filterID = localStorage.getItem("eventID")
+    //     console.log("eventID id", filterID)
+    //    // setselectedID(filterID)
+    // }, [eventTrigger])
+
+    // console.log("selectedID", selectedID)
+
+    // console.log("petid", petId)
     useEffect(() => {
         if (responsePet) {
             let { status, statuscode, data } = responsePet;
@@ -176,25 +179,50 @@ const Invoice = (props) => {
         }, 0)
     }, []);
 
-    useEffect(async () => {
-        //  let filterpet = []
-        // //  if(selectedID.length>0){
-        // //     selectedID.forEach((val) => {
-        // //         filterpet.push(val.value)
-        // //     })
-        // //  }
-         
-        //  let filterpetID = filterpet.join()
+    // if (window.performance) {
+    //     console.info("window.performance work's fine on this browser");
+    //   }
+    //     if (performance.navigation.type == 1) {
+    //       console.info( "This page is reloaded" );
+    //     } else {
+    //       console.info( "This page is not reloaded");
+    //     }
 
-      console.log("selected id",selectedID)
+
+
+    useEffect(async () => {
+        let filterID = JSON.parse(localStorage.getItem("eventID"))
+        let filterpet = []
+        if (filterID != null && filterID.length > 0) {
+            filterID.forEach((val) => {
+                if (val.label == "All") {
+                   // filterpet = []
+                   console.log("working")
+                    setemptyArray(!emptyArray)
+                }
+                else {
+                    filterpet.push(val.value)
+                }
+
+            })
+        }
+        let filterpetID = filterpet.join()
+
+        if(emptyArray){
+            console.log("wrking")
+            filterpetID=""
+        }
+
+        console.log("eventID id", filterID)
+        console.log("filterpetID id", filterpetID)
 
         let formData;
         if (startDate && endDate) {
             formData = { ...formData, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD") };
         }
-        if (selectedID) {
-            console.log("welcome")
-            formData = { ...formData, pet_id: selectedID };
+        if (filterpetID) {
+            // console.log("welcome")
+            formData = { ...formData, pet_id: filterpetID };
         }
         if (clinicId.value) {
             formData = { ...formData, clinic_id: clinicId.value };
@@ -207,7 +235,14 @@ const Invoice = (props) => {
         return () => {
             window.removeEventListener('scroll', (e) => handleScroll(e))
         };
-    }, [startDate, endDate, petId, clinicId,eventTrigger]);
+    }, [startDate, endDate, petId, clinicId, eventTrigger]);
+
+    useEffect(() => {
+            // if (emptyArray) {
+            //   let  filterpet = []
+            //     localStorage.setItem("eventID", filterpet)
+            // }
+    }, [emptyArray]);
 
 
     useEffect(() => {
@@ -332,7 +367,7 @@ const Invoice = (props) => {
                                             isSearchable={true}
                                             id="petId"
                                             name="petId"
-                                            value={petId}
+                                            value={emptyArray?[ {value: "", label: "All"}]:JSON.parse(localStorage.getItem("eventID"))}
                                             options={allPets}
                                             isMulti
                                             onChange={(e) => selectedPet(e)}
