@@ -27,8 +27,8 @@ const SignupComplete = (props) => {
     email: '',
     password: '',
     password_confirmation: '',
-    privacy_policy: 0,
-    term_and_conditions: 0,
+    privacy_policy: false,
+    term_and_conditions: false,
     device_token: new Buffer(window.navigator.userAgent).toString('base64')
   });
 
@@ -40,8 +40,8 @@ const SignupComplete = (props) => {
       code: tempData.code,
       phone: tempData.phone,
       email: payload.email,
-      privacy_policy: payload.privacy_policy,
-      term_and_conditions: payload.term_and_conditions,
+      privacy_policy: 1,
+      term_and_conditions: 1,
       password: payload.password,
       password_confirmation: payload.password_confirmation,
     }
@@ -86,9 +86,7 @@ const SignupComplete = (props) => {
             initialValues={formData}
             onSubmit={async values => {
               //setFormData(JSON.stringify(values, null, 2))
-              if (values.privacy == true && values.condition == true) {
                 createUser(values);
-              }
             }}
             validationSchema={SignupSchema}
           >
@@ -216,11 +214,11 @@ const SignupComplete = (props) => {
                   </div>
                   <div className="loginFieldGroup termsCondition">
                     <input type="checkbox" name={`privacy_policy`} checked={values.privacy_policy} value={values.privacy_policy} onChange={handleChange} />I agree to the <a href={`${process.env.REACT_APP_PAGES_URL}privacy-policy`} target="_blank"> Privacy Policy</a>
-                    <ErrorMessage name="privacy" component="span" className="errorMsg" /></div>
-
+                    <ErrorMessage name="privacy_policy" component="span" className="errorMsg" /></div>
+                    {console.log(values.term_and_conditions)}
                   <div className="loginFieldGroup termsCondition">
                     <input type="checkbox" name={`term_and_conditions`} checked={values.term_and_conditions} value={values.term_and_conditions} onChange={handleChange} />I agree to the  <a href={`${process.env.REACT_APP_PAGES_URL}terms-and-conditions`} target="_blank" onChange={handleChange}>Terms & Conditions.</a>
-                    <ErrorMessage name="condition" component="span" className="errorMsg" /></div>
+                    <ErrorMessage name="term_and_conditions" component="span" className="errorMsg" /></div>
                   <button disabled={isLoading} className="loginBtn">{isLoading && <Spinner animation="border" size="sm" />}
                     {(isLoading) ? 'Processing' : 'Log In'}</button>
                   <div className="alreadyAccount">
