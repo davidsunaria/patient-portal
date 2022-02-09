@@ -13,14 +13,16 @@ import INVOICE_HOSPITAL_PET from "patient-portal-images/invoiceHospital.svg";
 import CALENDER_IMAGE from "patient-portal-images/appointment.svg";
 import { Formik, ErrorMessage } from "formik";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import _ from "lodash";
+import _, { set } from "lodash";
 import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal-utils/Service";
 import NoRecord from "patient-portal-components/NoRecord";
 import { subDays } from "date-fns";
+import { filter } from "lodash";
 
 
 const Invoice = (props) => {
     const calendarRef = useRef();
+    const calendarRefto = useRef();
     const history = useHistory();
     const [isBottom, setIsBottom] = useState(false);
     const [records, setRecords] = useState([]);
@@ -31,11 +33,18 @@ const Invoice = (props) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [dateRange, setDateRange] = useState([]);//[subDays(new Date(), 15), new Date()]
+    const [dateRangeto, setDateRangeto] = useState([]);
     const [startDate, endDate] = dateRange;
-    const [petId, setPetId] = useState({ value: "", label: "All Pets" });
-    const [clinicId, setClinicId] = useState({ value: "", label: "All Clinics" });
+    const [startDateto, endDateto] = dateRangeto;
+    const [petId, setPetId] = useState([]);
+    const [selectedID, setselectedID] = useState([]);
+    const [clinicId, setClinicId] = useState([{ value: "", label: "Select clinics" }]);
     const [allClinics, setAllClinics] = useState([]);
     const [allPets, setAllPets] = useState([]);
+    const [filterID, setfilterID] = useState([]);
+    const [eventTrigger, seteventTrigger] = useState(false);
+    const [selectedPets, setSelectedPets] = useState([]);
+    const [emptyArray, setemptyArray] = useState(false);
 
     const getInvoices = useStoreActions((actions) => actions.invoice.getInvoices);
     const getAllClinics = useStoreActions((actions) => actions.invoice.getAllClinics);
@@ -43,7 +52,8 @@ const Invoice = (props) => {
 
     const getPets = useStoreActions((actions) => actions.pet.getPets);
     const responsePet = useStoreState((state) => state.pet.response);
-
+    // const setSelectedPet = useStoreActions((actions) => actions.pet.setSelectedPet);
+    // const getSelectedPet = useStoreState((state) => state.pet.getSelectedPet);
 
     const [formData, setFormData] = useState({
         pet_id: '',
@@ -56,6 +66,29 @@ const Invoice = (props) => {
         await getPets(getLoggedinUserId());
     }, []);
 
+    const selectedPet = (event) => {
+        // console.log("event", event)
+        // setPetId(event)
+        // event.forEach((val) => {
+        //     filterID.push(val.value)
+        // })
+        // let selectedID = [...new Set(filterID)];
+        // console.log("selectedid", selectedID)
+        // let filterpetID = selectedID.join()
+        // localStorage.setItem("filterpetID", filterpetID)
+        setSelectedPets(event)
+    }
+
+    // useEffect(() => {
+    //     //let filterpetID = localStorage.getItem("filterpetID")
+    //      let filterID = localStorage.getItem("eventID")
+    //     console.log("eventID id", filterID)
+    //    // setselectedID(filterID)
+    // }, [eventTrigger])
+
+    // console.log("selectedID", selectedID)
+
+    // console.log("petid", petId)
     useEffect(() => {
         if (responsePet) {
             let { status, statuscode, data } = responsePet;
@@ -123,6 +156,11 @@ const Invoice = (props) => {
         setIsOpen(!isOpen);
         calendarRef.current.setOpen(!isOpen)
     };
+    const handleClickto = (e) => {
+        e.preventDefault();
+        setIsOpen(!isOpen);
+        calendarRefto.current.setOpen(!isOpen)
+    };
     const lastScrollTop = useRef(0);
 
     const handleScroll = useCallback((e) => {
@@ -140,28 +178,59 @@ const Invoice = (props) => {
         }, 0)
     }, []);
 
+    // if (window.performance) {
+    //     console.info("window.performance work's fine on this browser");
+    //   }
+    //     if (performance.navigation.type == 1) {
+    //       console.info( "This page is reloaded" );
+    //     } else {
+    //       console.info( "This page is not reloaded");
+    //     }
+
+
+
     useEffect(async () => {
+        let filterID = selectedPets
+        let filterpet = []
+        if (filterID != null && filterID.length > 0) {
+            filterID.forEach((val) => {
+                    filterpet.push(val.value)
+
+            })
+        }
+        let filterpetID = filterpet.join()
+
+    
+
         let formData;
         if (startDate && endDate) {
             formData = { ...formData, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD") };
         }
-        if (petId.value) {
-            formData = { ...formData, pet_id: petId.value };
+        if (filterpetID) {
+            // console.log("welcome")
+            formData = { ...formData, pet_id: filterpetID };
         }
         if (clinicId.value) {
             formData = { ...formData, clinic_id: clinicId.value };
         }
         //if (formData !== undefined) {
-            formData = { ...formData, page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE };
-            await getInvoices({ clientId: getLoggedinUserId(), query: formData });
+        formData = { ...formData, page: process.env.REACT_APP_FIRST_PAGE, pagesize: process.env.REACT_APP_PER_PAGE };
+        await getInvoices({ clientId: getLoggedinUserId(), query: formData });
         //}
         window.addEventListener('scroll', (e) => handleScroll(e), true);
         return () => {
             window.removeEventListener('scroll', (e) => handleScroll(e))
         };
-    }, [startDate, endDate, petId, clinicId]);
+    }, [startDate, endDate, petId, clinicId, selectedPets]);
 
-  
+    useEffect(() => {
+            // if (emptyArray) {
+            //   let  filterpet = []
+            //     localStorage.setItem("eventID", filterpet)
+            // }
+    }, [emptyArray]);
+
+
     useEffect(() => {
         if (isBottom) {
             if (nextPageUrl) {
@@ -197,10 +266,10 @@ const Invoice = (props) => {
             status = "Cancelled";
             cls = "red";
         }
-        
-        if(value === "ready"){
+
+        if (value === "ready") {
             status = "Awaiting Payment";
-            cls = "orange"; 
+            cls = "orange";
         }
         if (type == 1) {
             return cls;
@@ -228,7 +297,7 @@ const Invoice = (props) => {
 
                                         <DatePicker
                                             dateFormat="yyyy-MM-dd"
-                                            placeholderText="Date"
+                                            placeholderText="Start Date"
                                             ref={calendarRef}
                                             className="fieldInput calendarFilter expandCalender"
                                             selectsRange={true}
@@ -238,12 +307,39 @@ const Invoice = (props) => {
                                                 setDateRange(update);
                                             }}
                                             isClearable={false}
-                                            
+                                            maxDate={new Date()}
+
                                             peekNextMonth
-      showMonthDropdown
-      showYearDropdown
-      dropdownMode="select"                                        />
+                                            showMonthDropdown
+                                            showYearDropdown
+                                            dropdownMode="select" />
                                         <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
+                                    </div>
+                                </div>
+
+                                <div className="fieldOuter d-sm-inline-block mr-sm-2 mb-2 mb-lg-0">
+                                    <div className="fieldBox fieldIcon">
+
+                                        <DatePicker
+                                            dateFormat="yyyy-MM-dd"
+                                            placeholderText=" End Date"
+                                            ref={calendarRefto}
+                                            className="fieldInput calendarFilter expandCalender"
+                                            selectsRange={true}
+                                            startDate={startDateto}
+                                            endDate={endDateto}
+                                            onChange={(update) => {
+                                                setDateRangeto(update);
+                                            }}
+                                            onSelect={(e) => { console.log("end", e) }}
+                                            isClearable={false}
+                                            maxDate={new Date()}
+                                            minDate={startDateto}
+                                            peekNextMonth
+                                            showMonthDropdown
+                                            showYearDropdown
+                                            dropdownMode="select" />
+                                        <img src={CALENDER_IMAGE} onClick={(e) => handleClickto(e)} />
                                     </div>
                                 </div>
 
@@ -257,9 +353,17 @@ const Invoice = (props) => {
                                             isSearchable={true}
                                             id="petId"
                                             name="petId"
-                                            value={petId}
+                                            value={emptyArray?[ {value: "", label: "All"}]:selectedPets}
                                             options={allPets}
-                                            onChange={(e) => setPetId(e)}
+                                            isMulti
+                                            onChange={(e) =>{ 
+                                                if(e.findIndex(_=>_.label=="All")>-1){
+                                                selectedPet([])
+                                                }else
+                                                selectedPet(e)
+                                            }}
+                                        //onChange={(e) => setPetId(e)}
+
                                         />
                                     </div>
                                 </div>
@@ -275,6 +379,7 @@ const Invoice = (props) => {
                                             name="clinicId"
                                             value={clinicId}
                                             options={allClinics}
+                                            isMulti
                                             onChange={(e) => setClinicId(e)}
                                         />
                                     </div>
@@ -284,7 +389,7 @@ const Invoice = (props) => {
                             {records && records.length > 0 ? (
                                 records.map((val, index) => (
                                     <div key={index} className="box recordCard onHover" onClick={() => goTo(val.id)}>
-                                        
+
                                         <div className={`dueDate ${getStatus(val.status, 1)}`}>{getStatus(val.status, 2)}</div>
                                         <div className="recordDate">
                                             <span>{(val.created) ? formatDate(val?.created, 1, false) : ''}</span>
@@ -296,8 +401,8 @@ const Invoice = (props) => {
                                 ))
 
                             ) : (
-                                <NoRecord />
-                            )}
+                                    <NoRecord />
+                                )}
                         </form>
                     </main>
                 </div>
