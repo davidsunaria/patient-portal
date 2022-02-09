@@ -43,6 +43,7 @@ const Invoice = (props) => {
     const [allPets, setAllPets] = useState([]);
     const [filterID, setfilterID] = useState([]);
     const [eventTrigger, seteventTrigger] = useState(false);
+    const [selectedPets, setSelectedPets] = useState([]);
     const [emptyArray, setemptyArray] = useState(false);
 
     const getInvoices = useStoreActions((actions) => actions.invoice.getInvoices);
@@ -75,9 +76,7 @@ const Invoice = (props) => {
         // console.log("selectedid", selectedID)
         // let filterpetID = selectedID.join()
         // localStorage.setItem("filterpetID", filterpetID)
-        localStorage.setItem("eventID", JSON.stringify(event))
-        //setselectedID(filterpetID)
-        seteventTrigger(!eventTrigger)
+        setSelectedPets(event)
     }
 
     // useEffect(() => {
@@ -191,30 +190,17 @@ const Invoice = (props) => {
 
 
     useEffect(async () => {
-        let filterID = JSON.parse(localStorage.getItem("eventID"))
+        let filterID = selectedPets
         let filterpet = []
         if (filterID != null && filterID.length > 0) {
             filterID.forEach((val) => {
-                if (val.label == "All") {
-                   // filterpet = []
-                   console.log("working")
-                    setemptyArray(!emptyArray)
-                }
-                else {
                     filterpet.push(val.value)
-                }
 
             })
         }
         let filterpetID = filterpet.join()
 
-        if(emptyArray){
-            console.log("wrking")
-            filterpetID=""
-        }
-
-        console.log("eventID id", filterID)
-        console.log("filterpetID id", filterpetID)
+    
 
         let formData;
         if (startDate && endDate) {
@@ -235,7 +221,7 @@ const Invoice = (props) => {
         return () => {
             window.removeEventListener('scroll', (e) => handleScroll(e))
         };
-    }, [startDate, endDate, petId, clinicId, eventTrigger]);
+    }, [startDate, endDate, petId, clinicId, selectedPets]);
 
     useEffect(() => {
             // if (emptyArray) {
@@ -367,10 +353,15 @@ const Invoice = (props) => {
                                             isSearchable={true}
                                             id="petId"
                                             name="petId"
-                                            value={emptyArray?[ {value: "", label: "All"}]:JSON.parse(localStorage.getItem("eventID"))}
+                                            value={emptyArray?[ {value: "", label: "All"}]:selectedPets}
                                             options={allPets}
                                             isMulti
-                                            onChange={(e) => selectedPet(e)}
+                                            onChange={(e) =>{ 
+                                                if(e.findIndex(_=>_.label=="All")>-1){
+                                                selectedPet([])
+                                                }else
+                                                selectedPet(e)
+                                            }}
                                         //onChange={(e) => setPetId(e)}
 
                                         />
