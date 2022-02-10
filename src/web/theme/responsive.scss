@@ -3,7 +3,12 @@ $primary:#4EB176;
 $secondary:#444444;
 $text-color:#4B4B5A;
 
-@media(max-width:1270px){
+@media(max-width:1200px){
+	.invoiceFilter .fieldOuter{
+		width:48%;
+		margin-top: 5px;
+		margin-bottom: 5px;
+	}
 }
 @media(max-width:1050px){
 	.profileInfo .profileDetail{display:block;}
@@ -70,4 +75,7 @@ $text-color:#4B4B5A;
 	.articleOuter .articleBlock .articleImg{height:173px;}
 	.settingLeft, .settingRight {width:100%;padding-left:0px;}
 	.loginOuter{position:static;}
+	.invoiceFilter .fieldOuter{
+		width:100%;
+	}
 }

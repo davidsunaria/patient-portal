@@ -302,7 +302,7 @@ const Invoice = (props) => {
                         />
 
                         <form>
-                            <div className="box mb-3">
+                            <div className="box mb-3 invoiceFilter">
                                 {/* <div className="fieldOuter d-sm-inline-block mr-sm-2 mb-2 mb-lg-0">
                                     <div className="fieldBox fieldIcon">
 
