@@ -37,8 +37,8 @@ const Invoice = (props) => {
     const [dateRangeto, setDateRangeto] = useState([]);
     // const [startDate, endDate] = dateRange;
     // const [startDateto, endDateto] = dateRangeto;
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [petId, setPetId] = useState([]);
     const [selectedID, setselectedID] = useState([]);
     const [clinicId, setClinicId] = useState([]);
@@ -359,7 +359,7 @@ const Invoice = (props) => {
 
                                         <DatePicker
                                             dateFormat="yyyy-MM-dd"
-                                            placeholderText=" End Date"
+                                            placeholderText="Start Date"
                                             ref={calendarRef}
                                             className="fieldInput calendarFilter expandCalender"
                                             selected={startDate}
@@ -383,7 +383,7 @@ const Invoice = (props) => {
 
                                         <DatePicker
                                             dateFormat="yyyy-MM-dd"
-                                            placeholderText=" End Date"
+                                            placeholderText="End Date"
                                             ref={calendarRefto}
                                             className="fieldInput calendarFilter expandCalender"
                                             selected={endDate}
