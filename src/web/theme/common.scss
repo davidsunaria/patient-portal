@@ -1321,7 +1321,7 @@ button{
     }
 }
 .petSelect{
-    min-width:220px;
+    min-width:185px;
 }
 .calendarFilter{
     width:130px;
@@ -2357,4 +2357,18 @@ color: red!important;
         object-fit: initial;
         object-position: initial;
     }
+}
+.termsCondition{
+    font-size:13px;
+    input{
+        display: inline-block;
+        margin: 3px 3px 0px 0px;
+        vertical-align: top;
+    }
+    a{
+        color:#4EB176;
+    }
+}
+.invoiceFilter .fieldOuter{
+    
 }
