@@ -39,6 +39,7 @@ const Invoice = (props) => {
     // const [startDateto, endDateto] = dateRangeto;
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [maxDate, setMaxDate] = useState(new Date());
     const [petId, setPetId] = useState([]);
     const [selectedID, setselectedID] = useState([]);
     const [clinicId, setClinicId] = useState([]);
@@ -70,15 +71,6 @@ const Invoice = (props) => {
 
 
     const selectedPet = (event) => {
-        // console.log("event", event)
-        // setPetId(event)
-        // event.forEach((val) => {
-        //     filterID.push(val.value)
-        // })
-        // let selectedID = [...new Set(filterID)];
-        // console.log("selectedid", selectedID)
-        // let filterpetID = selectedID.join()
-        // localStorage.setItem("filterpetID", filterpetID)
         setSelectedPets(event)
     }
 
@@ -86,16 +78,11 @@ const Invoice = (props) => {
         setClinicId(event)
     }
 
-    // useEffect(() => {
-    //     //let filterpetID = localStorage.getItem("filterpetID")
-    //      let filterID = localStorage.getItem("eventID")
-    //     console.log("eventID id", filterID)
-    //    // setselectedID(filterID)
-    // }, [eventTrigger])
+    const setEndDateStart = (event)=>{
+        setEndDate(event)
+        setMaxDate(event)
+    }
 
-    // console.log("selectedID", selectedID)
-
-    // console.log("petid", petId)
     useEffect(() => {
         if (responsePet) {
             let { status, statuscode, data } = responsePet;
@@ -303,57 +290,6 @@ const Invoice = (props) => {
 
                         <form>
                             <div className="box mb-3 invoiceFilter">
-                                {/* <div className="fieldOuter d-sm-inline-block mr-sm-2 mb-2 mb-lg-0">
-                                    <div className="fieldBox fieldIcon">
-
-                                        <DatePicker
-                                            dateFormat="yyyy-MM-dd"
-                                            placeholderText="Start Date"
-                                            ref={calendarRef}
-                                            className="fieldInput calendarFilter expandCalender"
-                                            selectsRange={true}
-                                            startDate={startDate}
-                                            //endDate={endDate}
-                                            onChange={(update) => {
-                                                setStartDate(update);
-                                            }}
-                                            isClearable={false}
-                                            maxDate={new Date()}
-
-                                            peekNextMonth
-                                            showMonthDropdown
-                                            showYearDropdown
-                                            dropdownMode="select" />
-                                        <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)} />
-                                    </div>
-                                </div>
-
-                                <div className="fieldOuter d-sm-inline-block mr-sm-2 mb-2 mb-lg-0">
-                                    <div className="fieldBox fieldIcon">
-
-                                        <DatePicker
-                                            dateFormat="yyyy-MM-dd"
-                                            placeholderText=" End Date"
-                                            ref={calendarRefto}
-                                            className="fieldInput calendarFilter expandCalender"
-                                            selectsRange={true}
-                                            startDate={endDate}
-                                            //endDate={endDateto}
-                                            onChange={(update) => {
-                                                setEndDate(update);
-                                            }}
-                                            onSelect={(e) => { console.log("end", e) }}
-                                            isClearable={false}
-                                            maxDate={new Date()}
-                                            minDate={startDate}
-                                            peekNextMonth
-                                            showMonthDropdown
-                                            showYearDropdown
-                                            dropdownMode="select" />
-                                        <img src={CALENDER_IMAGE} onClick={(e) => handleClickto(e)} />
-                                    </div>
-                                </div> */}
-
                                 <div className="fieldOuter d-sm-inline-block mr-sm-2 mb-2 mb-lg-0">
                                     <div className="fieldBox fieldIcon">
 
@@ -367,7 +303,7 @@ const Invoice = (props) => {
                                             startDate={startDate}
                                             endDate={endDate}
                                             isClearable={false}
-                                            maxDate={new Date()}
+                                            maxDate={maxDate}
                                             onChange={date => setStartDate(date)}
                                             peekNextMonth
                                             showMonthDropdown
@@ -390,10 +326,10 @@ const Invoice = (props) => {
                                             selectsEnd
                                             startDate={startDate}
                                             endDate={endDate}
-                                            maxDate={new Date()}
+                                            maxDate={maxDate}
                                             minDate={startDate}
                                             isClearable={false}
-                                            onChange={date => setEndDate(date)}
+                                            onChange={date => setEndDateStart(date)}
                                             peekNextMonth
                                             showMonthDropdown
                                             showYearDropdown
