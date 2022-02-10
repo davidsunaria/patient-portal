@@ -110,7 +110,6 @@ const InvoiceDetail = (props) => {
                     if (response.razorpay_payment_id) {
                         payload.razorpay_payment_id = response.razorpay_payment_id
                         await payInvoice(payload)
-                        await getInvoice(id);
                     }
                     else {
                         alert("payment error")
