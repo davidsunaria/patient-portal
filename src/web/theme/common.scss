@@ -927,6 +927,18 @@ table{
     }
 }
 
+.feedbackComment{
+    display:block;
+   // padding-left:22px;
+    position:relative;
+    font-size: 11px;
+    color:$text-color;
+    text-align:left;
+    margin-bottom:15px;
+    padding-top:2px;
+    cursor:pointer;
+}
+
 .checkboxOuter{
     > div:last-child, > label:last-child{
         margin:0px;
@@ -2356,5 +2368,13 @@ color: red!important;
         height: inherit;
         object-fit: initial;
         object-position: initial;
+    }
+}
+.feedbackPage{
+    .fieldOuter{
+        position:relative;
+    }
+    .errorMsg{
+        margin-top:-13px;
     }
 }
