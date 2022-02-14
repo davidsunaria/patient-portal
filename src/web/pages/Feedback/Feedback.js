@@ -10,7 +10,7 @@ import { getLoggedinUserId } from "patient-portal-utils/Service";
 import { SELECT_ANSWER } from "patient-portal-message";
 import { FIELD_REQUIRED } from "patient-portal-message";
 //import {FeedbackModal} from "./FeedbackModal.js"
-import FeedbackModal from "patient-portal-pages/Feedback/FeedbackModal"
+//import FeedbackModal from "patient-portal-pages/Feedback/FeedbackModal"
 import Select from 'react-select';
 import _ from "lodash";
 import { useCallback } from "react";
@@ -175,7 +175,7 @@ const Feedback = (props) => {
     // }
     // let arr =[{ value: "Yes", label: "Yes" },{ value: "NO", label: "NO" }]
     return (<React.Fragment>
-        {<FeedbackModal modal={FeedbackPopup} toggle={closeFeedbackPopup} />}
+        {/* {<FeedbackModal modal={FeedbackPopup} toggle={closeFeedbackPopup} />} */}
         <div className="content_outer">
             <Sidebar activeMenu="appointment" />
             <div className="right_content_col">
