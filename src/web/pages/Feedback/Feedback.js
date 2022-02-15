@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "patient-portal-components/Sidebar/Sidebar.js";
-import Rating from "patient-portal-components/Rating/Rating";
 import { useHistory, useParams } from "react-router-dom";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { formatDate } from "patient-portal-utils/Service";
@@ -9,11 +8,7 @@ import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { getLoggedinUserId } from "patient-portal-utils/Service";
 import { SELECT_ANSWER } from "patient-portal-message";
 import { FIELD_REQUIRED } from "patient-portal-message";
-//import {FeedbackModal} from "./FeedbackModal.js"
-//import FeedbackModal from "patient-portal-pages/Feedback/FeedbackModal"
-import Select from 'react-select';
 import _ from "lodash";
-import { useCallback } from "react";
 
 const Feedback = (props) => {
     const { id } = useParams();
