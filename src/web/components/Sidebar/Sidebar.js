@@ -20,12 +20,23 @@ const Sidebar = (props) => {
   const logout = useStoreActions((actions) => actions.auth.logout);
   const isLoggedOut = useStoreState((state) => state.auth.isLoggedOut);
   const [logoutModal, setLogoutModal] = useState(false);
+  const setClinics = useStoreActions((actions) => actions.invoice.setClinics);
+  const setStartDate = useStoreActions((actions) => actions.invoice.setStartDate);
+  const setEndDate=useStoreActions((actions) => actions.invoice.setEndDate);
+  const setSelectedPet = useStoreActions((actions) => actions.pet.setSelectedPet);
+  const setMaxDate=useStoreActions((actions) => actions.invoice.setMaxDate);
+
   const toggleMenu = () => {
     setShowSubMenu(!showSubmenu);
   };
 
   const goToUrl = (url) => {
     history.push("/" + url);
+    setClinics([])
+    setStartDate(null)
+    setEndDate(null)
+    setMaxDate(new Date())
+    setSelectedPet([])
   };
 
   const logoutMe = async () => {
@@ -38,14 +49,14 @@ const Sidebar = (props) => {
       setTimeout(() => {
         window.location.href = "/login";
       })
-      
+
     }
   }, [isLoggedOut]);
 
   useEffect(() => {
-      if(props.data){
-        setUserData(props.data);
-      }
+    if (props.data) {
+      setUserData(props.data);
+    }
   }, [props.data]);
 
   const logoutUser = (id) => {
@@ -53,7 +64,7 @@ const Sidebar = (props) => {
   };
   return (
     <React.Fragment>
-       <LogoutConfirmation modal={logoutModal} toggle={logoutUser} onLogout={logoutMe} />
+      <LogoutConfirmation modal={logoutModal} toggle={logoutUser} onLogout={logoutMe} />
       <div>
         <a
           className={
@@ -201,3 +212,4 @@ const Sidebar = (props) => {
 };
 
 export default Sidebar;
+ 

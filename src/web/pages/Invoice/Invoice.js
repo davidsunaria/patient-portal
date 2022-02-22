@@ -18,6 +18,7 @@ import { getLoggedinUserId, showFormattedDate, formatDate } from "patient-portal
 import NoRecord from "patient-portal-components/NoRecord";
 import { subDays } from "date-fns";
 import { filter } from "lodash";
+import { end } from "@popperjs/core";
 
 
 const Invoice = (props) => {
@@ -33,20 +34,15 @@ const Invoice = (props) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isOpen2, setIsOpen2] = useState(false);
-    const [dateRange, setDateRange] = useState([]);//[subDays(new Date(), 15), new Date()]
-    const [dateRangeto, setDateRangeto] = useState([]);
     // const [startDate, endDate] = dateRange;
     // const [startDateto, endDateto] = dateRangeto;
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [maxDate, setMaxDate] = useState(new Date());
+    // const [startDate, setStartDate] = useState(null);
+    // const [endDate, setEndDate] = useState(null);
+    // const [maxDate, setMaxDate] = useState(new Date());
     const [petId, setPetId] = useState([]);
-    const [selectedID, setselectedID] = useState([]);
     const [clinicId, setClinicId] = useState([]);
     const [allClinics, setAllClinics] = useState([]);
     const [allPets, setAllPets] = useState([]);
-    const [filterID, setfilterID] = useState([]);
-    const [eventTrigger, seteventTrigger] = useState(false);
     const [selectedPets, setSelectedPets] = useState([]);
 
     const getInvoices = useStoreActions((actions) => actions.invoice.getInvoices);
@@ -55,9 +51,16 @@ const Invoice = (props) => {
 
     const getPets = useStoreActions((actions) => actions.pet.getPets);
     const responsePet = useStoreState((state) => state.pet.response);
-    // const setSelectedPet = useStoreActions((actions) => actions.pet.setSelectedPet);
-    // const getSelectedPet = useStoreState((state) => state.pet.getSelectedPet);
-
+    const setSelectedPet = useStoreActions((actions) => actions.pet.setSelectedPet);
+    const getSelectedPet = useStoreState((state) => state.pet.getSelectedPet);
+    const setClinics = useStoreActions((actions) => actions.invoice.setClinics);
+    const getClinics = useStoreState((state) => state.invoice.getClinics);
+    const setStartDate = useStoreActions((actions) => actions.invoice.setStartDate);
+    const startDate = useStoreState((state) => state.invoice.startDate);
+    const setEndDate = useStoreActions((actions) => actions.invoice.setEndDate);
+    const setMaxDate = useStoreActions((actions) => actions.invoice.setMaxDate);
+    const endDate = useStoreState((state) => state.invoice.endDate);
+    const maxDate = useStoreState((state) => state.invoice.maxDate);
     const [formData, setFormData] = useState({
         pet_id: '',
         clinic_id: '',
@@ -71,14 +74,19 @@ const Invoice = (props) => {
 
 
     const selectedPet = (event) => {
-        setSelectedPets(event)
+        setSelectedPet(event)
     }
+
+    useEffect(() => {
+        setSelectedPets(getSelectedPet)
+        // setPetId(getSelectedPet)
+    }, [getSelectedPet])
 
     const selectedClinics = (event) => {
-        setClinicId(event)
+        setClinics(event)
     }
 
-    const setEndDateStart = (event)=>{
+    const setendDate = (event) => {
         setEndDate(event)
         setMaxDate(event)
     }
@@ -105,6 +113,7 @@ const Invoice = (props) => {
 
     useEffect(() => {
         if (response) {
+            console.log("response", response)
             let { status, statuscode, data } = response;
             if (statuscode && statuscode === 200) {
                 if (data?.clinics) {
@@ -141,6 +150,7 @@ const Invoice = (props) => {
         }
     }, [response]);
 
+
     const goTo = (id) => {
         history.push(`/invoice-detail/${id}`);
     }
@@ -172,19 +182,9 @@ const Invoice = (props) => {
         }, 0)
     }, []);
 
-    // if (window.performance) {
-    //     console.info("window.performance work's fine on this browser");
-    //   }
-    //     if (performance.navigation.type == 1) {
-    //       console.info( "This page is reloaded" );
-    //     } else {
-    //       console.info( "This page is not reloaded");
-    //     }
-
-
-
     useEffect(async () => {
-        let filterID = selectedPets
+        console.log("slectedpets useffect", selectedPets)
+        let filterID = getSelectedPet
         let filterpet = []
         if (filterID != null && filterID.length > 0) {
             filterID.forEach((val) => {
@@ -194,8 +194,8 @@ const Invoice = (props) => {
         }
         let filterpetID = filterpet.join()
 
-
-        let filterclinic = clinicId
+        console.log("clinicId useffect", clinicId)
+        let filterclinic = getClinics
         let filterclinics = []
         if (filterclinic != null && filterclinic.length > 0) {
             filterclinic.forEach((val) => {
@@ -211,10 +211,11 @@ const Invoice = (props) => {
             formData = { ...formData, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD") };
         }
         if (filterpetID) {
-            // console.log("welcome")
+            console.log("welcome")
             formData = { ...formData, pet_id: filterpetID };
         }
         if (filterclinicID) {
+            console.log("welcome2")
             formData = { ...formData, clinic_id: filterclinicID };
         }
         //if (formData !== undefined) {
@@ -225,7 +226,7 @@ const Invoice = (props) => {
         return () => {
             window.removeEventListener('scroll', (e) => handleScroll(e))
         };
-    }, [startDate, endDate, petId, clinicId, selectedPets]);
+    }, [startDate, endDate, getClinics, selectedPets]);
 
 
 
@@ -309,7 +310,7 @@ const Invoice = (props) => {
                                             showMonthDropdown
                                             showYearDropdown
                                             dropdownMode="select" />
-                                         <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)}  
+                                        <img src={CALENDER_IMAGE} onClick={(e) => handleClick(e)}
                                         />
                                     </div>
                                 </div>
@@ -329,12 +330,12 @@ const Invoice = (props) => {
                                             maxDate={maxDate}
                                             minDate={startDate}
                                             isClearable={false}
-                                            onChange={date => setEndDateStart(date)}
+                                            onChange={date => setendDate(date)}
                                             peekNextMonth
                                             showMonthDropdown
                                             showYearDropdown
                                             dropdownMode="select" />
-                                         <img src={CALENDER_IMAGE} onClick={(e) => handleClickto(e)}  
+                                        <img src={CALENDER_IMAGE} onClick={(e) => handleClickto(e)}
                                         />
                                     </div>
                                 </div>
@@ -349,7 +350,8 @@ const Invoice = (props) => {
                                             isSearchable={true}
                                             id="petId"
                                             name="petId"
-                                            value={selectedPets}
+                                            // value={selectedPets}
+                                            value={getSelectedPet}
                                             options={allPets}
                                             isMulti
                                             onChange={(e) => {
@@ -370,7 +372,8 @@ const Invoice = (props) => {
                                             isSearchable={true}
                                             id="clinicId"
                                             name="clinicId"
-                                            value={clinicId}
+                                            // value={clinicId}
+                                            value={getClinics}
                                             options={allClinics}
                                             isMulti
                                             // onChange={(e) => setClinicId(e)}

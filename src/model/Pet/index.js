@@ -4,6 +4,7 @@ import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { getPets, getPet, getTreatmentRecord, getVaccinationRecord, getAntiParasiticRecord, getReports, downloadReport, getMedicalRecords, createPet, updatePet, getSpecies, getBreeds, deletePet, getReportsByVisit, getDewormingDetail, getVaccinationDetail, getReportDetail, contactUs, getTreatmentDetail } from "patient-portal-api/PetApi.js";
 const petModel = {
   response: [],
+  getSelectedPet: [],
   isPetDeleted: false,
   isPetCreated: false,
   isPetUpdated: false,
@@ -35,6 +36,9 @@ const petModel = {
       getStoreActions().common.setLoading(false);
       return true;
     }
+  }),
+  setSelectedPet: action((state, payload) => {
+    state.getSelectedPet = payload;
   }),
   getPet: thunk(async (actions, payload, { getStoreActions }) => {
     await actions.setIsPetUpdated(false);
@@ -292,7 +296,7 @@ const petModel = {
   resetContactUs: thunk(async (actions, payload, { getStoreActions }) => {
     await actions.setResponse([]);
   }),
-  
+
   getTreatmentDetail: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
     let response = await getTreatmentDetail(payload);
