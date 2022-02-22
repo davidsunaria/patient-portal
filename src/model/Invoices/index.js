@@ -4,8 +4,24 @@ import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { getInvoices, getInvoice, downloadInvoice, getAllClinics, payInvoice } from "patient-portal-api/InvoiceApi.js";
 const invoiceModel = {
   response: [],
+  getClinics: [],
+  startDate: null,
+  endDate: null,
+  maxDate: new Date(),
   setResponse: action((state, payload) => {
     state.response = payload;
+  }),
+  setClinics: action((state, payload) => {
+    state.getClinics = payload;
+  }),
+  setStartDate: action((state, payload) => {
+    state.startDate = payload;
+  }),
+  setEndDate: action((state, payload) => {
+    state.endDate = payload;
+  }),
+  setMaxDate: action((state, payload) => {
+    state.maxDate = payload;
   }),
   getInvoices: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
@@ -80,4 +96,4 @@ const invoiceModel = {
 
 };
 
-export default invoiceModel;
+export default invoiceModel
