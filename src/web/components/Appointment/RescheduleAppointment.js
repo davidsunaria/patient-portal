@@ -19,6 +19,7 @@ const RescheduleAppointment = (props) => {
   const [formData, setFormData] = useState({});
   const [allProviders, setAllProviders] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [rescheduleReason, setRescheduleReason] = useState("");
   const [id, setId] = useState(null);
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
@@ -33,7 +34,6 @@ const RescheduleAppointment = (props) => {
   const getProviderSlots = useStoreActions((actions) => actions.appointment.getProviderSlots);
 
   const response = useStoreState((state) => state.appointment.response);
-
   const handleClick = (e) => {
     e.preventDefault();
     setIsOpen(!isOpen);
@@ -53,7 +53,7 @@ const RescheduleAppointment = (props) => {
           },
           1000
         );
-        
+
         setTime(props?.data?.time_format);
       }
 
@@ -167,14 +167,14 @@ const RescheduleAppointment = (props) => {
 
   useEffect(async () => {
     if (date) {
-     // console.log("Clinic get slots", props?.data, doctorRef);
+      // console.log("Clinic get slots", props?.data, doctorRef);
       let payload;
       payload = {
         clinicId: props?.data?.clinic_id,
         serviceId: props?.data?.service_id,
         date: moment(date).format("YYYY-MM-DD"),
         appType: props?.data?.appointment_type,
-        appointmentId: props?.data?.id
+        appointmentId: props?.data?.id,
       }
       if (date && props?.data?.service?.service_for == "clinic") {
         payload.providerId = props?.data?.doctor_id ?? "";
@@ -185,7 +185,7 @@ const RescheduleAppointment = (props) => {
         payload.providerId = doctorRef.current || "";
         await getProviderSlots(payload);
       }
-      
+
     }
 
   }, [date]);
@@ -198,7 +198,8 @@ const RescheduleAppointment = (props) => {
       date: moment(date).format("YYYY-MM-DD"),
       slot: time,
       doctor_id: (formData?.provider_id?.value) ?? "",
-      telehealth_clinic_id: timeSlotClinic ?? ""
+      telehealth_clinic_id: timeSlotClinic ?? "",
+      reschedule_reason:rescheduleReason
     };
     if (props?.data?.service_id && !formData?.provider_id?.value && props?.data?.service?.service_for == "provider") {
       toast.error(<ToastUI message={SELECT_PROVIDER} type={"Error"} />);
@@ -247,7 +248,7 @@ const RescheduleAppointment = (props) => {
             </div>}
 
             <div className="fieldOuter">
-              <label className="fieldLabel">Select Date</label>
+              <label className="fieldLabel">Select Date <span className="required">*</span></label>
               <div className="fieldBox fieldIcon">
                 <DatePicker
                   dateFormat="yyyy-MM-dd"
@@ -264,20 +265,29 @@ const RescheduleAppointment = (props) => {
             </div>
 
             <div className="fieldOuter">
-              <label className="fieldLabel">Select Timeslot</label>
+              <label className="fieldLabel">Select Timeslot <span className="required">*</span></label>
               <div className="fieldBox">
                 <div className="timeslotPopup">
                   {date && timeslots.length > 0 ? (
                     Object.values(timeslots).map((val, index) => (
-                      <span className={(val == time) ? "active" : ''} key={index} onClick={() => selectTime(val)}>{val}</span>
+                      <span className={(val == time) ? "active" : ''} key={index} onClick={() => selectTime(val)}>{val}</span> 
                     ))
                   ) : (
-                    <div className="noRecord">
-                      <p>No timeslot found</p>
-                    </div>
-                  )}
+                      <div className="noRecord">
+                        <p>No timeslot found</p>
+                      </div>
+                    )}
                 </div>
               </div>
+            </div>
+            <div className="fieldOuter">
+            <label className="fieldLabel">Reason</label>
+            <textarea
+              value={rescheduleReason}
+              name="reschedule_reason"
+              className="rescheduleTextarea"
+               onChange={(e) => setRescheduleReason(e.target.value)}
+            />
             </div>
             <button className="button primary mr-2" onClick={() => rescheduleApp()}>Submit</button>
             <button className="button secondary" onClick={props.toggle}>Close</button>
