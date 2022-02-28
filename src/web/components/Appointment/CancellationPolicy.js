@@ -12,21 +12,32 @@ import { formatDate } from "patient-portal-utils/Service";
 
 const CancellationPolicy = (props) => {
 
+  const [cancelReason, setCancelReason] = useState("");
+
   return (
     <React.Fragment>
       <Modal isOpen={props.modal} >
         <ModalBody className="p-0" >
           <div className="popupWrapper">
-            <div className="popupTitle">Cancellation Policy
+            <div className="popupTitle mb-3"> Cancel Appointment
               <a onClick={props.toggle} className="cross">
                 <img src={CROSS_IMAGE} />
               </a>
             </div>
-            <div className="p-text my-3">
-              {props.data?.cancellation_policy}
+            <div className="fieldOuter">
+            <label className="fieldLabel">Reason</label> 
+            <textarea
+              value={cancelReason}
+              name="cancleReason"
+              className="rescheduleTextarea"
+               onChange={(e) => setCancelReason(e.target.value)}
+            />
             </div>
-            <button className="button primary mr-2" onClick={() => props.onCancelAppointment(props.id)}>Accept</button>
-            <button className="button secondary" onClick={props.toggle}>Decline</button>
+            {/* <div className="p-text my-3">
+              {props.data?.cancellation_policy}
+            </div> */}
+            <button className="button primary mr-2" onClick={() => props.onCancelAppointment(props.id,cancelReason)}>Submit</button>
+            <button className="button secondary" onClick={props.toggle}>Cancel</button>
           </div>
         </ModalBody>
       </Modal>

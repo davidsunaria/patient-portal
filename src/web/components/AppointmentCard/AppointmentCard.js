@@ -121,8 +121,21 @@ const AppointmentCard = (props) => {
             await getCancellationPolicy(service_id);
         }
         setAppointmentId(e);
-        //setPolicyModal(!policyModal);
+        // setPolicyModal(!policyModal);
         setCurrentOpenStack(null);
+    };
+    const cancelPolicy = async (e, service_id) => {
+         setPolicyModal(!policyModal);
+        //  if (!e.target) {
+        //     await getCancellationPolicy(service_id);
+        // }
+        setAppointmentId(e);
+         setTimeout(
+            () => {
+                setCurrentOpenStack(null);
+            },
+            100
+        );
     };
     useEffect(() => {
         if (isCancelled) {
@@ -218,8 +231,8 @@ const AppointmentCard = (props) => {
         }
     }, [page]);
 
-    const onCancelAppointment = async (id) => {
-        await cancelAppointment({ id: id, clientId: getLoggedinUserId() });
+    const onCancelAppointment = async (id,reason) => {
+        await cancelAppointment({ id: id, clientId: getLoggedinUserId(), reason:reason});
     }
 
     useEffect(() => {
@@ -312,12 +325,18 @@ const AppointmentCard = (props) => {
                                         </a>
                                     </li>
                                     }
-                                    {(props.type == "upcoming" && val.status != "canceled") && <li>
+                                 {/* {(props.type == "upcoming" && val.status != "canceled") && <li>
                                         <a onClick={() => cancelApp(val?.id, val?.service_id)} >
                                             <img src={CANCEL_IMAGE} />
                                             Cancel
                                         </a>
-                                    </li>}
+                                    </li>}  */}
+                                     {(props.type == "upcoming" && val.status != "canceled") && <li>
+                                        <a onClick={() => cancelPolicy(val?.id, val?.service_id)} >
+                                            <img src={CANCEL_IMAGE} />
+                                            Cancel
+                                        </a>
+                                    </li>} 
                                     <li>
                                         <a onClick={() => showContact(val?.clinic_id)}>
                                             <img src={CONTACT_IMAGE} />
