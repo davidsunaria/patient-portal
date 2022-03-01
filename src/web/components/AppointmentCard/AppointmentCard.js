@@ -232,9 +232,7 @@ const AppointmentCard = (props) => {
     }, [page]);
 
     const onCancelAppointment = async (id,reason) => {
-        if(reason!==""){
             await cancelAppointment({ id: id, clientId: getLoggedinUserId(), reason:reason});
-        }
     }
 
     useEffect(() => {

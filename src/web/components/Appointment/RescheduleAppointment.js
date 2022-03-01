@@ -218,7 +218,7 @@ const RescheduleAppointment = (props) => {
       toast.error(<ToastUI message={SELECT_TIME} type={"Error"} />);
     }
     else {
-      if (rescheduleReason !== "" && id !== null && date !== "") {
+      if (id !== null && date !== "") {
         await updateAppointment(formDataPayload);
       }
     }
@@ -289,7 +289,7 @@ const RescheduleAppointment = (props) => {
               </div>
             </div>
             <div className="fieldOuter">
-              <label className="fieldLabel">Reason <span className="required">*</span></label>
+              <label className="fieldLabel">Reason </label>
               <textarea
                 value={rescheduleReason}
                 name="reschedule_reason"
