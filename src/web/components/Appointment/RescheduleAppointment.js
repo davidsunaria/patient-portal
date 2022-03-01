@@ -69,7 +69,7 @@ const RescheduleAppointment = (props) => {
       if (props?.data?.id && props?.data?.service?.service_for == "clinic") {
         await getDates(props?.data?.id);
       }
-
+      console.log("props", props)
       // Set first provider autoselected and get date and slots
       if (props?.data?.doctor) {
         setFormData({
@@ -106,9 +106,9 @@ const RescheduleAppointment = (props) => {
   }, [formData.provider_id, isProviderChanged]);
   useEffect(() => {
     if (response) {
+
       let { message, statuscode, data } = response;
       if (statuscode && statuscode === 200) {
-
         //Set Providers Data
         let resultSet = [];
         if (data?.providers) {
@@ -152,6 +152,13 @@ const RescheduleAppointment = (props) => {
           if (data?.timeSlots.length === 0) {
             setTime(null);
           }
+        }
+
+        if (data?.rescheduleReason?.reason !== undefined) {
+          setRescheduleReason(data?.rescheduleReason?.reason);
+        }
+        if (data?.rescheduleReason?.length == 0) {
+          setRescheduleReason("");
         }
 
         if (data?.timeSlotsClinic) {
@@ -199,7 +206,7 @@ const RescheduleAppointment = (props) => {
       slot: time,
       doctor_id: (formData?.provider_id?.value) ?? "",
       telehealth_clinic_id: timeSlotClinic ?? "",
-      reschedule_reason:rescheduleReason
+      reschedule_reason: rescheduleReason
     };
     if (props?.data?.service_id && !formData?.provider_id?.value && props?.data?.service?.service_for == "provider") {
       toast.error(<ToastUI message={SELECT_PROVIDER} type={"Error"} />);
@@ -211,7 +218,9 @@ const RescheduleAppointment = (props) => {
       toast.error(<ToastUI message={SELECT_TIME} type={"Error"} />);
     }
     else {
-      await updateAppointment(formDataPayload);
+      if (rescheduleReason !== "" && id !== null && date !== "") {
+        await updateAppointment(formDataPayload);
+      }
     }
   }
 
@@ -225,7 +234,6 @@ const RescheduleAppointment = (props) => {
                 <img src={CROSS_IMAGE} />
               </a>
             </div>
-            {/* {JSON.stringify(doctorRef.current)} */}
             {props?.data?.service?.service_for === "provider" && allProviders && allProviders.length > 0 && <div className="fieldOuter">
               <label className="fieldLabel">Select Provider</label>
               <div className="fieldBox providerSelectBox">
@@ -270,7 +278,7 @@ const RescheduleAppointment = (props) => {
                 <div className="timeslotPopup">
                   {date && timeslots.length > 0 ? (
                     Object.values(timeslots).map((val, index) => (
-                      <span className={(val == time) ? "active" : ''} key={index} onClick={() => selectTime(val)}>{val}</span> 
+                      <span className={(val == time) ? "active" : ''} key={index} onClick={() => selectTime(val)}>{val}</span>
                     ))
                   ) : (
                       <div className="noRecord">
@@ -281,13 +289,13 @@ const RescheduleAppointment = (props) => {
               </div>
             </div>
             <div className="fieldOuter">
-            <label className="fieldLabel">Reason</label>
-            <textarea
-              value={rescheduleReason}
-              name="reschedule_reason"
-              className="rescheduleTextarea"
-               onChange={(e) => setRescheduleReason(e.target.value)}
-            />
+              <label className="fieldLabel">Reason <span className="required">*</span></label>
+              <textarea
+                value={rescheduleReason}
+                name="reschedule_reason"
+                className="rescheduleTextarea"
+                onChange={(e) => setRescheduleReason(e.target.value)}
+              />
             </div>
             <button className="button primary mr-2" onClick={() => rescheduleApp()}>Submit</button>
             <button className="button secondary" onClick={props.toggle}>Close</button>

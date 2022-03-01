@@ -25,7 +25,7 @@ const CancellationPolicy = (props) => {
               </a>
             </div>
             <div className="fieldOuter">
-            <label className="fieldLabel">Reason</label> 
+            <label className="fieldLabel">Reason <span className="required">*</span></label> 
             <textarea
               value={cancelReason}
               name="cancleReason"
@@ -36,7 +36,7 @@ const CancellationPolicy = (props) => {
             {/* <div className="p-text my-3">
               {props.data?.cancellation_policy}
             </div> */}
-            <button className="button primary mr-2" onClick={() => props.onCancelAppointment(props.id,cancelReason)}>Submit</button>
+            <button className="button primary mr-2" onClick={() => props.onCancelAppointment(props.id,cancelReason,setCancelReason(""))}>Submit</button>
             <button className="button secondary" onClick={props.toggle}>Cancel</button>
           </div>
         </ModalBody>
