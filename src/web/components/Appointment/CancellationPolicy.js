@@ -25,7 +25,7 @@ const CancellationPolicy = (props) => {
               </a>
             </div>
             <div className="fieldOuter">
-            <label className="fieldLabel">Reason </label> 
+            <label className="fieldLabel">Reason for Cancellation </label> 
             <textarea
               value={cancelReason}
               name="cancleReason"

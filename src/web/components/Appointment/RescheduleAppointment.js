@@ -289,7 +289,7 @@ const RescheduleAppointment = (props) => {
               </div>
             </div>
             <div className="fieldOuter">
-              <label className="fieldLabel">Reason </label>
+              <label className="fieldLabel">Reason for Rescheduling </label>
               <textarea
                 value={rescheduleReason}
                 name="reschedule_reason"
