@@ -1153,7 +1153,7 @@ select.fieldInput{
     display:flex;
     flex-wrap: wrap;
     box-shadow:0px 0px 10px #dddddd;
-    max-height: 233px;
+    max-height: 250px;
     overflow-y: auto;
 
     span{
@@ -2370,6 +2370,7 @@ color: red!important;
         object-position: initial;
     }
 }
+
 .termsCondition{
     font-size:13px;
     input{
@@ -2381,8 +2382,7 @@ color: red!important;
         color:#4EB176;
     }
 }
-.invoiceFilter .fieldOuter{
-} 
+
 .feedbackPage{
     .fieldOuter{
         position:relative;
@@ -2390,4 +2390,14 @@ color: red!important;
     .errorMsg{
         margin-top:-13px;
     }
+}
+
+ .rescheduleTextarea{
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+    font-size: 13px;
+    padding: 8px 15px;
+    min-height: 100px;
 }

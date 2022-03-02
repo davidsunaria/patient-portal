@@ -4,7 +4,8 @@ const axiosApi = axios.create({
   headers: {
     Accept: "application/json",
     "Content-type": "application/json",
-    language: `EN`
+    language: `EN`,
+    actiontype:"patient_portal"
   }
 });
 // doing something with the request

@@ -19,6 +19,7 @@ const RescheduleAppointment = (props) => {
   const [formData, setFormData] = useState({});
   const [allProviders, setAllProviders] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [rescheduleReason, setRescheduleReason] = useState("");
   const [id, setId] = useState(null);
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
@@ -33,7 +34,6 @@ const RescheduleAppointment = (props) => {
   const getProviderSlots = useStoreActions((actions) => actions.appointment.getProviderSlots);
 
   const response = useStoreState((state) => state.appointment.response);
-
   const handleClick = (e) => {
     e.preventDefault();
     setIsOpen(!isOpen);
@@ -53,7 +53,7 @@ const RescheduleAppointment = (props) => {
           },
           1000
         );
-        
+
         setTime(props?.data?.time_format);
       }
 
@@ -69,7 +69,7 @@ const RescheduleAppointment = (props) => {
       if (props?.data?.id && props?.data?.service?.service_for == "clinic") {
         await getDates(props?.data?.id);
       }
-
+      console.log("props", props)
       // Set first provider autoselected and get date and slots
       if (props?.data?.doctor) {
         setFormData({
@@ -106,9 +106,9 @@ const RescheduleAppointment = (props) => {
   }, [formData.provider_id, isProviderChanged]);
   useEffect(() => {
     if (response) {
+
       let { message, statuscode, data } = response;
       if (statuscode && statuscode === 200) {
-
         //Set Providers Data
         let resultSet = [];
         if (data?.providers) {
@@ -154,6 +154,13 @@ const RescheduleAppointment = (props) => {
           }
         }
 
+        if (data?.rescheduleReason?.reason !== undefined) {
+          setRescheduleReason(data?.rescheduleReason?.reason);
+        }
+        if (data?.rescheduleReason?.length == 0) {
+          setRescheduleReason("");
+        }
+
         if (data?.timeSlotsClinic) {
           let timeSlotClinic = data?.timeSlotsClinic
           if (timeSlotClinic) {
@@ -167,14 +174,14 @@ const RescheduleAppointment = (props) => {
 
   useEffect(async () => {
     if (date) {
-     // console.log("Clinic get slots", props?.data, doctorRef);
+      // console.log("Clinic get slots", props?.data, doctorRef);
       let payload;
       payload = {
         clinicId: props?.data?.clinic_id,
         serviceId: props?.data?.service_id,
         date: moment(date).format("YYYY-MM-DD"),
         appType: props?.data?.appointment_type,
-        appointmentId: props?.data?.id
+        appointmentId: props?.data?.id,
       }
       if (date && props?.data?.service?.service_for == "clinic") {
         payload.providerId = props?.data?.doctor_id ?? "";
@@ -185,7 +192,7 @@ const RescheduleAppointment = (props) => {
         payload.providerId = doctorRef.current || "";
         await getProviderSlots(payload);
       }
-      
+
     }
 
   }, [date]);
@@ -198,7 +205,8 @@ const RescheduleAppointment = (props) => {
       date: moment(date).format("YYYY-MM-DD"),
       slot: time,
       doctor_id: (formData?.provider_id?.value) ?? "",
-      telehealth_clinic_id: timeSlotClinic ?? ""
+      telehealth_clinic_id: timeSlotClinic ?? "",
+      reschedule_reason: rescheduleReason
     };
     if (props?.data?.service_id && !formData?.provider_id?.value && props?.data?.service?.service_for == "provider") {
       toast.error(<ToastUI message={SELECT_PROVIDER} type={"Error"} />);
@@ -210,7 +218,9 @@ const RescheduleAppointment = (props) => {
       toast.error(<ToastUI message={SELECT_TIME} type={"Error"} />);
     }
     else {
-      await updateAppointment(formDataPayload);
+      if (id !== null && date !== "") {
+        await updateAppointment(formDataPayload);
+      }
     }
   }
 
@@ -224,7 +234,6 @@ const RescheduleAppointment = (props) => {
                 <img src={CROSS_IMAGE} />
               </a>
             </div>
-            {/* {JSON.stringify(doctorRef.current)} */}
             {props?.data?.service?.service_for === "provider" && allProviders && allProviders.length > 0 && <div className="fieldOuter">
               <label className="fieldLabel">Select Provider</label>
               <div className="fieldBox providerSelectBox">
@@ -247,7 +256,7 @@ const RescheduleAppointment = (props) => {
             </div>}
 
             <div className="fieldOuter">
-              <label className="fieldLabel">Select Date</label>
+              <label className="fieldLabel">Select Date <span className="required">*</span></label>
               <div className="fieldBox fieldIcon">
                 <DatePicker
                   dateFormat="yyyy-MM-dd"
@@ -264,7 +273,7 @@ const RescheduleAppointment = (props) => {
             </div>
 
             <div className="fieldOuter">
-              <label className="fieldLabel">Select Timeslot</label>
+              <label className="fieldLabel">Select Timeslot <span className="required">*</span></label>
               <div className="fieldBox">
                 <div className="timeslotPopup">
                   {date && timeslots.length > 0 ? (
@@ -272,12 +281,21 @@ const RescheduleAppointment = (props) => {
                       <span className={(val == time) ? "active" : ''} key={index} onClick={() => selectTime(val)}>{val}</span>
                     ))
                   ) : (
-                    <div className="noRecord">
-                      <p>No timeslot found</p>
-                    </div>
-                  )}
+                      <div className="noRecord">
+                        <p>No timeslot found</p>
+                      </div>
+                    )}
                 </div>
               </div>
+            </div>
+            <div className="fieldOuter">
+              <label className="fieldLabel">Reason for Rescheduling </label>
+              <textarea
+                value={rescheduleReason}
+                name="reschedule_reason"
+                className="rescheduleTextarea"
+                onChange={(e) => setRescheduleReason(e.target.value)}
+              />
             </div>
             <button className="button primary mr-2" onClick={() => rescheduleApp()}>Submit</button>
             <button className="button secondary" onClick={props.toggle}>Close</button>
