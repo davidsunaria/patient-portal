@@ -7,6 +7,7 @@ import treatmentInstructionModel from "./TreatmentInstruction";
 import invoiceModel from "./Invoices";
 import appointmentModel from "./Appointment";
 import autoLoginModel from "./AutoLogin";
+import ArticleListModel from "./ArticleList";
 
 const storeModel = {
 	auth: authModel,
@@ -17,7 +18,8 @@ const storeModel = {
 	treatment: treatmentInstructionModel,
 	invoice: invoiceModel,
 	appointment: appointmentModel,
-	autoLogin:autoLoginModel
+	autoLogin:autoLoginModel,
+	Article:ArticleListModel
 };
 
 export default storeModel;
