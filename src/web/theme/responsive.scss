@@ -53,6 +53,7 @@ $text-color:#4B4B5A;
 	/************************ new design changes **************************/
 	.titleDiscription{margin-bottom: 10px;}
 	.titleBtn{margin-bottom: 20px;}
+	.headerSearch{position:static;margin-top:15px;width:100%;}
 }
 @media(max-width:540px){
 	.customTabs{display:block;background:#ffffff;@include border-radius(5px);overflow:hidden;background: rgba(78, 177, 118, 0.1);}

@@ -37,13 +37,12 @@ export const getArticleDetail = async (formData) => {
 // };
 
  export const getArticleList = async (formData) => {
-   console.log("formdata",formData)
    let query;
    if(formData.query){
      query = objectToQuery(formData.query);
    }
    try {
-     let response = await axiosApi.get(`${apiUrl}/article_list/${formData.clientId}?${query}`);
+     let response = await axiosApi.get(`${apiUrl}/article_list?${query}&search_key=${formData.search_key}`);
      return response?.data;
    } catch (error) {
      return error?.response?.data;

@@ -12,8 +12,6 @@ const ArticleListModel = {
   
   getArticleList: thunk(async (actions, payload, { getStoreActions }) => {
     getStoreActions().common.setLoading(true);
-    console.log("payload",payload)
-  
     let response = await getArticleList(payload);
     if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);

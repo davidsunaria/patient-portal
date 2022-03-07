@@ -93,6 +93,20 @@ const Header = (props) => {
       <div className="titleBtn titleDescription">
         { props.heading && <h1 className="title">{props.heading}</h1>}
         <div className="titleDiscription">{props.subHeading}</div>
+
+        {props.hasInput && (
+          <div className="headerSearch">
+          <input
+              className={"fieldInput"}
+              placeholder="Search Articles"
+              id="name"
+              name="name"
+              type="text"
+              onChange = {props.onChangeHandler}
+          />
+         
+      </div>
+        )}
         {props.hasBtn && (
           <Button
             type="primary"
