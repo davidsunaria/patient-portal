@@ -154,6 +154,13 @@ const Dashboard = (props) => {
     [history],
   )
 
+  const articlePage = useCallback(() => {
+      history.push("/articles")
+   } )
+
+
+
+
   return (
     <React.Fragment>
       <div className="content_outer">
@@ -178,7 +185,7 @@ const Dashboard = (props) => {
               </div>
             </div>
 
-            <div className="articleTitle">Articles</div>
+            <div className="formSubtitle d-flex"><span className="pt-2">Articles</span> <button className="breed button primary ml-auto" onClick={() => articlePage()}>View All</button></div>
             <div className="articleOuter">
               <Article data={articles} />
             </div>
