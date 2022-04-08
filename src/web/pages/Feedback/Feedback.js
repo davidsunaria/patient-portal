@@ -260,7 +260,8 @@ const Feedback = (props) => {
 
 
                                     {result.question_type == "textbox" && <div className="fieldBox mb-3">
-                                        <input type="text" value={result?.answer} name={`rating_${result.id}`} className="fieldInput" onChange={(e) => handleInputChange(e, index, 'text')} />
+                                        <textarea value={result?.answer} name={`rating_${result.id}`} className="fieldInput" onChange={(e) => handleInputChange(e, index, 'text')} rows="8" />
+                                        {/* <input type="text" value={result?.answer} name={`rating_${result.id}`} className="fieldInput" onChange={(e) => handleInputChange(e, index, 'text')} /> */}
                                     </div>}
 
 
@@ -277,20 +278,24 @@ const Feedback = (props) => {
 
                                     {result.question_type == "rating" && <div className="fieldBox appRating">
 
-                                        {result.question_type == "rating" && new Array(result.max_rating).fill(1).map((_, i) => (
+                                        {/* {result.question_type == "rating" && new Array(result.max_rating).fill(1).map((_, i) => (
                                             <div key={i} onClick={() => onselectScale(i, index, result.id)} key={i} className={result.color && (i + 1 <= result.answer) ? "active" : ""}><span>{i + 1}</span></div>
-                                        ))
-                                            //  _.times(result.max_rating, (i) => {
-                                            //     const selected = i + 1 <= result.answer;
-                                            //     return <div key={i} onClick={() => onselectScale(i, index, result.id)} key={i} className={result.color && selected ? "active" : ""}><span>{i + 1}</span></div>
-                                            // })
+                                        )) */}
+                                        {_.times(result.max_rating, (i) => {
+                                            // const selected = i + 1 <= result.answer;
+                                            const selected = i + 1 == result.answer;
+                                            return <div key={i} onClick={() => onselectScale(i, index, result.id)} key={i} className={result.color && selected ? "active" : ""}><span>{i + 1}</span></div>
+                                        })
                                         }
+                                        {(submitted == true && result?.is_mendatory == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
+                                    {result?.rating_likely_status != 0 && <> <label className="notLike feedbackComment d-inline-block mr-3">
+                                        {result?.rating_not_likely}
+                                    </label> <label className="extremeLike feedbackComment d-inline-block mr-3">
+                                            {result?.rating_extremely_likely}
+                                        </label></>}
                                     </div>
                                     }
-                                    {(submitted == true && result?.is_mendatory == 1 && result.error == true) && <span className="errorMsg">{FIELD_REQUIRED}</span>}
-                                    {result?.comment != null && <label className="feedbackComment d-inline-block mr-3">
-                                        {result?.comment}
-                                    </label>}
+                                    
                                 </div>
 
                             ))

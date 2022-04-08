@@ -1309,8 +1309,10 @@ button{
     }
 }
 .appRating{
-    display:flex;
-    margin-top:10px;
+    display:inline-flex;
+    margin-top:0px;
+    margin-bottom:30px;
+    position:relative;
     div{
         margin-right: 10px;
         span{
@@ -1330,6 +1332,17 @@ button{
             color:#ffffff;
             cursor:pointer;
         }
+    }
+    .notLike{
+        position: absolute;
+        left:0px;
+        top:100%;
+    }
+    .extremeLike{
+        position: absolute;
+        right:0px;
+        top:100%;
+        margin-right:0px!important;
     }
 }
 .petSelect{
