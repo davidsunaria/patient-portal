@@ -152,7 +152,9 @@ const Profile = () => {
                     <div className="settingLinkTitle">Settings</div>
                     <Link to="/edit-profile">Edit Profile</Link>
                     {/* <a onClick={toggle}>Notification Settings</a> */}
+                    <Link to="/referral">Referral Program</Link>
                     <Link to="/contact-us">Contact</Link>
+                  
                   </section>
                   <section>
                     <a href={`${process.env.REACT_APP_PAGES_URL}privacy-policy`} target="_blank">Privacy Policy</a>
