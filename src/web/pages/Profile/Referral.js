@@ -52,7 +52,6 @@ const Referral = (props) => {
                         <Header
                             backEnabled={true}
                             heading={"Referral Program"}
-                            subHeading={"Here we can add or edit pet information"}
                             hasBtn={false}
 
                         />
