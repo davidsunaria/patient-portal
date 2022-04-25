@@ -6,6 +6,8 @@ import petModel from "./Pet";
 import treatmentInstructionModel from "./TreatmentInstruction";
 import invoiceModel from "./Invoices";
 import appointmentModel from "./Appointment";
+import autoLoginModel from "./AutoLogin";
+import ArticleListModel from "./ArticleList";
 
 const storeModel = {
 	auth: authModel,
@@ -15,7 +17,9 @@ const storeModel = {
 	pet: petModel,
 	treatment: treatmentInstructionModel,
 	invoice: invoiceModel,
-	appointment: appointmentModel
+	appointment: appointmentModel,
+	autoLogin:autoLoginModel,
+	Article:ArticleListModel
 };
 
 export default storeModel;

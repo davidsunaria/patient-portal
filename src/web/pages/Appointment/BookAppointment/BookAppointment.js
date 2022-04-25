@@ -9,7 +9,7 @@ import Step4 from "./Step4";
 import Step5 from "./Step5";
 import Step6 from "./Step6";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import _, { conformsTo } from "lodash";
+import * as  _  from "lodash";
 import moment from "moment";
 import { getLoggedinUserId, getUser, getLoggedinPreferredClinic, getLastPetId } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
@@ -272,7 +272,7 @@ const BookAppointment = (props) => {
           //console.log("heyt", request);
           if (request.collect_payment_before_booking == 1 && request.payment_amount > 0) {
             await displayRazorpay(request);
-           // console.log("Form Submission", request);
+            // console.log("Form Submission", request);
           }
           else {
             await createAppointment(request);
@@ -567,6 +567,9 @@ const BookAppointment = (props) => {
     });
   }
   const displayRazorpay = async (payload) => {
+    let notesPayload = _.omit(payload, ['booked_by','collect_payment_before_booking','duration','payment_amount','provider_name','razorpay_payment_id','service_for','type','clinic_id']);
+    console.log("notesPayload",notesPayload)
+    console.log("payload",payload)
     let userData = getUser();
     const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
 
@@ -576,7 +579,7 @@ const BookAppointment = (props) => {
     }
     let currency = 'INR';
     let amount = (payload.payment_amount) * 100;
-    
+
     const options = {
       key: process.env.REACT_APP_RAZORPAY_KEY, // Enter the Key ID generated from the Dashboard
       amount: amount,
@@ -597,9 +600,7 @@ const BookAppointment = (props) => {
         email: `${userData?.email}`,
         contact: `${userData?.phone_code}`,
       },
-      notes: {
-        address: '',
-      },
+      notes: notesPayload,
       theme: {
         color: '#2EAD5A',
       },

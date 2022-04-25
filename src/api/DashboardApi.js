@@ -1,4 +1,4 @@
-import { axiosApi, apiUrl } from "patient-portal-utils/HttpService.js";
+import { axiosApi, apiUrl,objectToQuery } from "patient-portal-utils/HttpService.js";
 
 export const getDashboard = async (formData) => {
   try {
@@ -26,6 +26,28 @@ export const getArticleDetail = async (formData) => {
     return error?.response?.data;
   }
 };
+
+// export const getArticleList = async (formData) => {
+//   try {
+//     let response = await axiosApi.get(`${apiUrl}/article_list/${}`);
+//     return response?.data;
+//   } catch (error) {
+//     return error?.response?.data;
+//   }
+// };
+
+ export const getArticleList = async (formData) => {
+   let query;
+   if(formData.query){
+     query = objectToQuery(formData.query);
+   }
+   try {
+     let response = await axiosApi.get(`${apiUrl}/article_list?${query}&search_key=${formData.search_key}`);
+     return response?.data;
+   } catch (error) {
+     return error?.response?.data;
+   }
+ };
 
 
 export const getPetByVisit = async (formData) => {

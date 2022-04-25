@@ -20,6 +20,7 @@ import VerifyOtp from "patient-portal-pages/Auth/VerifyOtp.js";
 
 import Signup from "patient-portal-pages/Auth/Signup.js";
 import SignupComplete from "patient-portal-pages/Auth/SignupComplete.js";
+import AutoLogin from "patient-portal-pages/Auth/AutoLogin.js";
 
 
 import Feedback from "patient-portal-pages/Feedback/Feedback.js";
@@ -39,6 +40,7 @@ import TreatmentReports from "patient-portal-pages/Pet/TreatmentReports.js";
 import AppointmentDetail from "patient-portal-pages/Appointment/AppointmentDetail.js";
 import Questionnaire from "patient-portal-pages/Questionnaire/Questionnaire.js";
 import ContactUs from "patient-portal-pages/Profile/ContactUs.js";
+import ArticlesList from "patient-portal-pages/ArticlesList/ArticlesList.js";
 
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -83,6 +85,7 @@ const Routes = () => {
 						<PublicRoute restricted={true} path={"/login"} component={Login} exact />
 						<PublicRoute restricted={true} path={"/register"} component={Signup} exact />
 						<PublicRoute restricted={true} path={"/register-user"} component={SignupComplete} exact />
+						<PublicRoute restricted={false} path={"/auto-login/:token"} component={AutoLogin} exact />
 
 						{/* private routes */}
 						<PrivateRoute path={"/dashboard"} component={Dashboard} exact />
@@ -110,6 +113,7 @@ const Routes = () => {
 						
 						<PrivateRoute path={"/questionnaire/:id/:type"} component={Questionnaire} exact />
 						<PrivateRoute path={"/contact-us"} component={ContactUs} exact />
+						<PrivateRoute path={"/articles"} component={ArticlesList} exact />
 						<Route
 							path="/"
 							render={() => <Redirect to="/login" />}

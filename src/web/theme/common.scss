@@ -1345,7 +1345,7 @@ button{
     }
 }
 .petSelect{
-    min-width:220px;
+    min-width:185px;
 }
 .calendarFilter{
     width:130px;
@@ -2402,5 +2402,20 @@ color: red!important;
     }
     .errorMsg{
         margin-top:-13px;
+    }
+}
+.headerSearch{
+    position:absolute;
+    right:0px;
+    top:-5px;
+    width:350px;
+    input{
+        padding-left:38px;
+        background-image: url('~patient-portal-images/search.svg');
+        background-position: 11px 8px;
+        background-repeat: no-repeat;
+        background-size: 20px;
+        @include border-radius(50px);
+        background-color: rgba(255,255,255,0.7);
     }
 }

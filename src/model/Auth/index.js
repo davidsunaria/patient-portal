@@ -1,7 +1,7 @@
 import { Action, action, thunk, Thunk } from "easy-peasy";
 import { ToastContainer, toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import { sendOTP, getTranslations, login, verifyOtp, signUp, sendForgotPasswordOTP, resetPassword, logout } from "patient-portal-api/AuthApi.js";
+import { sendOTP, getTranslations, login, verifyOtp, signUp, sendForgotPasswordOTP, resetPassword, logout, autologin } from "patient-portal-api/AuthApi.js";
 import { setToken, setAccountData, setUser, setTempData, removeTempData } from "patient-portal-utils/Service.js";
 import { OTP_SENT } from "patient-portal-message";
 const authModel = {
@@ -91,6 +91,7 @@ const authModel = {
 			return true;
 		}
 	}),
+
 	verifyOtp: thunk(async (actions, payload, { getStoreActions }) => {
 		getStoreActions().common.setLoading(true);
 		let response = await verifyOtp(payload);

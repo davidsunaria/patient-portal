@@ -3,7 +3,12 @@ $primary:#4EB176;
 $secondary:#444444;
 $text-color:#4B4B5A;
 
-@media(max-width:1270px){
+@media(max-width:1200px){
+	.invoiceFilter .fieldOuter{
+		width:48%;
+		margin-top: 5px;
+		margin-bottom: 5px;
+	}
 }
 @media(max-width:1050px){
 	.profileInfo .profileDetail{display:block;}
@@ -49,6 +54,7 @@ $text-color:#4B4B5A;
 	.titleDiscription{margin-bottom: 10px;}
 	.titleBtn{margin-bottom: 20px;}
 	.appRating{display: flex;}
+	.headerSearch{position:static;margin-top:15px;width:100%;}
 }
 @media(max-width:540px){
 	.customTabs{display:block;background:#ffffff;@include border-radius(5px);overflow:hidden;background: rgba(78, 177, 118, 0.1);}
@@ -72,4 +78,7 @@ $text-color:#4B4B5A;
 	.settingLeft, .settingRight {width:100%;padding-left:0px;}
 	.loginOuter{position:static;}
 	.extremeLike{margin-right:7px!important;}
+	.invoiceFilter .fieldOuter{
+		width:100%;
+	}
 }
