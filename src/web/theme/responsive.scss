@@ -41,13 +41,14 @@ $text-color:#4B4B5A;
 	.timeslotPopup span {width: 46%!important;}
 	.titleBtn{padding-right: 0px;}
 	.titleBtn button{position: static;}
-	.appRating div span{width: 25px;}
-	.appRating div {margin-right:2px;}
+	.appRating div span{width: auto;}
+	.appRating div {margin-right:2px;flex:1;}
 	.totalInvoice{width:100%;padding-left:20px;}
 	.popupOverlay{padding: 0px 10px;}
 	/************************ new design changes **************************/
 	.titleDiscription{margin-bottom: 10px;}
 	.titleBtn{margin-bottom: 20px;}
+	.appRating{display: flex;}
 }
 @media(max-width:540px){
 	.customTabs{display:block;background:#ffffff;@include border-radius(5px);overflow:hidden;background: rgba(78, 177, 118, 0.1);}
@@ -70,4 +71,5 @@ $text-color:#4B4B5A;
 	.articleOuter .articleBlock .articleImg{height:173px;}
 	.settingLeft, .settingRight {width:100%;padding-left:0px;}
 	.loginOuter{position:static;}
+	.extremeLike{margin-right:7px!important;}
 }

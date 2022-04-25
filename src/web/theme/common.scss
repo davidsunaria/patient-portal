@@ -927,6 +927,18 @@ table{
     }
 }
 
+.feedbackComment{
+    display:block;
+   // padding-left:22px;
+    position:relative;
+    font-size: 11px;
+    color:$text-color;
+    text-align:left;
+    margin-bottom:15px;
+    padding-top:2px;
+    cursor:pointer;
+}
+
 .checkboxOuter{
     > div:last-child, > label:last-child{
         margin:0px;
@@ -1297,8 +1309,10 @@ button{
     }
 }
 .appRating{
-    display:flex;
-    margin-top:10px;
+    display:inline-flex;
+    margin-top:0px;
+    margin-bottom:30px;
+    position:relative;
     div{
         margin-right: 10px;
         span{
@@ -1318,6 +1332,16 @@ button{
             color:#ffffff;
             cursor:pointer;
         }
+    }
+    .notLike{
+        position: absolute;
+        left:0px;
+        top:100%;
+    }
+    .extremeLike{
+        position: absolute;
+        right:-5px;
+        top:100%;
     }
 }
 .petSelect{
@@ -2358,6 +2382,7 @@ color: red!important;
         object-position: initial;
     }
 }
+
 .termsCondition{
     font-size:13px;
     input{
@@ -2367,5 +2392,15 @@ color: red!important;
     }
     a{
         color:#4EB176;
+
+    }
+}
+
+.feedbackPage{
+    .fieldOuter{
+        position:relative;
+    }
+    .errorMsg{
+        margin-top:-13px;
     }
 }
