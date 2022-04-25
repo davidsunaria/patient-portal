@@ -1153,7 +1153,7 @@ select.fieldInput{
     display:flex;
     flex-wrap: wrap;
     box-shadow:0px 0px 10px #dddddd;
-    max-height: 233px;
+    max-height: 250px;
     overflow-y: auto;
 
     span{
@@ -2418,4 +2418,13 @@ color: red!important;
         @include border-radius(50px);
         background-color: rgba(255,255,255,0.7);
     }
+}
+ .rescheduleTextarea{
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+    font-size: 13px;
+    padding: 8px 15px;
+    min-height: 100px;
 }

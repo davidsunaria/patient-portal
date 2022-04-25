@@ -57,9 +57,19 @@ export const getClinicInfo = async (formData) => {
 	}
 };
 
+// export const cancelAppointment = async (formData) => {
+// 	try {
+// 		let response = await axiosApi.get(`${apiUrl}/cancel/${formData.id}/${formData.clientId}`);
+// 		return response?.data;
+// 	} catch (error) {
+// 		return error?.response?.data;
+// 	}
+// };
+
+
 export const cancelAppointment = async (formData) => {
 	try {
-		let response = await axiosApi.get(`${apiUrl}/cancel/${formData.id}/${formData.clientId}`);
+    let response = await axiosApi.post(`${apiUrl}/cancel`, formData);
 		return response?.data;
 	} catch (error) {
 		return error?.response?.data;
