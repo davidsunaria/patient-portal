@@ -41,6 +41,7 @@ import AppointmentDetail from "patient-portal-pages/Appointment/AppointmentDetai
 import Questionnaire from "patient-portal-pages/Questionnaire/Questionnaire.js";
 import ContactUs from "patient-portal-pages/Profile/ContactUs.js";
 import ArticlesList from "patient-portal-pages/ArticlesList/ArticlesList.js";
+import Referral from "patient-portal-pages/Profile/Referral.js";
 
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -114,6 +115,7 @@ const Routes = () => {
 						<PrivateRoute path={"/questionnaire/:id/:type"} component={Questionnaire} exact />
 						<PrivateRoute path={"/contact-us"} component={ContactUs} exact />
 						<PrivateRoute path={"/articles"} component={ArticlesList} exact />
+						<PrivateRoute path={"/referral"} component={Referral} exact />
 						<Route
 							path="/"
 							render={() => <Redirect to="/login" />}

@@ -82,7 +82,8 @@ const Header = (props) => {
     <React.Fragment>
       {props.backEnabled && (!props.backTitle || !props.backAction) && (
         <a className="backTo" onClick={() => goToUrl()}>
-          <img src={GO_BACK_IMAGE} /> Back to Profile
+         <img src={GO_BACK_IMAGE} /> 
+          {props.heading=="Referral Program"?"Back to Main":"Back to Profile"}
         </a>
       )}
       {props.backEnabled && props.backTitle && props.backAction && (
