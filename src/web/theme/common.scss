@@ -2393,6 +2393,7 @@ color: red!important;
     }
     a{
         color:#4EB176;
+
     }
 }
 
@@ -2404,6 +2405,8 @@ color: red!important;
         margin-top:-13px;
     }
 }
+
+
 
  .rescheduleTextarea{
     width: 100%;
@@ -2429,6 +2432,15 @@ color: red!important;
         background-color: rgba(255,255,255,0.7);
     }
 }
+ .rescheduleTextarea{
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+    font-size: 13px;
+    padding: 8px 15px;
+    min-height: 100px;
+ }
 .referralImg{
     height: 109px;
     margin: 30px 0px;
@@ -2487,5 +2499,4 @@ color: red!important;
     top:11px;
     font-weight: 600;
     cursor: pointer;
-
 }

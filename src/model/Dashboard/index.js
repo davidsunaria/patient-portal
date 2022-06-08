@@ -123,11 +123,14 @@ const dashboardModel = {
     } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
       
-      if (payload.event == "report") {
+      if(payload.event === "deworming" && payload.type === "completed"){
+        payload.history.push(`/pet-profile/${response.data.event_data.pet_id}/deworming/${payload.id}`);
+      }
+      else if (payload.event === "report") {
         let type = "report";
         payload.history.push(`/pet-profile/${response.data.event_data.pet_id}/${type}/${payload.id}`);
       }
-     else if (payload.event == "anti_ectoparasite" || payload.event == "deworming" || payload.event == "vaccination") {
+     else if (payload.event === "anti_ectoparasite" || payload.event === "deworming" || payload.event === "vaccination") {
         payload.history.push(`/book-appointment/${response.data.event_data.pet_id}`);
       }
     }else{

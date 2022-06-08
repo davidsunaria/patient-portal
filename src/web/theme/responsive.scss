@@ -53,8 +53,8 @@ $text-color:#4B4B5A;
 	/************************ new design changes **************************/
 	.titleDiscription{margin-bottom: 10px;}
 	.titleBtn{margin-bottom: 20px;}
-	.headerSearch{position:static;margin-top:15px;width:100%;}
 	.appRating{display: flex;}
+	.headerSearch{position:static;margin-top:15px;width:100%;}
 }
 @media(max-width:540px){
 	.customTabs{display:block;background:#ffffff;@include border-radius(5px);overflow:hidden;background: rgba(78, 177, 118, 0.1);}
@@ -77,10 +77,10 @@ $text-color:#4B4B5A;
 	.articleOuter .articleBlock .articleImg{height:173px;}
 	.settingLeft, .settingRight {width:100%;padding-left:0px;}
 	.loginOuter{position:static;}
+	.extremeLike{margin-right:7px!important;}
 	.invoiceFilter .fieldOuter{
 		width:100%;
 	}
-	.extremeLike{margin-right:7px!important;}
 	.shareLinkOuter{padding:12px 15px 15px;margin-bottom:20px;}
 	.linkOuter{padding:6px 50px 6px 15px;}
 }
