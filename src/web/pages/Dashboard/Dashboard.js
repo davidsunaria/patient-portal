@@ -105,14 +105,7 @@ const Dashboard = (props) => {
         }
         break;
       case "vaccination":
-        if(event.type == "upcoming"){
-          //Book appointment page
-          getPetId(event, "new");
-         
-        }
-        else{
-          getPetId(event);
-        }
+        getPetId(event, "new");
         break;
       case "invoice":
         history.push(`/invoice-detail/${event.event_id}`);
@@ -134,7 +127,6 @@ const Dashboard = (props) => {
     [history],
   )
   const getPetId = useCallback(async (event, type) => {
-    console.log('eventeventevent', event);
     if (type && type == "new") {
       //console.log("Heloo", event.event_id, event.event_type, type);
       await getPetIdInfo({ id: event.event_id, event: event.event_type, history, type: event?.type });
