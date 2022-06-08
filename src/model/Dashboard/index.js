@@ -122,9 +122,12 @@ const dashboardModel = {
       getStoreActions().common.setLoading(false);
     } else if (response && response.statuscode == 200) {
       getStoreActions().common.setLoading(false);
-      
+      console.log(payload, response)
       if(payload.event === "deworming" && payload.type === "completed"){
         payload.history.push(`/pet-profile/${response.data.event_data.pet_id}/deworming/${payload.id}`);
+      }
+      else if(payload.event === "vaccination" && payload.type === "completed"){
+        payload.history.push(`/pet-profile/${response.data.event_data.pet_id}/vaccination-record/${payload.id}`);
       }
       else if (payload.event === "report") {
         let type = "report";
