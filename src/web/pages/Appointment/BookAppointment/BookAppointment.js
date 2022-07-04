@@ -433,6 +433,27 @@ const BookAppointment = (props) => {
 
   }, [formData.date, formData.provider_id]);
 
+  const checkDoctor = async() =>{
+    if (formData.date && formData.provider_id.value == "any") {
+
+      let timeToBeSent = "";
+      _.forOwn(timeSlot, function (value, key) {
+        if (key == 0) {
+          timeToBeSent = value;
+        }
+      });
+      if (timeToBeSent) {
+        let payload = {
+          service_id: formData.service_id,
+          clinic_id: formData.clinic_id,
+          date: moment(formData.date).format("YYYY-MM-DD"),
+          slot: timeToBeSent
+        }
+        await getProviderName(payload);
+      }
+    }
+  }
+
   const updateOther = (payload, step, name) => {
     let finalPayload = { ...otherData };
     if (step == 2) {
@@ -625,7 +646,7 @@ const BookAppointment = (props) => {
             {currentPage == 1 && <Step1 page={currentPage} onSubmit={handleStepOne} />}
             {currentPage == 2 && <Step2 other={otherData} formData={formData} data={allClinics} page={currentPage} onSubmit={handleStepTwo} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 3 && <Step3 timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
-            {currentPage == 4 && <Step4 timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
+            {currentPage == 4 && <Step4 checkDoctor={checkDoctor} timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 5 && <Step5 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 6 && <Step6 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
           </main>
