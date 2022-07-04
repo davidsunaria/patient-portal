@@ -8,6 +8,7 @@ import moment from "moment";
 import Other from "patient-portal-pages/Appointment/BookAppointment/Other.js"
 import I_IMAGE from "patient-portal-images/i.svg";
 import Service from "patient-portal-components/Appointment/Service";
+import { useStoreActions, useStoreState } from "easy-peasy";
 
 
 const Step4 = (props) => {
@@ -38,7 +39,6 @@ const Step4 = (props) => {
             setOpenTimePopup(!openTimePopup);
         }
     }
-
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => {
         return (<React.Fragment>
             <span onClick={onClick} ref={ref}>
@@ -60,6 +60,7 @@ const Step4 = (props) => {
     });
 
     const handleTimeSelect = (e, name, val) => {
+        props.checkDoctor()
         showTime();
         setSelectedTimeSlot(val);
         props.onSubmit(e, name, val);
@@ -163,7 +164,7 @@ const Step4 = (props) => {
 
 
                 {(props?.enabledDates.length > 0 || props?.providers.length > 0 && props.formData.provider_id) && <div className="dateTimeOuter">
-                   { props?.enabledDates.length > 0 && <React.Fragment><div id="datePicker" className="AppointmentDate">
+                    {props?.enabledDates.length > 0 && <React.Fragment><div id="datePicker" className="AppointmentDate">
                         <DatePicker
                             wrapperClassName={props?.formData?.date ? "" : "appointmentDatePicker"}
                             placeholderText="Select Date"
@@ -174,20 +175,20 @@ const Step4 = (props) => {
                         />
                     </div>
 
-                    <div className="AppointmentDate timeSlot" >
+                        <div className="AppointmentDate timeSlot" >
 
-                        <label ref={innerRef} onClick={(e) => showTime(e)}>{(selectedTimeSlot) ? selectedTimeSlot : (props.formData.date) ? props.formData.slot : ""}</label>
-                        {props.formData && (props.formData.date != undefined || props?.enabledDates[0]) && <div className={(openTimePopup == false) ? "timeslotPopup d-none" : "timeslotPopup"}>
+                            <label ref={innerRef} onClick={(e) => showTime(e)}>{(selectedTimeSlot) ? selectedTimeSlot : (props.formData.date) ? props.formData.slot : ""}</label>
+                            {props.formData && (props.formData.date != undefined || props?.enabledDates[0]) && <div className={(openTimePopup == false) ? "timeslotPopup d-none" : "timeslotPopup"}>
 
-                            {props.slot && Object.values(props.slot).map((val, index) => (
-                                <span className={getSelectedClass(val, (selectedTimeSlot) ? selectedTimeSlot : props.formData.slot)} key={index} onClick={(e) => handleTimeSelect(e, "slot", val)}>{val}</span>
-                            ))}
-                        </div>
-                        }
-                    </div></React.Fragment>}
+                                {props.slot && Object.values(props.slot).map((val, index) => (
+                                    <span className={getSelectedClass(val, (selectedTimeSlot) ? selectedTimeSlot : props.formData.slot)} key={index} onClick={(e) => handleTimeSelect(e, "slot", val)}>{val}</span>
+                                ))}
+                            </div>
+                            }
+                        </div></React.Fragment>}
                 </div>
                 }
-    
+
                 {props.enabledDates.length == 0 && <p className="p-text mt-3">
                     No slots available. Kindly select another doctor or "Any" or another service.
                 </p>}
