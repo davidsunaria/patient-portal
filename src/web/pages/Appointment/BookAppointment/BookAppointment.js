@@ -9,7 +9,7 @@ import Step4 from "./Step4";
 import Step5 from "./Step5";
 import Step6 from "./Step6";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import * as  _  from "lodash";
+import * as  _ from "lodash";
 import moment from "moment";
 import { getLoggedinUserId, getUser, getLoggedinPreferredClinic, getLastPetId } from "patient-portal-utils/Service";
 import { toast } from "react-toastify";
@@ -433,15 +433,23 @@ const BookAppointment = (props) => {
 
   }, [formData.date, formData.provider_id]);
 
-  const checkDoctor = async() =>{
+  const checkDoctor = async (time) => {
     if (formData.date && formData.provider_id.value == "any") {
 
       let timeToBeSent = "";
-      _.forOwn(timeSlot, function (value, key) {
-        if (key == 0) {
-          timeToBeSent = value;
-        }
-      });
+      if (time) {
+        timeToBeSent = time;
+      }
+      else {
+        _.forOwn(timeSlot, function (value, key) {
+          console.log("value", value)
+          if (key == 0) {
+            timeToBeSent = value;
+          }
+        });
+      }
+
+
       if (timeToBeSent) {
         let payload = {
           service_id: formData.service_id,
@@ -588,9 +596,9 @@ const BookAppointment = (props) => {
     });
   }
   const displayRazorpay = async (payload) => {
-    let notesPayload = _.omit(payload, ['booked_by','collect_payment_before_booking','duration','payment_amount','provider_name','razorpay_payment_id','service_for','type','clinic_id']);
-    console.log("notesPayload",notesPayload)
-    console.log("payload",payload)
+    let notesPayload = _.omit(payload, ['booked_by', 'collect_payment_before_booking', 'duration', 'payment_amount', 'provider_name', 'razorpay_payment_id', 'service_for', 'type', 'clinic_id']);
+    console.log("notesPayload", notesPayload)
+    console.log("payload", payload)
     let userData = getUser();
     const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
 
