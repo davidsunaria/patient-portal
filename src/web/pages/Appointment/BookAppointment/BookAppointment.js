@@ -433,7 +433,7 @@ const BookAppointment = (props) => {
 
   }, [formData.date, formData.provider_id]);
 
-  const checkDoctor = async (time) => {
+  const checkDoctor = async (time=null) => {
     if (formData.date && formData.provider_id.value == "any") {
 
       let timeToBeSent = "";

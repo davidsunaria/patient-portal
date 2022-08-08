@@ -60,7 +60,6 @@ const Step4 = (props) => {
     });
 
     const handleTimeSelect = (e, name, val) => {
-        console.log("props value",val)
         props.checkDoctor(val)
         showTime();
         setSelectedTimeSlot(val);
