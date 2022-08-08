@@ -425,7 +425,8 @@ const BookAppointment = (props) => {
           service_id: formData.service_id,
           clinic_id: formData.clinic_id,
           date: moment(formData.date).format("YYYY-MM-DD"),
-          slot: timeToBeSent
+          slot: timeToBeSent,
+          type:formData.type
         }
         await getProviderName(payload);
       }
@@ -455,7 +456,8 @@ const BookAppointment = (props) => {
           service_id: formData.service_id,
           clinic_id: formData.clinic_id,
           date: moment(formData.date).format("YYYY-MM-DD"),
-          slot: timeToBeSent
+          slot: timeToBeSent,
+          type:formData.type
         }
         await getProviderName(payload);
       }
