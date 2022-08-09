@@ -91,13 +91,13 @@ const RescheduleAppointment = (props) => {
   useEffect(async () => {
 
     if (formData?.provider_id?.value && isProviderChanged == true) {
-      console.log("Fire APi", formData.provider_id)
       let request = {
         clinicId: formData.clinic_id,
         serviceId: formData.service_id,
         providerId: formData.provider_id.value,
         appType: formData.type,
-        appointmentId: props?.data?.id
+        appointmentId: props?.data?.id,
+        date: moment(date).format("YYYY-MM-DD")
       }
       //console.log("Doctor Selected", request, formData.provider_id);
       await getProviderSchedule(request);
