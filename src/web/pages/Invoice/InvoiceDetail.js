@@ -90,7 +90,12 @@ const InvoiceDetail = (props) => {
     const displayRazorpay = async (payload) => {
         let userData = getUser();
         const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
-
+        
+        let notesPayload = {
+            "payment_type": "invoice",
+            "invoice_id": payload?.id || ""
+        }
+        console.log("notesPayload",notesPayload)
         if (!res) {
             toast.error(<ToastUI message={RAZORPAY_ERROR} type={"Error"} />);
             return;
@@ -125,6 +130,7 @@ const InvoiceDetail = (props) => {
                 email: `${userData?.email}`,
                 contact: `${userData?.phone_code}`,
             },
+            notes: notesPayload,
             theme: {
                 color: '#2EAD5A',
             },
@@ -212,10 +218,10 @@ const InvoiceDetail = (props) => {
                                             ))
 
                                         ) : (
-                                                <tr>
-                                                    <td colSpan={5} className="text-center">No Record Found</td>
-                                                </tr>
-                                            )}
+                                            <tr>
+                                                <td colSpan={5} className="text-center">No Record Found</td>
+                                            </tr>
+                                        )}
 
 
                                     </tbody>

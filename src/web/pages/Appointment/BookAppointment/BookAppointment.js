@@ -598,9 +598,24 @@ const BookAppointment = (props) => {
     });
   }
   const displayRazorpay = async (payload) => {
-    let notesPayload = _.omit(payload, ['booked_by', 'collect_payment_before_booking', 'duration', 'payment_amount', 'provider_name', 'razorpay_payment_id', 'service_for', 'type', 'clinic_id']);
-    console.log("notesPayload", notesPayload)
-    console.log("payload", payload)
+    //let notesPayload = _.omit(payload, ['booked_by', 'client_name','collect_payment_before_booking', 'duration', 'payment_amount', 'provider_name', 'razorpay_payment_id', 'service_for', 'type', 'clinic_id','phone','email','telehealth_clinic_id','pet_name','pet_species','pet_dob']);
+    let notesPayload = {
+      "pet_id": payload?.pet_id || "",
+      "client_id": payload?.client_id || "",
+      "client_name":  payload?.client_name || "",
+      "phone": payload?.phone || "",
+      "email": payload?.email || "",
+      "date": payload?.date || "",
+      "slot": payload?.slot || "",
+      "telehealth_clinic_id": payload?.clinic_id || "",
+      "provider_id": payload?.provider_id || "",
+      "service_id": payload?.service_id || "",
+      "appointment_notes": payload?.appointment_notes || "",
+      "pet_name": payload?.pet_name || "",
+      "pet_species": payload?.pet_species || "", 
+      "pet_dob": payload?.pet_dob || ""
+    }
+    
     let userData = getUser();
     const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
 
