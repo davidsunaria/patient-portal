@@ -607,7 +607,7 @@ const BookAppointment = (props) => {
       "email": payload?.email || "",
       "date": payload?.date || "",
       "slot": payload?.slot || "",
-      "telehealth_clinic_id": payload?.clinic_id || "",
+      "telehealth_clinic_id": payload?.telehealth_clinic_id || "",
       "provider_id": payload?.provider_id || "",
       "service_id": payload?.service_id || "",
       "appointment_notes": payload?.appointment_notes || "",
