@@ -132,19 +132,20 @@ const BookAppointment = (props) => {
   }
 
   const handleStepFour = (e, name, val) => {
-    let formPayload = { ...formData };
+    let formPayload = { ...formData};
     //console.log("->>>>",formData)
-    if (name && name == "pet_id" && val != "") {
+    if (name &&( name == "pet_id" ||  name == "pet") && val != "") {
       //console.log("->>>>",e, name, val)
-      formPayload[name] = val.id;
+      formPayload[name] = val?.id;
+      formPayload["pet_breed"] = val?.breedmap?.name;
     }
     if (e?.target?.name) {
       formPayload[e.target.name] = e?.target?.value;
+      //formPayload["pet_breed"] = val?.breedmap?.name;
     }
     setFormData(formPayload);
     updateOther(val, 4, name);
   }
-
   useEffect(async () => {
     await getAllClinics();
   }, []);
@@ -389,7 +390,6 @@ const BookAppointment = (props) => {
         providerId: formData.provider_id.value,
         appType: formData.type
       }
-      console.log("Doctor Selected", request, formData.provider_id);
       await getProviderSchedule(request);
     }
   }, [formData.provider_id]);
@@ -397,7 +397,6 @@ const BookAppointment = (props) => {
   // Get Provider Slots By Date
   useEffect(async () => {
     if (formData.date) {
-      console.log("on date selection",);
       let payload = {
         clinicId: formData.clinic_id,
         serviceId: formData.service_id,
@@ -412,7 +411,6 @@ const BookAppointment = (props) => {
   // Get Doctor Name
   useEffect(async () => {
     if (formData.date && formData.provider_id.value == "any") {
-      console.log("Any Doctor Selected And Date Changed", formData);
 
       let timeToBeSent = "";
       _.forOwn(timeSlot, function (value, key) {
@@ -420,7 +418,7 @@ const BookAppointment = (props) => {
           timeToBeSent = value;
         }
       });
-      if (timeToBeSent) {
+     // if (timeToBeSent) {
         let payload = {
           service_id: formData.service_id,
           clinic_id: formData.clinic_id,
@@ -429,7 +427,7 @@ const BookAppointment = (props) => {
           type:formData.type
         }
         await getProviderName(payload);
-      }
+     // }
     }
 
   }, [formData.date, formData.provider_id]);
@@ -443,7 +441,6 @@ const BookAppointment = (props) => {
       }
       else {
         _.forOwn(timeSlot, function (value, key) {
-          console.log("value", value)
           if (key == 0) {
             timeToBeSent = value;
           }
@@ -483,7 +480,6 @@ const BookAppointment = (props) => {
         finalPayload = { ...otherData, provider_name: payload };
       }
       if (name && name == "doctor_profile") {
-        console.log("Setting doc");
         finalPayload = { ...otherData, doctor_profile: payload };
       }
 
@@ -613,7 +609,8 @@ const BookAppointment = (props) => {
       "appointment_notes": payload?.appointment_notes || "",
       "pet_name": payload?.pet_name || "",
       "pet_species": payload?.pet_species || "", 
-      "pet_dob": payload?.pet_dob || ""
+      "pet_dob": payload?.pet_dob || "",
+      "pet_breed": payload?.pet_breed || "",
     }
     
     let userData = getUser();
@@ -672,7 +669,7 @@ const BookAppointment = (props) => {
             {currentPage == 2 && <Step2 other={otherData} formData={formData} data={allClinics} page={currentPage} onSubmit={handleStepTwo} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 3 && <Step3 timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
             {currentPage == 4 && <Step4 checkDoctor={checkDoctor} timeSlotClinic={timeSlotClinic} other={otherData} data={allServices} slot={timeSlot} enabledDates={calenderData} formData={formData} providers={allProviders} page={currentPage} onSubmit={handleStepThree} onNext={handleNext} onBack={handleBack} />}
-            {currentPage == 5 && <Step5 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
+            {currentPage == 5 && <Step5 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack}  />}
             {currentPage == 6 && <Step6 other={otherData} page={currentPage} formData={formData} onSubmit={handleStepFour} onNext={handleNext} onBack={handleBack} />}
           </main>
         </div>
