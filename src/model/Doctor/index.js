@@ -40,7 +40,6 @@ const doctorModel = {
 		state.questions = payload;
 	}),
 	setLoggedInUser: action((state, payload) => {
-		console.log(payload);
 		state.loggedInUser = payload;
 	}),
 	setUserProfile: action((state, payload) => {
@@ -186,7 +185,6 @@ const doctorModel = {
 		if (response.status != 200) {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 		} else {
-			console.log(response.data);
 			localStorage.setItem("doctorId", response.data._id);
 			await actions.setLoggedInUser(response.data);
 			return response.data;
@@ -197,7 +195,6 @@ const doctorModel = {
 		if (response.status != 200) {
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 		} else {
-			console.log(response.data);
 			localStorage.setItem("doctorId", response.data._id);
 			await actions.setLoggedInUser(response.data);
 			return response.data;
