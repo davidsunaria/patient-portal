@@ -91,7 +91,7 @@ const Signup = (props) => {
                                 input = { iso2: phone.iso2, dialCode: phone.dialCode, phone: inputFieled };
                                 setPhone(input);
                               }}
-                              autoPlaceholder={true}
+                              autoPlaceholder={false}
                             /> 
                     </div>
                     {errors.phone && <span className="errorMsg">{errors.phone}</span>}
