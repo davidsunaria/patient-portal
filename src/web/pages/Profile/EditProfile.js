@@ -333,7 +333,8 @@ const EditProfile = (props) => {
                                     input = { iso2: phone.iso2, dialCode: phone.dialCode, phone: inputFieled };
                                     setPhone(input);
                                   }}
-                                  autoPlaceholder={true}
+                                 // placeholder="Enter your Number"
+                                  autoPlaceholder={false}
                                 />
                               }
                             </div>
@@ -409,7 +410,7 @@ const EditProfile = (props) => {
                                     input = { iso2: phone.iso2, dialCode: phone.dialCode, phone: inputFieled };
                                     setPhone2(input);
                                   }}
-                                  autoPlaceholder={true}
+                                  autoPlaceholder={false}
                                 />
                               }
                             </div>
