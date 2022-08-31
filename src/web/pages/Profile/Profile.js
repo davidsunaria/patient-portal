@@ -12,6 +12,8 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { setUser } from "patient-portal-utils/Service.js";
 import DEFAULT_USER_IMG from "patient-portal-images/default-user.png";
 import CROSS_IMAGE from "patient-portal-images/cross.svg";
+import DeleteAccount from "patient-portal-components/Modal/DeleteAccount";
+
 
 const Profile = () => {
   const history = useHistory();
@@ -75,6 +77,8 @@ const Profile = () => {
     await updateSettings({ payload: payload, id: getLoggedinUserId() });
     setSettingsData(payload);
   }
+
+ 
   return (
     <React.Fragment>
       <div className="content_outer">
@@ -124,6 +128,7 @@ const Profile = () => {
           </ModalBody>
 
         </Modal>
+        
         <Sidebar activeMenu="profile" data={userData} />
         <div className="right_content_col">
           <main>
@@ -154,12 +159,15 @@ const Profile = () => {
                     {/* <a onClick={toggle}>Notification Settings</a> */}
                     <Link to="/referral">Referral Program</Link>
                     <Link to="/contact-us">Contact</Link>
+                   
+                    {/* <p className="deleteAccount"onClick={deleteAccount}>Delete Account</p> */}
                   
                   </section>
                   <section>
                     <a href={`${process.env.REACT_APP_PAGES_URL}privacy-policy`} target="_blank">Privacy Policy</a>
                     <a href={`${process.env.REACT_APP_PAGES_URL}refund-policy`} target="_blank">Refund Policy</a>
                     <a href={`${process.env.REACT_APP_PAGES_URL}terms-and-conditions`} target="_blank">Terms And Conditions</a>
+                    <DeleteAccount />
                   </section>
                 </div>
 
