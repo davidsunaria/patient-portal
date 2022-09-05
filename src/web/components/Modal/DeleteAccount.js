@@ -10,14 +10,15 @@ const DeleteAccount = (props) => {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
 
-  const logout = useStoreActions((actions) => actions.auth.logout);
-
+  const deleteProfile = useStoreActions((actions) => actions?.profile?.deleteProfile);
+  const setDeletedModal = useStoreActions((actions) => actions?.profile?.setDeletedModal);
+  const deletedModal = useStoreState((state) => state?.profile?.deletedModal);
   const deleteConfirmation = () => {
     setConfirmModal(true)
   }
   const openDeleteModal = () => {
     setConfirmModal(false)
-    setDeleteModal(true)
+    setDeletedModal(true)
   }
   const handleChange = (e) => {
     setPassword(e?.target?.value)
@@ -25,22 +26,22 @@ const DeleteAccount = (props) => {
       setError("")
     }
   }
-  const deleteAccount = async() => {
+  const deleteAccount = async () => {
     console.log("password", password)
     if (password === "") {
       setError("please enter empty field")
     }
     else {
-      await logout();
+      await deleteProfile({ password: password })
       setError("")
       setPassword("")
-      setDeleteModal(false)
+     // setDeletedModal(false)
     }
   }
   const deleteModalClose = () => {
     setError("")
     setPassword("")
-    setDeleteModal(false)
+    setDeletedModal(false)
   }
   return (
     <React.Fragment>
@@ -59,21 +60,21 @@ const DeleteAccount = (props) => {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button className="button primary" onClick={openDeleteModal}>Yes</Button>{' '}
-          <Button className="button secondary" onClick={() => setConfirmModal(false)}>No</Button>
+          <Button className="button bg-danger" onClick={openDeleteModal}>Delete</Button>{' '}
+          <Button className="button bg-info" onClick={() => setConfirmModal(false)}>Cancel</Button>
         </ModalFooter>
       </Modal>
 
 
-      <Modal isOpen={deleteModal}  >
+      <Modal isOpen={deletedModal}  >
         <ModalBody className="p-0">
           <div className="popupWrapper">
             <div className="popupTitle"><span className="deletedTitle">Please re-enter your password to confirm:</span>
-              <a className="cross deletedTitle"  onClick={deleteModalClose}>
+              <a className="cross deletedTitle" onClick={deleteModalClose}>
                 <img src={CROSS_IMAGE} />
               </a>
             </div>
-           
+
 
             <div className={
               "fieldBox"
