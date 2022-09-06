@@ -58,7 +58,9 @@ const profileModel = {
       getStoreActions().common.setLoading(false);
       await actions.setDeletedModal(false);
       toast.success(<ToastUI message={response.message} type={"Success"} />);
-      await handleInvalidToken()
+      setTimeout(()=>{
+        handleInvalidToken()
+      },2000)
      // getStoreActions()?.auth?.logout();
       //await actions.setResponse(response);
     } else {
