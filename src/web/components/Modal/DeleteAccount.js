@@ -99,6 +99,7 @@ const DeleteAccount = (props) => {
         </ModalBody>
         <ModalFooter>
           <Button className="button bg-danger" onClick={deleteAccount}>Delete Account</Button>{' '}
+          <Button className="button bg-secondary" onClick={deleteModalClose}>Cancel</Button>{' '}
         </ModalFooter>
       </Modal>
 
