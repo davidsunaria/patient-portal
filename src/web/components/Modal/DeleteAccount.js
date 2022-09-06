@@ -29,7 +29,7 @@ const DeleteAccount = (props) => {
   const deleteAccount = async () => {
     console.log("password", password)
     if (password === "") {
-      setError("please enter empty field")
+      setError("please enter the password")
     }
     else {
       await deleteProfile({ password: password })
@@ -45,7 +45,7 @@ const DeleteAccount = (props) => {
   }
   return (
     <React.Fragment>
-      <p className="deleteAccount" onClick={deleteConfirmation}>Delete Account</p>
+      <p className="deleteAccount text-danger" onClick={deleteConfirmation}>Delete Account</p>
       <Modal isOpen={confirmModal}  >
         <ModalBody className="p-0">
           <div className="popupWrapper">
@@ -61,18 +61,21 @@ const DeleteAccount = (props) => {
         </ModalBody>
         <ModalFooter>
           <Button className="button bg-danger" onClick={openDeleteModal}>Delete</Button>{' '}
-          <Button className="button bg-info" onClick={() => setConfirmModal(false)}>Cancel</Button>
+          <Button className="button bg-secondary" onClick={() => setConfirmModal(false)}>Cancel</Button>
         </ModalFooter>
       </Modal>
 
 
       <Modal isOpen={deletedModal}  >
-        <ModalBody className="p-0">
+        <ModalBody className="p-0 modal-body">
           <div className="popupWrapper">
-            <div className="popupTitle"><span className="deletedTitle">Please re-enter your password to confirm:</span>
-              <a className="cross deletedTitle" onClick={deleteModalClose}>
+          <div className="popupTitle mb-3"><span className="">Delete Account</span>
+              <a className="cross " onClick={deleteModalClose}>
                 <img src={CROSS_IMAGE} />
               </a>
+            </div>
+
+            <div className="popupTitle"><span className="deletedTitle">Once you confirm, your account will be deleted and will be logged out from all the devices. If you wish to proceed, please re-enter your password below.</span>
             </div>
 
 

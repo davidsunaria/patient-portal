@@ -1,8 +1,8 @@
 import { action, thunk } from "easy-peasy";
 import { toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import { getMyProfile, getPets, updateMyProfile, getClinics, getSettings, updateSettings, deleteProfile } from "patient-portal-api/ProfileApi.js";
-import { getProfileCompleted } from "patient-portal-utils/Service";
+import { getMyProfile, getPets, updateMyProfile, getClinics, getSettings, updateSettings, deleteProfile, } from "patient-portal-api/ProfileApi.js";
+import { getProfileCompleted,handleInvalidToken } from "patient-portal-utils/Service";
 
 const profileModel = {
   response: [],
@@ -58,7 +58,8 @@ const profileModel = {
       getStoreActions().common.setLoading(false);
       await actions.setDeletedModal(false);
       toast.success(<ToastUI message={response.message} type={"Success"} />);
-      getStoreActions()?.auth?.logout();
+      await handleInvalidToken()
+     // getStoreActions()?.auth?.logout();
       //await actions.setResponse(response);
     } else {
       await actions.setDeletedModal(true);
