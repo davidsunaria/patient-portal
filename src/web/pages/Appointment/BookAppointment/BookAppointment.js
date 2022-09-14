@@ -171,9 +171,11 @@ const BookAppointment = (props) => {
         //Set Providers Data
         let resultSet = [];
         if (data?.providers) {
-          resultSet.push({
-            value: "any", label: "Any", doctor_profile: ""
-          });
+            resultSet.push({
+              value: "any", label: "Any", doctor_profile: ""
+           });
+        
+          
           _.forOwn(data.providers, function (value, key) {
             resultSet.push({
               value: value.user_id, label: `${value.title} ${value.firstname} ${value.lastname}`, doctor_profile: value?.doctor_profile
@@ -289,7 +291,6 @@ const BookAppointment = (props) => {
       if (status) {
         // console.log("Page", page);
         if (page == 4) {
-
           setAllProviders([]);
           setCalenderData([]);
           setTimeSlot([]);
