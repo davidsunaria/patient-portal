@@ -135,15 +135,14 @@ const Step4 = (props) => {
                         <div className="col-xl-4 col-md-6">
                             <div className="fieldOuter mb-0">
                                 <div className="fieldBox providerSelectBox">
-
                                     <Select
                                         placeholder={"Select provider"}
                                         className={"customSelectBox"}
                                         isSearchable={true}
                                         id="provider_id"
                                         name="provider_id"
-                                        options={props?.providers}
-                                        value={props?.formData?.provider_id}
+                                        options={props?.providers.length > 1 ?props?.providers:[]}
+                                        value={props?.providers.length > 1 ? props?.formData?.provider_id:"Select provider"}
                                         onChange={(e) => {
                                             props.onSubmit(e, "provider_id")
                                         }}
