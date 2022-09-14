@@ -391,7 +391,11 @@ const BookAppointment = (props) => {
         providerId: formData.provider_id.value,
         appType: formData.type
       }
-      await getProviderSchedule(request);
+      
+      if(allProviders?.length>1){
+        await getProviderSchedule(request);
+      }
+      
     }
   }, [formData.provider_id]);
 
