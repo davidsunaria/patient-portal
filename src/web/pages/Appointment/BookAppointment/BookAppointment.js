@@ -153,7 +153,7 @@ const BookAppointment = (props) => {
   useEffect(() => {
     if (response) {
       let { statuscode, data } = response;
-      if (statuscode && statuscode === 200) {
+      if (statuscode && statuscode == 200) {
         if (data?.timeSlotsClinic) {
           setTimeSlotClinic(data.timeSlotsClinic);
         }
@@ -218,6 +218,7 @@ const BookAppointment = (props) => {
         }
 
         // Set Timeslot 
+       
         if (data?.timeSlots) {
           if (data.timeSlots) {
             setTimeSlot(data.timeSlots);
