@@ -128,6 +128,7 @@ const EditProfile = (props) => {
     
     formData.append("gender", (payload?.gender == null || payload?.gender == 'null') ? "" : payload?.gender);
     formData.append("nick_name", payload?.nick_name ?? "");
+    formData.append("secondary_name", payload?.nick_name ?? "");
     
       formData.append("phone_code2", `${(phone2.phone) ? "+" + phone2.dialCode : ''}`);
       formData.append("phoneNumber_2", `${(phone2.phone) ? phone2.phone.replace(/[ `~!@#$%^&*()_|\-=?;:'",.<>\{\}\[\]\\\/]/gi, '') : ''}`);
