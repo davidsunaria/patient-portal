@@ -40,6 +40,7 @@ const BookAppointment = (props) => {
   const createAppointment = useStoreActions((actions) => actions.appointment.createAppointment);
   const getProviderName = useStoreActions((actions) => actions.appointment.getProviderName);
   const getPet = useStoreActions((actions) => actions.appointment.getPet);
+  const setCount = useStoreActions((actions) => actions.appointment.setCount);
 
   const response = useStoreState((state) => state.appointment.response);
   const isBooked = useStoreState((state) => state.appointment.isBooked);
@@ -301,6 +302,7 @@ const BookAppointment = (props) => {
         }
         else {
           setCurrentPage(page);
+          
         }
 
       }
@@ -351,6 +353,7 @@ const BookAppointment = (props) => {
     }
     else {
       setCurrentPage(page);
+      setCount(0)
     }
 
   }
