@@ -9,8 +9,12 @@ const appointmentModel = {
   isBooked: false,
   isFeedbackGiven: false,
   isQuestionnaireSubmitted: false,
+  count:0,
   setResponse: action((state, payload) => {
     state.response = payload;
+  }),
+  setCount: action((state, payload) => {
+    state.count = payload;
   }),
   setIsRescheduled: action((state, payload) => {
     state.isRescheduled = payload;
@@ -210,7 +214,7 @@ const appointmentModel = {
     }
   }),
 
-  getProviderSchedule: thunk(async (actions, payload, { getStoreActions }) => {
+  getProviderSchedule: thunk(async (actions, payload, { getStoreActions,getState }) => {
     getStoreActions().common.setLoading(true);
     let response = await getProviderSchedule(payload);
     if (response && response.statuscode != 200) {
@@ -218,7 +222,10 @@ const appointmentModel = {
       getStoreActions().common.setLoading(false);
     } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
-      getStoreActions().common.setLoading(false);
+      if(getState()?.count!=0){
+        getStoreActions().common.setLoading(false);
+      }
+      await actions.setCount(1)
     } else {
       getStoreActions().common.setLoading(false);
       return true;
