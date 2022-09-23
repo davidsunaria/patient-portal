@@ -20,6 +20,7 @@ const Step4 = (props) => {
     const calendarRef = useRef();
     const [serviceModal, setServiceModal] = useState(false);
     const [serviceDetail, setServiceDetail] = useState({});
+    const setOtherLoader = useStoreActions((actions) => actions.appointment.setOtherLoader);
 
     const showServiceDetail = async (e) => {
         setServiceModal(!serviceModal);
@@ -170,7 +171,8 @@ const Step4 = (props) => {
                             placeholderText="Select Date"
                             includeDates={props.enabledDates}
                             selected={props?.formData?.date}
-                            onChange={(e) => props.onSubmit(e, 'date', props.formData?.date)}
+                            onChange={(e) => {props.onSubmit(e, 'date', props.formData?.date) 
+                            setOtherLoader(true)}}
                             customInput={<ExampleCustomInput />}
                         />
                     </div>

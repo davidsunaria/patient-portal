@@ -9,12 +9,16 @@ const appointmentModel = {
   isBooked: false,
   isFeedbackGiven: false,
   isQuestionnaireSubmitted: false,
-  count:0,
+  count: 0,
+  otherLoader: false,
   setResponse: action((state, payload) => {
     state.response = payload;
   }),
   setCount: action((state, payload) => {
     state.count = payload;
+  }),
+  setOtherLoader: action((state, payload) => {
+    state.otherLoader = payload;
   }),
   setIsRescheduled: action((state, payload) => {
     state.isRescheduled = payload;
@@ -214,7 +218,11 @@ const appointmentModel = {
     }
   }),
 
-  getProviderSchedule: thunk(async (actions, payload, { getStoreActions,getState }) => {
+  getProviderSchedule: thunk(async (actions, payload, { getStoreActions, getState }) => {
+    if (getState()?.count != 0) {
+      actions.setCount(1)
+      actions.setOtherLoader(false)
+    }
     getStoreActions().common.setLoading(true);
     let response = await getProviderSchedule(payload);
     if (response && response.statuscode != 200) {
@@ -222,23 +230,24 @@ const appointmentModel = {
       getStoreActions().common.setLoading(false);
     } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
-      if(getState()?.count!=0){
-        getStoreActions().common.setLoading(false);
-      }
-      await actions.setCount(1)
+      getStoreActions().common.setLoading(false);
     } else {
       getStoreActions().common.setLoading(false);
       return true;
     }
   }),
-  getProviderSlots: thunk(async (actions, payload, { getStoreActions }) => {
+  getProviderSlots: thunk(async (actions, payload, { getStoreActions, getState }) => {
+    if(getState()?.otherLoader===true){
+      actions.setOtherLoader(false)
     getStoreActions().common.setLoading(true);
+    }
     let response = await getProviderSlots(payload);
     if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
       getStoreActions().common.setLoading(false);
     } else if (response && response.statuscode == 200) {
       await actions.setResponse(response);
+      //console.log("extra loader")
       getStoreActions().common.setLoading(false);
     } else {
       getStoreActions().common.setLoading(false);
@@ -265,8 +274,11 @@ const appointmentModel = {
     }
   }),
 
-  getProviderName: thunk(async (actions, payload, { getStoreActions }) => {
+  getProviderName: thunk(async (actions, payload, { getStoreActions ,getState}) => {
+    if(getState()?.otherLoader===true){
+      actions.setOtherLoader(false)
     getStoreActions().common.setLoading(true);
+    }
     let response = await getProviderName(payload);
     if (response && response.statuscode != 200) {
       toast.error(<ToastUI message={response.message} type={"Error"} />);
