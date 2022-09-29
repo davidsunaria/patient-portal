@@ -1,7 +1,7 @@
 import { Action, action, thunk, Thunk } from "easy-peasy";
 import { ToastContainer, toast } from "react-toastify";
 import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
-import { sendOTP, getTranslations, login, verifyOtp, signUp, sendForgotPasswordOTP, resetPassword, logout, autologin } from "patient-portal-api/AuthApi.js";
+import { sendOTP, getTranslations, login, verifyOtp,verifyLoginWithOtp, signUp, sendForgotPasswordOTP, resetPassword, logout, autologin,sendOtpForLogin } from "patient-portal-api/AuthApi.js";
 import { setToken, setAccountData, setUser, setTempData, removeTempData } from "patient-portal-utils/Service.js";
 import { OTP_SENT } from "patient-portal-message";
 const authModel = {
@@ -12,12 +12,20 @@ const authModel = {
 	isSignupCompleted: false,
 	isPasswordReset: false,
 	isLoggedOut: false,
+	loginWithOtp:false,
+	otpToken:false,
 	response: {},
 	setTranslations: action((state, payload) => {
 		state.translations = payload;
 	}),
 	setIsLogin: action((state, payload) => {
 		state.isLogin = payload;
+	}),
+	setLoginWithOtp: action((state, payload) => {
+		state.loginWithOtp = payload;
+	}),
+	setOtpToken: action((state, payload) => {
+		state.otpToken = payload;
 	}),
 	setIsOtpSend: action((state, payload) => {
 		state.isOtpSend = payload;
@@ -55,13 +63,33 @@ const authModel = {
 			return true;
 		}
 	}),
+	sendOtpForLogin: thunk(async (actions, payload, { getStoreActions }) => {
+		console.log("new function")
+		getStoreActions().common.setLoading(true);
+		let response = await sendOtpForLogin(payload);
+		if (response && response.statuscode != 200) {
+			toast.error(<ToastUI message={response.message} type={"Error"} />);
+			getStoreActions().common.setLoading(false);
+		} else if (response && response.statuscode == 200) {
+			console.log("reso",response)
+			toast.success(<ToastUI message={OTP_SENT} type={"Success"} />);
+			payload.type = "LoginWithOtp";
+			setTempData(payload);
+			 await actions.setIsOtpSend(true);
+			getStoreActions().common.setLoading(false);
+		}
+		else {
+			getStoreActions().common.setLoading(false);
+			return true;
+		}
+	}),
 	getTranslations: thunk(async (actions, payload, { getStoreActions, getStoreState }) => {
 		if (getStoreState().auth.translations.length === 0) {
 			let response = await getTranslations();
 			if (response && response.statuscode != 200) {
 				toast.error(<ToastUI message={response.message} type={"Error"} />);
-			} else if (response && response.statuscode == 200) {
-				await actions.setTranslations(response.data);
+			} else if (response && response?.statuscode == 200) {
+				await actions.setTranslations(response?.data);
 				return response.data;
 			}
 			else {
@@ -102,6 +130,35 @@ const authModel = {
 			await actions.setIsOtpVerified(true);
 			getStoreActions().common.setLoading(false);
 			await actions.setResponse(response.data);
+			return true;
+		}
+		else {
+			getStoreActions().common.setLoading(false);
+			return true;
+		}
+	}),
+
+	verifyLoginWithOtp: thunk(async (actions, payload, { getStoreActions }) => {
+		getStoreActions().common.setLoading(true);
+		let response = await verifyLoginWithOtp(payload);
+		if (response && response.statuscode != 200) {
+			console.log("fail")
+			toast.error(<ToastUI message={response.message} type={"Error"} />);
+			getStoreActions().common.setLoading(false);
+		} else if (response && response.statuscode == 200) {
+			//console.log("success",response?.data?.token)
+			if(response?.data?.token){
+				actions.setOtpToken(true)
+				setToken(response?.data?.token);
+				setUser(response?.data?.client);
+				setAccountData(response?.data?.accountInfo);
+				await actions.setResponse(response?.data);
+				await actions.setIsLogin(true);
+				getStoreActions().common.setLoading(false);
+			}
+			  await actions.setIsOtpVerified(true);
+			 getStoreActions().common.setLoading(false);
+			  await actions.setResponse(response?.data);
 			return true;
 		}
 		else {

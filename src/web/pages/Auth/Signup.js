@@ -16,7 +16,10 @@ const Signup = (props) => {
   const {RegisterSchema} = useAuthValidation();
   const isLoading = useStoreState((state) => state.common.isLoading);
   const sendOTP = useStoreActions((actions) => actions.auth.sendOTP);
+  const sendOtpForLogin = useStoreActions((actions) => actions.auth.sendOtpForLogin);
   const isOtpSend = useStoreState((state) => state.auth.isOtpSend);
+  const loginWithOtp = useStoreState((state) => state.auth.loginWithOtp);
+  const setLoginWithOtp = useStoreActions((actions) => actions.auth.setLoginWithOtp);
 
   const { labelData } = useContext(LanguageContext);
   const [phone, setPhone] = useState({ iso2: '', dialCode: '', phone: '' });
@@ -27,9 +30,20 @@ const Signup = (props) => {
       code: `+${payload.dialCode}`,
       phone: payload.phone
     }
-    await sendOTP(formData);
+    if(loginWithOtp ){
+      await sendOtpForLogin(formData);
+    }
+    else{
+      await sendOTP(formData);
+    }
+  }
+
+  const signInPage= () =>{
+    setLoginWithOtp(false)
+    history.push("/login");
   }
   
+  console.log("send",loginWithOtp)
 
   useEffect(() => {
     if (isOtpSend) {
@@ -43,7 +57,11 @@ const Signup = (props) => {
         <div className="loginBox">
           <div className="loginLogo"><img src={DCCLOGO} /></div>
           <div className="loginTitle mb-2">Welcome Back!</div>
-          <p className="loginTitleInfo mb-4">If you are new client, Please fill your details below to complete signup to activate your account.</p>
+          {
+            loginWithOtp ? <p className="loginTitleInfo mb-4">Please enter your mobile number to continue with us</p>:
+            <p className="loginTitleInfo mb-4">If you are new client, Please fill your details below to complete signup to activate your account.</p>
+          }
+         
           <Formik
             enableReinitialize={true}
             initialValues={phone}
@@ -100,7 +118,8 @@ const Signup = (props) => {
 
                   <div className="alreadyAccount">
                     <p>Already have an account?</p>
-                    <Link to="/login">Sign In</Link>
+                     <p onClick={()=>signInPage()} disabled={isLoading} className="signIn">Sign In</p> 
+                    {/* <Link to="/login">Sign In</Link> */}
                   </div>
                 </form>
               );

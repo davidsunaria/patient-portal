@@ -17,7 +17,11 @@ const VerifyOtp = (props) => {
   const sendOTP = useStoreActions((actions) => actions.auth.sendOTP);
   const sendForgotPasswordOTP = useStoreActions((actions) => actions.auth.sendForgotPasswordOTP);
   const isOtpVerified = useStoreState((state) => state.auth.isOtpVerified);
-  const response = useStoreState((state) => state.auth.response);
+  const setLoginWithOtp = useStoreActions((actions) => actions.auth.setLoginWithOtp);
+  const sendOtpForLogin = useStoreActions((actions) => actions.auth.sendOtpForLogin);
+  const verifyLoginWithOtp = useStoreActions((actions) => actions.auth.verifyLoginWithOtp);
+  const otpToken = useStoreState((state) => state.auth.otpToken);
+  const loginWithOtp = useStoreState((state) => state.auth.loginWithOtp);
   const { labelData } = useContext(LanguageContext);
   const [formData, setFormData] = useState({
     otp: "",
@@ -34,7 +38,14 @@ const VerifyOtp = (props) => {
     });
   };
   const verify = async (payload) => {
-    await verifyOtp(payload);
+    let tempData = getTempData();
+    if (tempData.type === "LoginWithOtp") {
+      await verifyLoginWithOtp(payload)
+    }
+    else {
+      await verifyOtp(payload);
+    }
+
   }
   const resendOtp = async (payload) => {
     let tempData = getTempData();
@@ -47,21 +58,35 @@ const VerifyOtp = (props) => {
       delete tempData.type;
       await sendOTP(tempData);
     }
+    if (tempData.type === "LoginWithOtp") {
+      delete tempData.type;
+      await sendOtpForLogin(tempData);
+    }
     //
   }
   useEffect(() => {
+    //console.log("isOtpVerified",response)
     if (isOtpVerified) {
       let tempData = getTempData();
       if (tempData.type === "forgot_password") {
         history.push("/reset-password");
       }
+      else if(otpToken){
+        history.push("/dashboard");
+      }
       else {
         history.push("/register-user");
       }
     }
-  }, [isOtpVerified])
+  }, [isOtpVerified,otpToken])
 
-  
+  useEffect(() => {
+    if (loginWithOtp) {
+      setLoginWithOtp(false)
+    }
+  }, [])
+
+
   return (
     <React.Fragment>
 
@@ -116,7 +141,7 @@ const VerifyOtp = (props) => {
 
         </div>
       </div>
-      
+
     </React.Fragment>
   );
 };

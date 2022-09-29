@@ -71,7 +71,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-weight:600;
 }
 .loginTitleInfo{
-    font-size: 12px;
+    font-size: 13px;
     color:#627086;
     text-align:center;
 }
@@ -2487,4 +2487,15 @@ color: red!important;
     top:11px;
     font-weight: 600;
     cursor: pointer;
+}
+
+.signIn{
+    cursor: pointer;
+    display: inline-block !important;
+    color: #4eb176!important;
+    font-size: 13px!important;
+}
+
+.termLabel{
+    display: inline-block !important;
 }
