@@ -17,7 +17,9 @@ const Login = (props) => {
   const [formData, setFormData] = useState({ user_name: '', password: '', device_token: new Buffer(window.navigator.userAgent).toString('base64') });
   const { labelData } = useContext(LanguageContext);
   const login = useStoreActions((actions) => actions.auth.login);
+  const setLoginWithOtp = useStoreActions((actions) => actions.auth.setLoginWithOtp);
   const isLogin = useStoreState((state) => state.auth.isLogin);
+  const loginWithOtp = useStoreState((state) => state.auth.loginWithOtp);
   const isLoading = useStoreState((state) => state.common.isLoading);
   const { LoginSchema } = useAuthValidation();
   const response = useStoreState((state) => state.auth.response);
@@ -25,11 +27,19 @@ const Login = (props) => {
   const signIn = async (values) => {
     await login(values);
   }
+  const LoginOtp= async ()=>{
+    setLoginWithOtp(true)
+  }
   useEffect(() => {
     if (isLogin) {
      
     }
   }, [isLogin])
+  useEffect(() => {
+    if (loginWithOtp) {
+     history.push("/register")
+    }
+  }, [loginWithOtp])
 
   useEffect(() => {
     if (response) {
@@ -127,7 +137,8 @@ const Login = (props) => {
                     </div>
                     <ErrorMessage name="password" component="span" className="errorMsg" />
                   </div>
-                  <button type="submit" disabled={isLoading} className="loginBtn">Log In</button>
+                  <button type="submit" disabled={isLoading} className="loginBtn mb-3">Log In</button>
+                   <button onClick={()=>LoginOtp()} disabled={isLoading} className="loginBtn">Log with OTP</button>
 
 
                   <div className="alreadyAccount">

@@ -18,6 +18,15 @@ export const sendOTP = async (formData) => {
 	}
 };
 
+export const sendOtpForLogin = async (formData) => {
+	try {
+		let response = await axiosApi.post(`${apiUrl}/otp-to-login`, formData);
+		return response?.data;
+	} catch (error) {
+		return error?.response?.data;
+	}
+};
+
 export const login = async (formData) => {
 	try {
 		let response = await axiosApi.post(`${apiUrl}/client-login`, formData);
@@ -42,6 +51,15 @@ export const autologin = async (token) => {
 export const verifyOtp = async (formData) => {
 	try {
 		let response = await axiosApi.post(`${apiUrl}/verify-signup-otp`, formData);
+		return response?.data;
+	} catch (error) {
+		return error?.response?.data;
+	}
+};
+
+export const verifyLoginWithOtp = async (formData) => {
+	try {
+		let response = await axiosApi.post(`${apiUrl}/verify-otp-to-login`, formData);
 		return response?.data;
 	} catch (error) {
 		return error?.response?.data;

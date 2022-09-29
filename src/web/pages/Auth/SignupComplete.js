@@ -213,14 +213,14 @@ const SignupComplete = (props) => {
                     <ErrorMessage name="password_confirmation" component="span" className="errorMsg" />
                   </div>
                   <div className="loginFieldGroup termsCondition">
-                    <input type="checkbox" name={`privacy_policy`} checked={values.privacy_policy} value={values.privacy_policy} onChange={handleChange} />I agree to the <a href={`${process.env.REACT_APP_PAGES_URL}privacy-policy`} target="_blank"> Privacy Policy</a>
+                    <input type="checkbox" id="privacy"  name={`privacy_policy`} checked={values.privacy_policy} value={values.privacy_policy} onChange={handleChange} /><label className="termLabel" for="privacy">I agree to the</label> <a href={`${process.env.REACT_APP_PAGES_URL}privacy-policy`} target="_blank"> Privacy Policy</a>
                     <ErrorMessage name="privacy_policy" component="span" className="errorMsg" /></div>
                     {console.log(values.term_and_conditions)}
                   <div className="loginFieldGroup termsCondition">
-                    <input type="checkbox" name={`term_and_conditions`} checked={values.term_and_conditions} value={values.term_and_conditions} onChange={handleChange} />I agree to the  <a href={`${process.env.REACT_APP_PAGES_URL}terms-and-conditions`} target="_blank" onChange={handleChange}>Terms & Conditions.</a>
+                    <input type="checkbox" id="term" name={`term_and_conditions`} checked={values.term_and_conditions} value={values.term_and_conditions} onChange={handleChange} /><label for="term" className="termLabel">I agree to the</label>  <a href={`${process.env.REACT_APP_PAGES_URL}terms-and-conditions`} target="_blank" onChange={handleChange}>Terms & Conditions.</a>
                     <ErrorMessage name="term_and_conditions" component="span" className="errorMsg" /></div>
                   <button disabled={isLoading} className="loginBtn">{isLoading && <Spinner animation="border" size="sm" />}
-                    {(isLoading) ? 'Processing' : 'Log In'}</button>
+                    {(isLoading) ? 'Processing' : 'Sign Up'}</button>
                   <div className="alreadyAccount">
                     <p>Already have an account?</p>
                     <Link to="/login">Sign In</Link>
