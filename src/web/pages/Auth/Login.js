@@ -23,6 +23,7 @@ const Login = (props) => {
   const isLoading = useStoreState((state) => state.common.isLoading);
   const { LoginSchema } = useAuthValidation();
   const response = useStoreState((state) => state.auth.response);
+  const setSignupPhone = useStoreActions((actions) => actions.auth.setSignupPhone);
 
   const signIn = async (values) => {
     await login(values);
@@ -56,6 +57,9 @@ const Login = (props) => {
        history.push("/dashboard");
     }
   }, [title]);
+  useEffect(()=>{
+   setSignupPhone({ iso2: '', dialCode: '', phone: '' })
+  },[])
   return (
     <React.Fragment>
       <div className="loginOuter">

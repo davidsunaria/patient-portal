@@ -74,6 +74,7 @@ const SignupComplete = (props) => {
       history.push("/dashboard");
     }
   }, [title]);
+ 
   return (
     <React.Fragment>
       <div className="loginOuter">
@@ -169,7 +170,7 @@ const SignupComplete = (props) => {
                     <ErrorMessage name="email" component="span" className="errorMsg" />
                   </div>
 
-                  <div className="loginFieldGroup">
+                  <div className="loginFieldGroup mb-5">
                     <label>Create Password</label>
                     <div className={
                       errors.password && touched.password
@@ -215,7 +216,6 @@ const SignupComplete = (props) => {
                   <div className="loginFieldGroup termsCondition">
                     <input type="checkbox" id="privacy"  name={`privacy_policy`} checked={values.privacy_policy} value={values.privacy_policy} onChange={handleChange} /><label className="termLabel" for="privacy">I agree to the</label> <a href={`${process.env.REACT_APP_PAGES_URL}privacy-policy`} target="_blank"> Privacy Policy</a>
                     <ErrorMessage name="privacy_policy" component="span" className="errorMsg" /></div>
-                    {console.log(values.term_and_conditions)}
                   <div className="loginFieldGroup termsCondition">
                     <input type="checkbox" id="term" name={`term_and_conditions`} checked={values.term_and_conditions} value={values.term_and_conditions} onChange={handleChange} /><label for="term" className="termLabel">I agree to the</label>  <a href={`${process.env.REACT_APP_PAGES_URL}terms-and-conditions`} target="_blank" onChange={handleChange}>Terms & Conditions.</a>
                     <ErrorMessage name="term_and_conditions" component="span" className="errorMsg" /></div>

@@ -33,9 +33,17 @@ const useAuthValidation = (props) => {
       .string()
       .email()
       .required(EMAIL_REQUIRED),
+
     password: Yup
-      .string()
-      .required(PASSWORD_REQUIRED),
+    .string()
+    .required(PASSWORD_REQUIRED)
+    .matches(
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+      "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+    ),
+    // password: Yup
+    //   .string()
+    //   .required(PASSWORD_REQUIRED),
     term_and_conditions: Yup.bool().oneOf([true], 'You must agree to terms & conditions'),
     privacy_policy: Yup.bool().oneOf([true], 'You must agree to privacy policy'),
     password_confirmation: Yup
@@ -66,6 +74,7 @@ const useAuthValidation = (props) => {
       .required(REENTER_PASSWORD)
       .oneOf([Yup.ref('password'), null], CONFIRM_PASSWORD_MATCH)
   }), [labelData]);
+
 
   return { LoginSchema, VerifyOtpSchema, SignupSchema, ForgotPasswordSchema, RegisterSchema, ResetPasswordSchema };
 }
