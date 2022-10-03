@@ -20,9 +20,11 @@ const Signup = (props) => {
   const isOtpSend = useStoreState((state) => state.auth.isOtpSend);
   const loginWithOtp = useStoreState((state) => state.auth.loginWithOtp);
   const setLoginWithOtp = useStoreActions((actions) => actions.auth.setLoginWithOtp);
-
+  const setSignupPhone = useStoreActions((actions) => actions.auth.setSignupPhone);
+  const signupPhone = useStoreState((state) => state.auth.signupPhone);
+  
   const { labelData } = useContext(LanguageContext);
-  const [phone, setPhone] = useState({ iso2: '', dialCode: '', phone: '' });
+  //const [phone, setPhone] = useState({ iso2: '', dialCode: '', phone: '' });
  
  
   const sendOtp = async (payload) => {
@@ -43,7 +45,6 @@ const Signup = (props) => {
     history.push("/login");
   }
   
-  console.log("send",loginWithOtp)
 
   useEffect(() => {
     if (isOtpSend) {
@@ -64,7 +65,7 @@ const Signup = (props) => {
          
           <Formik
             enableReinitialize={true}
-            initialValues={phone}
+            initialValues={signupPhone}
             onSubmit={async values => {
               sendOtp(values);
             }}
@@ -95,21 +96,22 @@ const Signup = (props) => {
                       <IntlTelInput
                             preferredCountries={['IN']}
                               css={ ['intl-tel-input'] }
-                              defaultValue={`${phone.phone}`}
+                              defaultValue={`${signupPhone?.phone}`}
                               fieldName='phone'
                               separateDialCode={`true`}
                               autoComplete={`phone`}
                               onPhoneNumberChange={(isValidNumber,phone, payload, fullNumber) => {
                                 let input  = {...phone};
                                 input = { iso2: payload.iso2, dialCode: payload.dialCode, phone: phone };
-                                setPhone(input);
+                                setSignupPhone(input);
                               }}
                               onSelectFlag={(inputFieled,phone, payload, isValidNumber) => {
                                 let input  = {...phone};
                                 input = { iso2: phone.iso2, dialCode: phone.dialCode, phone: inputFieled };
-                                setPhone(input);
+                                setSignupPhone(input);
                               }}
-                              autoPlaceholder={false}
+                              placeholder="Enter Your Number"
+                              autoPlaceholder={true}
                             /> 
                     </div>
                     {errors.phone && <span className="errorMsg">{errors.phone}</span>}

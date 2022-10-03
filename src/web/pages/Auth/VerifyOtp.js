@@ -20,6 +20,7 @@ const VerifyOtp = (props) => {
   const setLoginWithOtp = useStoreActions((actions) => actions.auth.setLoginWithOtp);
   const sendOtpForLogin = useStoreActions((actions) => actions.auth.sendOtpForLogin);
   const verifyLoginWithOtp = useStoreActions((actions) => actions.auth.verifyLoginWithOtp);
+  const setIsOtpSend = useStoreActions((actions) => actions.auth.setIsOtpSend);
   const otpToken = useStoreState((state) => state.auth.otpToken);
   const loginWithOtp = useStoreState((state) => state.auth.loginWithOtp);
   const { labelData } = useContext(LanguageContext);
@@ -84,6 +85,10 @@ const VerifyOtp = (props) => {
     if (loginWithOtp) {
       setLoginWithOtp(false)
     }
+  }, [])
+
+  useEffect(() => {
+    setIsOtpSend(false)
   }, [])
 
 

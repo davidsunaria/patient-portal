@@ -15,6 +15,10 @@ const authModel = {
 	loginWithOtp:false,
 	otpToken:false,
 	response: {},
+	signupPhone:{ iso2: '', dialCode: '', phone: '' },
+	setSignupPhone: action((state, payload) => {
+		state.signupPhone = payload;
+	}),
 	setTranslations: action((state, payload) => {
 		state.translations = payload;
 	}),
