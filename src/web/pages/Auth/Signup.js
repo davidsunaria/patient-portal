@@ -94,7 +94,7 @@ const Signup = (props) => {
                     }>
                       <img src={MOBILE_IMAGE} />
                       <IntlTelInput
-                            preferredCountries={['IN']}
+                            preferredCountries={[signupPhone?.iso2?signupPhone?.iso2:'in']}
                               css={ ['intl-tel-input'] }
                               defaultValue={`${signupPhone?.phone}`}
                               fieldName='phone'

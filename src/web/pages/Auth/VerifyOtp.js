@@ -81,11 +81,11 @@ const VerifyOtp = (props) => {
     }
   }, [isOtpVerified,otpToken])
 
-  useEffect(() => {
-    if (loginWithOtp) {
-      setLoginWithOtp(false)
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (loginWithOtp) {
+  //     setLoginWithOtp(false)
+  //   }
+  // }, [])
 
   useEffect(() => {
     setIsOtpSend(false)
