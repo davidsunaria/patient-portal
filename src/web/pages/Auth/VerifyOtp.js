@@ -3,11 +3,14 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { LanguageContext } from "patient-portal-context/LanguageContext.js";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import DCCLOGO from "patient-portal-images/dcc-logo.svg";
-
 import OtpInput from 'react-otp-input';
 import { useAuthValidation } from "patient-portal-utils/validations/auth/AuthSchema";
 import { Formik, ErrorMessage } from "formik";
 import { getTempData } from "patient-portal-utils/Service";
+import useAnalyticsEventTracker from './useAnalyticsEventTracker';
+import ReactGA from 'react-ga';
+const TRACKING_ID = "UA-244529252-1"; // OUR_TRACKING_ID
+ReactGA.initialize(TRACKING_ID);
 
 
 const VerifyOtp = (props) => {
@@ -22,6 +25,7 @@ const VerifyOtp = (props) => {
   const verifyLoginWithOtp = useStoreActions((actions) => actions.auth.verifyLoginWithOtp);
   const setIsOtpSend = useStoreActions((actions) => actions.auth.setIsOtpSend);
   const otpToken = useStoreState((state) => state.auth.otpToken);
+  const response = useStoreState((state) => state.auth.response);
   const loginWithOtp = useStoreState((state) => state.auth.loginWithOtp);
   const { labelData } = useContext(LanguageContext);
   const [formData, setFormData] = useState({
@@ -29,6 +33,7 @@ const VerifyOtp = (props) => {
     code: '',
     phone: ''
   });
+  const gaEventTracker = useAnalyticsEventTracker('Login');
 
   const handleChangeVal = (otp) => {
     let tempData = getTempData();
@@ -74,6 +79,7 @@ const VerifyOtp = (props) => {
       }
       else if(otpToken){
         history.push("/dashboard");
+        gaEventTracker('login-with-otp')
       }
       else {
         history.push("/register-user");
