@@ -4,6 +4,7 @@ import ToastUI from "patient-portal-components/ToastUI/ToastUI.js";
 import { sendOTP, getTranslations, login, verifyOtp,verifyLoginWithOtp, signUp, sendForgotPasswordOTP, resetPassword, logout, autologin,sendOtpForLogin } from "patient-portal-api/AuthApi.js";
 import { setToken, setAccountData, setUser, setTempData, removeTempData } from "patient-portal-utils/Service.js";
 import { OTP_SENT } from "patient-portal-message";
+
 const authModel = {
 	translations: [],
 	isLogin: false,
@@ -147,6 +148,7 @@ const authModel = {
 		let response = await verifyLoginWithOtp(payload);
 		if (response && response.statuscode != 200) {
 			console.log("fail")
+			actions.setOtpToken(false)
 			toast.error(<ToastUI message={response.message} type={"Error"} />);
 			getStoreActions().common.setLoading(false);
 		} else if (response && response.statuscode == 200) {
@@ -166,6 +168,7 @@ const authModel = {
 			return true;
 		}
 		else {
+			actions.setOtpToken(false)
 			getStoreActions().common.setLoading(false);
 			return true;
 		}

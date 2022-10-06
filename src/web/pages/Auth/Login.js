@@ -3,13 +3,16 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { LanguageContext } from "patient-portal-context/LanguageContext.js";
 import DCCLOGO from "patient-portal-images/dcc-logo.svg";
-
 import EMAIL_IMAGE from "patient-portal-images/phone-email.svg";
 import PASSWORD_IMAGE from "patient-portal-images/password.svg";
-
 import { Formik, ErrorMessage } from "formik";
 import { Spinner } from 'react-bootstrap';
 import { useAuthValidation } from "patient-portal-utils/validations/auth/AuthSchema";
+import useAnalyticsEventTracker from './useAnalyticsEventTracker';
+import ReactGA from 'react-ga';
+const TRACKING_ID = "UA-244529252-1"; // OUR_TRACKING_ID
+ReactGA.initialize(TRACKING_ID);
+
 
 const Login = (props) => {
   const [title, setTitle] = useState("");
@@ -25,41 +28,43 @@ const Login = (props) => {
   const response = useStoreState((state) => state.auth.response);
   const setSignupPhone = useStoreActions((actions) => actions.auth.setSignupPhone);
 
+  const gaEventTracker = useAnalyticsEventTracker('Login');
   const signIn = async (values) => {
     await login(values);
   }
-  const LoginOtp= async ()=>{
+  const LoginOtp = async () => {
     setLoginWithOtp(true)
   }
   useEffect(() => {
     if (isLogin) {
-     
+
     }
   }, [isLogin])
   useEffect(() => {
     if (loginWithOtp) {
-     history.push("/register")
+      history.push("/register")
     }
   }, [loginWithOtp])
 
   useEffect(() => {
     if (response) {
       let { accountInfo } = response;
-        if (accountInfo) {
-          setTitle(accountInfo.name);
-        }
+      if (accountInfo) {
+        setTitle(accountInfo.name);
+      }
     }
   }, [response]);
 
   useEffect(() => {
     if (title) {
       document.title = (title) ? title : "Patient Portal";
-       history.push("/dashboard");
+      gaEventTracker('directLogin')
+      history.push("/dashboard");
     }
   }, [title]);
-  useEffect(()=>{
-   setSignupPhone({ iso2: '', dialCode: '', phone: '' })
-  },[])
+  useEffect(() => {
+    setSignupPhone({ iso2: '', dialCode: '', phone: '' })
+  }, [])
   return (
     <React.Fragment>
       <div className="loginOuter">
@@ -142,7 +147,7 @@ const Login = (props) => {
                     <ErrorMessage name="password" component="span" className="errorMsg" />
                   </div>
                   <button type="submit" disabled={isLoading} className="loginBtn mb-3">Log In</button>
-                   <button onClick={()=>LoginOtp()} disabled={isLoading} className="loginBtn">Log with OTP</button>
+                  <button onClick={() => LoginOtp()} disabled={isLoading} className="loginBtn">Log with OTP</button>
 
 
                   <div className="alreadyAccount">
