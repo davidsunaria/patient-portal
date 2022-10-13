@@ -10,6 +10,10 @@ yarn-error.log*
 build
 build/Release
 
+#hidden file
+FirebaseConfig.json
+
+
 # Dependency directories
 node_modules/
 jspm_packages/

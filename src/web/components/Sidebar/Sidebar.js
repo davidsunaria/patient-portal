@@ -9,6 +9,7 @@ import USER_IMAGE from "patient-portal-images/user.png";
 import DOWN_ARROW from "patient-portal-images/down-arrow.svg";
 import DEFAULT_USER_IMG from "patient-portal-images/default-user.png";
 import LogoutConfirmation from "patient-portal-components/Logout/LogoutConfirmation"
+import FirebaseService from "../../../firebase/FirebaseService";
 
 const Sidebar = (props) => {
   const history = useHistory();
@@ -42,6 +43,7 @@ const Sidebar = (props) => {
   const logoutMe = async () => {
     setLogoutModal(false);
     await logout();
+    FirebaseService.logLogOut()
   };
   useEffect(() => {
     if (isLoggedOut) {
