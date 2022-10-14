@@ -6,12 +6,8 @@ import DCCLOGO from "patient-portal-images/dcc-logo.svg";
 import EMAIL_IMAGE from "patient-portal-images/phone-email.svg";
 import PASSWORD_IMAGE from "patient-portal-images/password.svg";
 import { Formik, ErrorMessage } from "formik";
-import { Spinner } from 'react-bootstrap';
 import { useAuthValidation } from "patient-portal-utils/validations/auth/AuthSchema";
-import useAnalyticsEventTracker from './useAnalyticsEventTracker';
-import ReactGA from 'react-ga';
-const TRACKING_ID = "UA-244529252-1"; // OUR_TRACKING_ID
-ReactGA.initialize(TRACKING_ID);
+import FirebaseService from "../../../firebase/FirebaseService";
 
 
 const Login = (props) => {
@@ -27,9 +23,8 @@ const Login = (props) => {
   const { LoginSchema } = useAuthValidation();
   const response = useStoreState((state) => state.auth.response);
   const setSignupPhone = useStoreActions((actions) => actions.auth.setSignupPhone);
-
-  const gaEventTracker = useAnalyticsEventTracker('Login');
-  const signIn = async (values) => {
+  
+const signIn = async (values) => {
     await login(values);
   }
   const LoginOtp = async () => {
@@ -58,7 +53,7 @@ const Login = (props) => {
   useEffect(() => {
     if (title) {
       document.title = (title) ? title : "Patient Portal";
-      gaEventTracker('directLogin')
+      FirebaseService.logLogin("Web-Password",response?.client)
       history.push("/dashboard");
     }
   }, [title]);

@@ -7,10 +7,8 @@ import OtpInput from 'react-otp-input';
 import { useAuthValidation } from "patient-portal-utils/validations/auth/AuthSchema";
 import { Formik, ErrorMessage } from "formik";
 import { getTempData } from "patient-portal-utils/Service";
-import useAnalyticsEventTracker from './useAnalyticsEventTracker';
-import ReactGA from 'react-ga';
-const TRACKING_ID = "UA-244529252-1"; // OUR_TRACKING_ID
-ReactGA.initialize(TRACKING_ID);
+import FirebaseService from "../../../firebase/FirebaseService";
+
 
 
 const VerifyOtp = (props) => {
@@ -33,7 +31,6 @@ const VerifyOtp = (props) => {
     code: '',
     phone: ''
   });
-  const gaEventTracker = useAnalyticsEventTracker('Login');
 
   const handleChangeVal = (otp) => {
     let tempData = getTempData();
@@ -79,7 +76,7 @@ const VerifyOtp = (props) => {
       }
       else if(otpToken){
         history.push("/dashboard");
-        gaEventTracker('login-with-otp')
+        FirebaseService.logLogin("Web-OTP",response?.client)
       }
       else {
         history.push("/register-user");
