@@ -48,3 +48,12 @@ export const getSettings = async (formData) => {
     return error?.response?.data;
   }
 };
+
+export const deleteProfile = async (formData) => {
+  try {
+    let response = await axiosApi.post(`${apiUrl}/delete-profile`, formData);
+    return response?.data;
+  } catch (error) {
+    return error?.response?.data;
+  }
+};
