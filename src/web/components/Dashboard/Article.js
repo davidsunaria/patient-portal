@@ -25,7 +25,7 @@ const Article = (props) => {
             {result.image && <img src={`${process.env.REACT_APP_MEDIA_URL}articles/${result.image}`} />}
              
             </div>
-            <p>{truncate(result?.title, 50, 45)}</p>
+            <p>{truncate(result?.title, 40, 40)}</p>
           </div>
         ))
       ) : (
