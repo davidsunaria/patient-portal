@@ -2501,6 +2501,18 @@ color: red!important;
     cursor: pointer;
 }
 
+
+.signIn{
+    cursor: pointer;
+    display: inline-block !important;
+    color: #4eb176!important;
+    font-size: 13px!important;
+}
+
+.termLabel{
+    display: inline-block !important;
+}
+
 .deleteAccount{
     cursor: pointer;
     font-size: 13px;
@@ -2515,14 +2527,4 @@ color: red!important;
     color: #6C757D;
     display: block;
     margin-bottom: 10px;
-}
-.signIn{
-    cursor: pointer;
-    display: inline-block !important;
-    color: #4eb176!important;
-    font-size: 13px!important;
-}
-
-.termLabel{
-    display: inline-block !important;
 }
